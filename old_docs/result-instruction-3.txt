@@ -1,0 +1,143 @@
+PS D:\App_Project\Website\BMad-Methods\project-5\Ulasis\Backend> node setup-db.js
+Connected to MySQL as root
+Database ulasis created
+User ulasis_user created
+Privileges granted
+Privileges flushed
+Database setup complete
+PS D:\App_Project\Website\BMad-Methods\project-5\Ulasis\Backend> npm run migrate
+
+> ulasis-backend@1.0.0 migrate
+> sequelize-cli db:migrate
+
+
+Sequelize CLI [Node: 22.17.1, CLI: 6.6.3, ORM: 6.37.7]
+
+Loaded configuration file "config\config.js".
+Using environment "development".
+Ignoring invalid configuration option passed to Connection: collate. This is currently a warning, but in future versions of MySQL2, an error will be thrown if you pass an invalid configuration option to a Connection
+Ignoring invalid configuration option passed to Connection: collate. This is currently a warning, but in future versions of MySQL2, an error will be thrown if you pass an invalid configuration option to a Connection
+No migrations were executed, database schema was already up to date.
+PS D:\App_Project\Website\BMad-Methods\project-5\Ulasis\Backend> npm install
+
+up to date, audited 914 packages in 2s
+
+118 packages are looking for funding
+  run `npm fund` for details
+
+1 moderate severity vulnerability
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+PS D:\App_Project\Website\BMad-Methods\project-5\Ulasis\Backend> npm run dev
+
+> ulasis-backend@1.0.0 dev
+> nodemon src/app.js
+
+[nodemon] 3.1.10
+[nodemon] to restart at any time, enter `rs`
+[nodemon] watching path(s): *.*
+[nodemon] watching extensions: js,mjs,cjs,json
+[nodemon] starting `node src/app.js`
+Environment loaded
+Express loaded
+Loading configs...
+App config loaded
+2025-10-30 11:55:12 [info]: Database security configuration loaded {"service":"ulasis-backend","environment":"development","sslEnabled":false,"poolMax":10,"poolMin":0,"connectionTimeout":15000,"multipleStatements":false}
+Database config loaded
+Swagger config loaded
+Logger loaded
+Loading error handlers...
+Error handlers loaded
+Loading security middleware...
+Security middleware loaded
+Loading monitoring middleware...
+Requiring models...
+Models required successfully
+Loading routes...
+Loading health routes...
+Health routes loaded
+Loading auth routes...
+2025-10-30 11:55:13 [info]: Token blacklist service initialized {"service":"ulasis-backend","storageType":"memory","cleanupInterval":3600000,"defaultTTL":604800000}        
+2025-10-30 11:55:13 [info]: Using test email account for development {"service":"ulasis-backend"}
+Auth routes loaded
+Loading admin routes...
+Admin routes loaded
+Loading questionnaire routes...
+Questionnaire routes loaded
+Loading qr code routes...
+Registering POST / route for QR codes
+qrCodeController.createQRCode: [
+  [Function: uploadRateLimitMiddleware],
+  [Function: multerMiddleware],
+  [Function: fileSecurityMiddleware],
+  [Function (anonymous)],
+  [AsyncFunction: createQRCode]
+]
+QR code routes loaded
+Loading question routes...
+Question routes loaded
+Loading response routes...
+2025-10-30 11:55:14 [info]: Skipping Redis initialization in development environment {"service":"ulasis-backend"}
+Response routes loaded
+Loading analytics routes...
+2025-10-30 11:55:14 [info]: Skipping Redis initialization in development environment {"service":"ulasis-backend"}
+Analytics routes loaded
+Loading subscription routes...
+Subscription routes loaded
+Loading notification routes...
+Notification routes loaded
+All routes loaded
+Starting database initialization...
+Testing database connection...
+(node:26108) Warning: Accessing non-existent property 'processResponse' of module exports inside circular dependency
+(Use `node --trace-warnings ...` to show where the warning was created)
+2025-10-30 11:55:15 [info]: Loaded email template: verification.html {"service":"ulasis-backend"}
+2025-10-30 11:55:15 [info]: Loaded email template: password-reset.html {"service":"ulasis-backend"}
+2025-10-30 11:55:15 [info]: Loaded email template: new-review.html {"service":"ulasis-backend"}
+Database connection established successfully
+Syncing models...
+2025-10-30 11:55:15 [info]: Loaded email template: subscription-change.html {"service":"ulasis-backend"}
+Database models synchronized
+Models initialized successfully
+2025-10-30 11:55:15 [info]: Application models initialized successfully {"service":"ulasis-backend"}
+2025-10-30 11:55:15 [info]: 📚 Swagger documentation available at: /api-docs {"service":"ulasis-backend"}
+2025-10-30 11:55:15 [info]: 📄 JSON specification available at: /api-docs.json {"service":"ulasis-backend"}
+2025-10-30 11:55:15 [info]: Privacy cleanup job is disabled {"service":"ulasis-backend"}
+2025-10-30 11:55:15 [info]: Scheduled jobs initialized {"service":"ulasis-backend"}   
+2025-10-30 11:55:15 [info]: 🚀 Ulasis Backend Server running on port 3000 {"service":"ulasis-backend"}
+2025-10-30 11:55:15 [info]: 📊 Health check available at: http://localhost:3000/api/v1/health {"service":"ulasis-backend"}
+2025-10-30 11:55:15 [info]: 🔐 Auth endpoints available at: http://localhost:3000/api/v1/auth {"service":"ulasis-backend"}
+2025-10-30 11:55:15 [info]: 🌍 Environment: development {"service":"ulasis-backend"}  
+2025-10-30 11:55:15 [info]: 🌐 Server bound to all interfaces (0.0.0.0) {"service":"ulasis-backend"}
+2025-10-30 11:55:16 [info]: Test email account created: {"service":"ulasis-backend"}
+2025-10-30 11:55:18 [error]: Email service configuration error: self-signed certificate in certificate chain {"service":"ulasis-backend","code":"ESOCKET","command":"CONN","stack":"Error: self-signed certificate in certificate chain\n    at TLSSocket.onConnectSecure (node:_tls_wrap:1679:34)\n    at TLSSocket.emit (node:events:518:28)\n    at TLSSocket._finishInit (node:_tls_wrap:1078:8)\n    at ssl.onhandshakedone (node:_tls_wrap:864:12)"}
+2025-10-30 11:55:42 [warn]: System alert: High memory usage {"service":"ulasis-backend","usage":"91.21%","heapUsed":"62MB","heapTotal":"68MB"}
+2025-10-30 11:56:12 [warn]: System alert: High memory usage {"service":"ulasis-backend","usage":"91.
+
+
+===
+
+PS D:\App_Project\Website\BMad-Methods\project-5\Ulasis\Frontend> npm install
+
+up to date, audited 240 packages in 2s
+
+38 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+PS D:\App_Project\Website\BMad-Methods\project-5\Ulasis\Frontend> npm run dev
+
+> ulasis---customer-intelligence-dashboard@0.0.0 dev
+> vite
+
+
+  VITE v6.4.1  ready in 370 ms
+
+  ➜  Local:   http://localhost:3001/
+  ➜  Network: http://192.168.1.25:3001/
+  ➜  press h + enter to show help
+
+

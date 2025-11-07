@@ -1,0 +1,593 @@
+react-dom_client.js?v=172ad00c:20103 Download the React DevTools for a better development experience: https://react.dev/link/react-devtools
+App.tsx:40 App render - isAuthenticated: false authLoading: true user: null
+App.tsx:40 App render - isAuthenticated: false authLoading: true user: null
+App.tsx:449 🔍 Load data check - isAuthenticated: false isDemoMode: false user: null
+App.tsx:477 🚫 Skipping data load - not authenticated or in demo mode
+App.tsx:449 🔍 Load data check - isAuthenticated: false isDemoMode: false user: null
+App.tsx:477 🚫 Skipping data load - not authenticated or in demo mode
+App.tsx:40 App render - isAuthenticated: false authLoading: false user: null
+App.tsx:40 App render - isAuthenticated: false authLoading: false user: null
+App.tsx:40 App render - isAuthenticated: false authLoading: true user: null
+App.tsx:40 App render - isAuthenticated: false authLoading: true user: null
+apiService.ts:73  POST http://localhost:3000/api/v1/auth/login 429 (Too Many Requests)
+dispatchXhrRequest @ axios.js?v=172ad00c:1696
+xhr @ axios.js?v=172ad00c:1573
+dispatchRequest @ axios.js?v=172ad00c:2107
+Promise.then
+_request @ axios.js?v=172ad00c:2310
+request @ axios.js?v=172ad00c:2219
+httpMethod @ axios.js?v=172ad00c:2356
+wrap @ axios.js?v=172ad00c:8
+login @ apiService.ts:73
+login @ useAuth.tsx:51
+handleSubmit @ LoginPage.tsx:39
+executeDispatch @ react-dom_client.js?v=172ad00c:13622
+runWithFiberInDEV @ react-dom_client.js?v=172ad00c:997
+processDispatchQueue @ react-dom_client.js?v=172ad00c:13658
+(anonymous) @ react-dom_client.js?v=172ad00c:14071
+batchedUpdates$1 @ react-dom_client.js?v=172ad00c:2626
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=172ad00c:13763
+dispatchEvent @ react-dom_client.js?v=172ad00c:16784
+dispatchDiscreteEvent @ react-dom_client.js?v=172ad00c:16765
+<form>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=172ad00c:247
+LoginPage @ LoginPage.tsx:69
+react_stack_bottom_frame @ react-dom_client.js?v=172ad00c:18509
+renderWithHooksAgain @ react-dom_client.js?v=172ad00c:5729
+renderWithHooks @ react-dom_client.js?v=172ad00c:5665
+updateFunctionComponent @ react-dom_client.js?v=172ad00c:7475
+beginWork @ react-dom_client.js?v=172ad00c:8525
+runWithFiberInDEV @ react-dom_client.js?v=172ad00c:997
+performUnitOfWork @ react-dom_client.js?v=172ad00c:12561
+workLoopSync @ react-dom_client.js?v=172ad00c:12424
+renderRootSync @ react-dom_client.js?v=172ad00c:12408
+performWorkOnRoot @ react-dom_client.js?v=172ad00c:11766
+performWorkOnRootViaSchedulerTask @ react-dom_client.js?v=172ad00c:13505
+performWorkUntilDeadline @ react-dom_client.js?v=172ad00c:36
+<LoginPage>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=172ad00c:247
+App @ App.tsx:642
+react_stack_bottom_frame @ react-dom_client.js?v=172ad00c:18509
+renderWithHooksAgain @ react-dom_client.js?v=172ad00c:5729
+renderWithHooks @ react-dom_client.js?v=172ad00c:5665
+updateFunctionComponent @ react-dom_client.js?v=172ad00c:7475
+beginWork @ react-dom_client.js?v=172ad00c:8525
+runWithFiberInDEV @ react-dom_client.js?v=172ad00c:997
+performUnitOfWork @ react-dom_client.js?v=172ad00c:12561
+workLoopSync @ react-dom_client.js?v=172ad00c:12424
+renderRootSync @ react-dom_client.js?v=172ad00c:12408
+performWorkOnRoot @ react-dom_client.js?v=172ad00c:11766
+performWorkOnRootViaSchedulerTask @ react-dom_client.js?v=172ad00c:13505
+performWorkUntilDeadline @ react-dom_client.js?v=172ad00c:36
+<App>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=172ad00c:247
+(anonymous) @ index.tsx:19
+App.tsx:40 App render - isAuthenticated: false authLoading: false user: null
+App.tsx:40 App render - isAuthenticated: false authLoading: false user: null
+App.tsx:40 App render - isAuthenticated: false authLoading: true user: null
+App.tsx:40 App render - isAuthenticated: false authLoading: true user: null
+apiService.ts:73  POST http://localhost:3000/api/v1/auth/login 429 (Too Many Requests)
+dispatchXhrRequest @ axios.js?v=172ad00c:1696
+xhr @ axios.js?v=172ad00c:1573
+dispatchRequest @ axios.js?v=172ad00c:2107
+Promise.then
+_request @ axios.js?v=172ad00c:2310
+request @ axios.js?v=172ad00c:2219
+httpMethod @ axios.js?v=172ad00c:2356
+wrap @ axios.js?v=172ad00c:8
+login @ apiService.ts:73
+login @ useAuth.tsx:51
+handleSubmit @ LoginPage.tsx:39
+executeDispatch @ react-dom_client.js?v=172ad00c:13622
+runWithFiberInDEV @ react-dom_client.js?v=172ad00c:997
+processDispatchQueue @ react-dom_client.js?v=172ad00c:13658
+(anonymous) @ react-dom_client.js?v=172ad00c:14071
+batchedUpdates$1 @ react-dom_client.js?v=172ad00c:2626
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=172ad00c:13763
+dispatchEvent @ react-dom_client.js?v=172ad00c:16784
+dispatchDiscreteEvent @ react-dom_client.js?v=172ad00c:16765
+<form>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=172ad00c:247
+LoginPage @ LoginPage.tsx:69
+react_stack_bottom_frame @ react-dom_client.js?v=172ad00c:18509
+renderWithHooksAgain @ react-dom_client.js?v=172ad00c:5729
+renderWithHooks @ react-dom_client.js?v=172ad00c:5665
+updateFunctionComponent @ react-dom_client.js?v=172ad00c:7475
+beginWork @ react-dom_client.js?v=172ad00c:8525
+runWithFiberInDEV @ react-dom_client.js?v=172ad00c:997
+performUnitOfWork @ react-dom_client.js?v=172ad00c:12561
+workLoopSync @ react-dom_client.js?v=172ad00c:12424
+renderRootSync @ react-dom_client.js?v=172ad00c:12408
+performWorkOnRoot @ react-dom_client.js?v=172ad00c:11766
+performWorkOnRootViaSchedulerTask @ react-dom_client.js?v=172ad00c:13505
+performWorkUntilDeadline @ react-dom_client.js?v=172ad00c:36
+<LoginPage>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=172ad00c:247
+App @ App.tsx:642
+react_stack_bottom_frame @ react-dom_client.js?v=172ad00c:18509
+renderWithHooksAgain @ react-dom_client.js?v=172ad00c:5729
+renderWithHooks @ react-dom_client.js?v=172ad00c:5665
+updateFunctionComponent @ react-dom_client.js?v=172ad00c:7475
+beginWork @ react-dom_client.js?v=172ad00c:8525
+runWithFiberInDEV @ react-dom_client.js?v=172ad00c:997
+performUnitOfWork @ react-dom_client.js?v=172ad00c:12561
+workLoopSync @ react-dom_client.js?v=172ad00c:12424
+renderRootSync @ react-dom_client.js?v=172ad00c:12408
+performWorkOnRoot @ react-dom_client.js?v=172ad00c:11766
+performWorkOnRootViaSchedulerTask @ react-dom_client.js?v=172ad00c:13505
+performWorkUntilDeadline @ react-dom_client.js?v=172ad00c:36
+<App>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=172ad00c:247
+(anonymous) @ index.tsx:19
+App.tsx:40 App render - isAuthenticated: false authLoading: false user: null
+App.tsx:40 App render - isAuthenticated: false authLoading: false user: null
+App.tsx:40 App render - isAuthenticated: false authLoading: true user: null
+App.tsx:40 App render - isAuthenticated: false authLoading: true user: null
+apiService.ts:73  POST http://localhost:3000/api/v1/auth/login 429 (Too Many Requests)
+dispatchXhrRequest @ axios.js?v=172ad00c:1696
+xhr @ axios.js?v=172ad00c:1573
+dispatchRequest @ axios.js?v=172ad00c:2107
+Promise.then
+_request @ axios.js?v=172ad00c:2310
+request @ axios.js?v=172ad00c:2219
+httpMethod @ axios.js?v=172ad00c:2356
+wrap @ axios.js?v=172ad00c:8
+login @ apiService.ts:73
+login @ useAuth.tsx:51
+handleSubmit @ LoginPage.tsx:39
+executeDispatch @ react-dom_client.js?v=172ad00c:13622
+runWithFiberInDEV @ react-dom_client.js?v=172ad00c:997
+processDispatchQueue @ react-dom_client.js?v=172ad00c:13658
+(anonymous) @ react-dom_client.js?v=172ad00c:14071
+batchedUpdates$1 @ react-dom_client.js?v=172ad00c:2626
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=172ad00c:13763
+dispatchEvent @ react-dom_client.js?v=172ad00c:16784
+dispatchDiscreteEvent @ react-dom_client.js?v=172ad00c:16765
+<form>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=172ad00c:247
+LoginPage @ LoginPage.tsx:69
+react_stack_bottom_frame @ react-dom_client.js?v=172ad00c:18509
+renderWithHooksAgain @ react-dom_client.js?v=172ad00c:5729
+renderWithHooks @ react-dom_client.js?v=172ad00c:5665
+updateFunctionComponent @ react-dom_client.js?v=172ad00c:7475
+beginWork @ react-dom_client.js?v=172ad00c:8525
+runWithFiberInDEV @ react-dom_client.js?v=172ad00c:997
+performUnitOfWork @ react-dom_client.js?v=172ad00c:12561
+workLoopSync @ react-dom_client.js?v=172ad00c:12424
+renderRootSync @ react-dom_client.js?v=172ad00c:12408
+performWorkOnRoot @ react-dom_client.js?v=172ad00c:11766
+performWorkOnRootViaSchedulerTask @ react-dom_client.js?v=172ad00c:13505
+performWorkUntilDeadline @ react-dom_client.js?v=172ad00c:36
+<LoginPage>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=172ad00c:247
+App @ App.tsx:642
+react_stack_bottom_frame @ react-dom_client.js?v=172ad00c:18509
+renderWithHooksAgain @ react-dom_client.js?v=172ad00c:5729
+renderWithHooks @ react-dom_client.js?v=172ad00c:5665
+updateFunctionComponent @ react-dom_client.js?v=172ad00c:7475
+beginWork @ react-dom_client.js?v=172ad00c:8525
+runWithFiberInDEV @ react-dom_client.js?v=172ad00c:997
+performUnitOfWork @ react-dom_client.js?v=172ad00c:12561
+workLoopSync @ react-dom_client.js?v=172ad00c:12424
+renderRootSync @ react-dom_client.js?v=172ad00c:12408
+performWorkOnRoot @ react-dom_client.js?v=172ad00c:11766
+performWorkOnRootViaSchedulerTask @ react-dom_client.js?v=172ad00c:13505
+performWorkUntilDeadline @ react-dom_client.js?v=172ad00c:36
+<App>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=172ad00c:247
+(anonymous) @ index.tsx:19
+App.tsx:40 App render - isAuthenticated: false authLoading: false user: null
+App.tsx:40 App render - isAuthenticated: false authLoading: false user: null
+App.tsx:40 App render - isAuthenticated: false authLoading: true user: null
+App.tsx:40 App render - isAuthenticated: false authLoading: true user: null
+apiService.ts:73  POST http://localhost:3000/api/v1/auth/login 429 (Too Many Requests)
+dispatchXhrRequest @ axios.js?v=172ad00c:1696
+xhr @ axios.js?v=172ad00c:1573
+dispatchRequest @ axios.js?v=172ad00c:2107
+Promise.then
+_request @ axios.js?v=172ad00c:2310
+request @ axios.js?v=172ad00c:2219
+httpMethod @ axios.js?v=172ad00c:2356
+wrap @ axios.js?v=172ad00c:8
+login @ apiService.ts:73
+login @ useAuth.tsx:51
+handleSubmit @ LoginPage.tsx:39
+executeDispatch @ react-dom_client.js?v=172ad00c:13622
+runWithFiberInDEV @ react-dom_client.js?v=172ad00c:997
+processDispatchQueue @ react-dom_client.js?v=172ad00c:13658
+(anonymous) @ react-dom_client.js?v=172ad00c:14071
+batchedUpdates$1 @ react-dom_client.js?v=172ad00c:2626
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=172ad00c:13763
+dispatchEvent @ react-dom_client.js?v=172ad00c:16784
+dispatchDiscreteEvent @ react-dom_client.js?v=172ad00c:16765
+<form>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=172ad00c:247
+LoginPage @ LoginPage.tsx:69
+react_stack_bottom_frame @ react-dom_client.js?v=172ad00c:18509
+renderWithHooksAgain @ react-dom_client.js?v=172ad00c:5729
+renderWithHooks @ react-dom_client.js?v=172ad00c:5665
+updateFunctionComponent @ react-dom_client.js?v=172ad00c:7475
+beginWork @ react-dom_client.js?v=172ad00c:8525
+runWithFiberInDEV @ react-dom_client.js?v=172ad00c:997
+performUnitOfWork @ react-dom_client.js?v=172ad00c:12561
+workLoopSync @ react-dom_client.js?v=172ad00c:12424
+renderRootSync @ react-dom_client.js?v=172ad00c:12408
+performWorkOnRoot @ react-dom_client.js?v=172ad00c:11766
+performWorkOnRootViaSchedulerTask @ react-dom_client.js?v=172ad00c:13505
+performWorkUntilDeadline @ react-dom_client.js?v=172ad00c:36
+<LoginPage>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=172ad00c:247
+App @ App.tsx:642
+react_stack_bottom_frame @ react-dom_client.js?v=172ad00c:18509
+renderWithHooksAgain @ react-dom_client.js?v=172ad00c:5729
+renderWithHooks @ react-dom_client.js?v=172ad00c:5665
+updateFunctionComponent @ react-dom_client.js?v=172ad00c:7475
+beginWork @ react-dom_client.js?v=172ad00c:8525
+runWithFiberInDEV @ react-dom_client.js?v=172ad00c:997
+performUnitOfWork @ react-dom_client.js?v=172ad00c:12561
+workLoopSync @ react-dom_client.js?v=172ad00c:12424
+renderRootSync @ react-dom_client.js?v=172ad00c:12408
+performWorkOnRoot @ react-dom_client.js?v=172ad00c:11766
+performWorkOnRootViaSchedulerTask @ react-dom_client.js?v=172ad00c:13505
+performWorkUntilDeadline @ react-dom_client.js?v=172ad00c:36
+<App>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=172ad00c:247
+(anonymous) @ index.tsx:19
+App.tsx:40 App render - isAuthenticated: false authLoading: false user: null
+App.tsx:40 App render - isAuthenticated: false authLoading: false user: null
+App.tsx:40 App render - isAuthenticated: false authLoading: true user: null
+App.tsx:40 App render - isAuthenticated: false authLoading: true user: null
+apiService.ts:73  POST http://localhost:3000/api/v1/auth/login 429 (Too Many Requests)
+dispatchXhrRequest @ axios.js?v=172ad00c:1696
+xhr @ axios.js?v=172ad00c:1573
+dispatchRequest @ axios.js?v=172ad00c:2107
+Promise.then
+_request @ axios.js?v=172ad00c:2310
+request @ axios.js?v=172ad00c:2219
+httpMethod @ axios.js?v=172ad00c:2356
+wrap @ axios.js?v=172ad00c:8
+login @ apiService.ts:73
+login @ useAuth.tsx:51
+handleSubmit @ LoginPage.tsx:39
+executeDispatch @ react-dom_client.js?v=172ad00c:13622
+runWithFiberInDEV @ react-dom_client.js?v=172ad00c:997
+processDispatchQueue @ react-dom_client.js?v=172ad00c:13658
+(anonymous) @ react-dom_client.js?v=172ad00c:14071
+batchedUpdates$1 @ react-dom_client.js?v=172ad00c:2626
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=172ad00c:13763
+dispatchEvent @ react-dom_client.js?v=172ad00c:16784
+dispatchDiscreteEvent @ react-dom_client.js?v=172ad00c:16765
+<form>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=172ad00c:247
+LoginPage @ LoginPage.tsx:69
+react_stack_bottom_frame @ react-dom_client.js?v=172ad00c:18509
+renderWithHooksAgain @ react-dom_client.js?v=172ad00c:5729
+renderWithHooks @ react-dom_client.js?v=172ad00c:5665
+updateFunctionComponent @ react-dom_client.js?v=172ad00c:7475
+beginWork @ react-dom_client.js?v=172ad00c:8525
+runWithFiberInDEV @ react-dom_client.js?v=172ad00c:997
+performUnitOfWork @ react-dom_client.js?v=172ad00c:12561
+workLoopSync @ react-dom_client.js?v=172ad00c:12424
+renderRootSync @ react-dom_client.js?v=172ad00c:12408
+performWorkOnRoot @ react-dom_client.js?v=172ad00c:11766
+performWorkOnRootViaSchedulerTask @ react-dom_client.js?v=172ad00c:13505
+performWorkUntilDeadline @ react-dom_client.js?v=172ad00c:36
+<LoginPage>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=172ad00c:247
+App @ App.tsx:642
+react_stack_bottom_frame @ react-dom_client.js?v=172ad00c:18509
+renderWithHooksAgain @ react-dom_client.js?v=172ad00c:5729
+renderWithHooks @ react-dom_client.js?v=172ad00c:5665
+updateFunctionComponent @ react-dom_client.js?v=172ad00c:7475
+beginWork @ react-dom_client.js?v=172ad00c:8525
+runWithFiberInDEV @ react-dom_client.js?v=172ad00c:997
+performUnitOfWork @ react-dom_client.js?v=172ad00c:12561
+workLoopSync @ react-dom_client.js?v=172ad00c:12424
+renderRootSync @ react-dom_client.js?v=172ad00c:12408
+performWorkOnRoot @ react-dom_client.js?v=172ad00c:11766
+performWorkOnRootViaSchedulerTask @ react-dom_client.js?v=172ad00c:13505
+performWorkUntilDeadline @ react-dom_client.js?v=172ad00c:36
+<App>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=172ad00c:247
+(anonymous) @ index.tsx:19
+App.tsx:40 App render - isAuthenticated: false authLoading: false user: null
+App.tsx:40 App render - isAuthenticated: false authLoading: false user: null
+App.tsx:40 App render - isAuthenticated: false authLoading: true user: null
+App.tsx:40 App render - isAuthenticated: false authLoading: true user: null
+apiService.ts:73  POST http://localhost:3000/api/v1/auth/login 429 (Too Many Requests)
+dispatchXhrRequest @ axios.js?v=172ad00c:1696
+xhr @ axios.js?v=172ad00c:1573
+dispatchRequest @ axios.js?v=172ad00c:2107
+Promise.then
+_request @ axios.js?v=172ad00c:2310
+request @ axios.js?v=172ad00c:2219
+httpMethod @ axios.js?v=172ad00c:2356
+wrap @ axios.js?v=172ad00c:8
+login @ apiService.ts:73
+login @ useAuth.tsx:51
+handleSubmit @ LoginPage.tsx:39
+executeDispatch @ react-dom_client.js?v=172ad00c:13622
+runWithFiberInDEV @ react-dom_client.js?v=172ad00c:997
+processDispatchQueue @ react-dom_client.js?v=172ad00c:13658
+(anonymous) @ react-dom_client.js?v=172ad00c:14071
+batchedUpdates$1 @ react-dom_client.js?v=172ad00c:2626
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=172ad00c:13763
+dispatchEvent @ react-dom_client.js?v=172ad00c:16784
+dispatchDiscreteEvent @ react-dom_client.js?v=172ad00c:16765
+<form>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=172ad00c:247
+LoginPage @ LoginPage.tsx:69
+react_stack_bottom_frame @ react-dom_client.js?v=172ad00c:18509
+renderWithHooksAgain @ react-dom_client.js?v=172ad00c:5729
+renderWithHooks @ react-dom_client.js?v=172ad00c:5665
+updateFunctionComponent @ react-dom_client.js?v=172ad00c:7475
+beginWork @ react-dom_client.js?v=172ad00c:8525
+runWithFiberInDEV @ react-dom_client.js?v=172ad00c:997
+performUnitOfWork @ react-dom_client.js?v=172ad00c:12561
+workLoopSync @ react-dom_client.js?v=172ad00c:12424
+renderRootSync @ react-dom_client.js?v=172ad00c:12408
+performWorkOnRoot @ react-dom_client.js?v=172ad00c:11766
+performWorkOnRootViaSchedulerTask @ react-dom_client.js?v=172ad00c:13505
+performWorkUntilDeadline @ react-dom_client.js?v=172ad00c:36
+<LoginPage>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=172ad00c:247
+App @ App.tsx:642
+react_stack_bottom_frame @ react-dom_client.js?v=172ad00c:18509
+renderWithHooksAgain @ react-dom_client.js?v=172ad00c:5729
+renderWithHooks @ react-dom_client.js?v=172ad00c:5665
+updateFunctionComponent @ react-dom_client.js?v=172ad00c:7475
+beginWork @ react-dom_client.js?v=172ad00c:8525
+runWithFiberInDEV @ react-dom_client.js?v=172ad00c:997
+performUnitOfWork @ react-dom_client.js?v=172ad00c:12561
+workLoopSync @ react-dom_client.js?v=172ad00c:12424
+renderRootSync @ react-dom_client.js?v=172ad00c:12408
+performWorkOnRoot @ react-dom_client.js?v=172ad00c:11766
+performWorkOnRootViaSchedulerTask @ react-dom_client.js?v=172ad00c:13505
+performWorkUntilDeadline @ react-dom_client.js?v=172ad00c:36
+<App>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=172ad00c:247
+(anonymous) @ index.tsx:19
+App.tsx:40 App render - isAuthenticated: false authLoading: false user: null
+App.tsx:40 App render - isAuthenticated: false authLoading: false user: null
+App.tsx:40 App render - isAuthenticated: false authLoading: true user: null
+App.tsx:40 App render - isAuthenticated: false authLoading: true user: null
+apiService.ts:73  POST http://localhost:3000/api/v1/auth/login 429 (Too Many Requests)
+dispatchXhrRequest @ axios.js?v=172ad00c:1696
+xhr @ axios.js?v=172ad00c:1573
+dispatchRequest @ axios.js?v=172ad00c:2107
+Promise.then
+_request @ axios.js?v=172ad00c:2310
+request @ axios.js?v=172ad00c:2219
+httpMethod @ axios.js?v=172ad00c:2356
+wrap @ axios.js?v=172ad00c:8
+login @ apiService.ts:73
+login @ useAuth.tsx:51
+handleSubmit @ LoginPage.tsx:39
+executeDispatch @ react-dom_client.js?v=172ad00c:13622
+runWithFiberInDEV @ react-dom_client.js?v=172ad00c:997
+processDispatchQueue @ react-dom_client.js?v=172ad00c:13658
+(anonymous) @ react-dom_client.js?v=172ad00c:14071
+batchedUpdates$1 @ react-dom_client.js?v=172ad00c:2626
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=172ad00c:13763
+dispatchEvent @ react-dom_client.js?v=172ad00c:16784
+dispatchDiscreteEvent @ react-dom_client.js?v=172ad00c:16765
+<form>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=172ad00c:247
+LoginPage @ LoginPage.tsx:69
+react_stack_bottom_frame @ react-dom_client.js?v=172ad00c:18509
+renderWithHooksAgain @ react-dom_client.js?v=172ad00c:5729
+renderWithHooks @ react-dom_client.js?v=172ad00c:5665
+updateFunctionComponent @ react-dom_client.js?v=172ad00c:7475
+beginWork @ react-dom_client.js?v=172ad00c:8525
+runWithFiberInDEV @ react-dom_client.js?v=172ad00c:997
+performUnitOfWork @ react-dom_client.js?v=172ad00c:12561
+workLoopSync @ react-dom_client.js?v=172ad00c:12424
+renderRootSync @ react-dom_client.js?v=172ad00c:12408
+performWorkOnRoot @ react-dom_client.js?v=172ad00c:11766
+performWorkOnRootViaSchedulerTask @ react-dom_client.js?v=172ad00c:13505
+performWorkUntilDeadline @ react-dom_client.js?v=172ad00c:36
+<LoginPage>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=172ad00c:247
+App @ App.tsx:642
+react_stack_bottom_frame @ react-dom_client.js?v=172ad00c:18509
+renderWithHooksAgain @ react-dom_client.js?v=172ad00c:5729
+renderWithHooks @ react-dom_client.js?v=172ad00c:5665
+updateFunctionComponent @ react-dom_client.js?v=172ad00c:7475
+beginWork @ react-dom_client.js?v=172ad00c:8525
+runWithFiberInDEV @ react-dom_client.js?v=172ad00c:997
+performUnitOfWork @ react-dom_client.js?v=172ad00c:12561
+workLoopSync @ react-dom_client.js?v=172ad00c:12424
+renderRootSync @ react-dom_client.js?v=172ad00c:12408
+performWorkOnRoot @ react-dom_client.js?v=172ad00c:11766
+performWorkOnRootViaSchedulerTask @ react-dom_client.js?v=172ad00c:13505
+performWorkUntilDeadline @ react-dom_client.js?v=172ad00c:36
+<App>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=172ad00c:247
+(anonymous) @ index.tsx:19
+App.tsx:40 App render - isAuthenticated: false authLoading: false user: null
+App.tsx:40 App render - isAuthenticated: false authLoading: false user: null
+App.tsx:40 App render - isAuthenticated: false authLoading: true user: null
+App.tsx:40 App render - isAuthenticated: false authLoading: true user: null
+apiService.ts:73  POST http://localhost:3000/api/v1/auth/login 429 (Too Many Requests)
+dispatchXhrRequest @ axios.js?v=172ad00c:1696
+xhr @ axios.js?v=172ad00c:1573
+dispatchRequest @ axios.js?v=172ad00c:2107
+Promise.then
+_request @ axios.js?v=172ad00c:2310
+request @ axios.js?v=172ad00c:2219
+httpMethod @ axios.js?v=172ad00c:2356
+wrap @ axios.js?v=172ad00c:8
+login @ apiService.ts:73
+login @ useAuth.tsx:51
+handleSubmit @ LoginPage.tsx:39
+executeDispatch @ react-dom_client.js?v=172ad00c:13622
+runWithFiberInDEV @ react-dom_client.js?v=172ad00c:997
+processDispatchQueue @ react-dom_client.js?v=172ad00c:13658
+(anonymous) @ react-dom_client.js?v=172ad00c:14071
+batchedUpdates$1 @ react-dom_client.js?v=172ad00c:2626
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=172ad00c:13763
+dispatchEvent @ react-dom_client.js?v=172ad00c:16784
+dispatchDiscreteEvent @ react-dom_client.js?v=172ad00c:16765
+<form>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=172ad00c:247
+LoginPage @ LoginPage.tsx:69
+react_stack_bottom_frame @ react-dom_client.js?v=172ad00c:18509
+renderWithHooksAgain @ react-dom_client.js?v=172ad00c:5729
+renderWithHooks @ react-dom_client.js?v=172ad00c:5665
+updateFunctionComponent @ react-dom_client.js?v=172ad00c:7475
+beginWork @ react-dom_client.js?v=172ad00c:8525
+runWithFiberInDEV @ react-dom_client.js?v=172ad00c:997
+performUnitOfWork @ react-dom_client.js?v=172ad00c:12561
+workLoopSync @ react-dom_client.js?v=172ad00c:12424
+renderRootSync @ react-dom_client.js?v=172ad00c:12408
+performWorkOnRoot @ react-dom_client.js?v=172ad00c:11766
+performWorkOnRootViaSchedulerTask @ react-dom_client.js?v=172ad00c:13505
+performWorkUntilDeadline @ react-dom_client.js?v=172ad00c:36
+<LoginPage>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=172ad00c:247
+App @ App.tsx:642
+react_stack_bottom_frame @ react-dom_client.js?v=172ad00c:18509
+renderWithHooksAgain @ react-dom_client.js?v=172ad00c:5729
+renderWithHooks @ react-dom_client.js?v=172ad00c:5665
+updateFunctionComponent @ react-dom_client.js?v=172ad00c:7475
+beginWork @ react-dom_client.js?v=172ad00c:8525
+runWithFiberInDEV @ react-dom_client.js?v=172ad00c:997
+performUnitOfWork @ react-dom_client.js?v=172ad00c:12561
+workLoopSync @ react-dom_client.js?v=172ad00c:12424
+renderRootSync @ react-dom_client.js?v=172ad00c:12408
+performWorkOnRoot @ react-dom_client.js?v=172ad00c:11766
+performWorkOnRootViaSchedulerTask @ react-dom_client.js?v=172ad00c:13505
+performWorkUntilDeadline @ react-dom_client.js?v=172ad00c:36
+<App>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=172ad00c:247
+(anonymous) @ index.tsx:19
+App.tsx:40 App render - isAuthenticated: false authLoading: false user: null
+App.tsx:40 App render - isAuthenticated: false authLoading: false user: null
+App.tsx:40 App render - isAuthenticated: false authLoading: false user: null
+App.tsx:40 App render - isAuthenticated: false authLoading: false user: null
+App.tsx:449 🔍 Load data check - isAuthenticated: false isDemoMode: true user: null
+App.tsx:477 🚫 Skipping data load - not authenticated or in demo mode
+App.tsx:40 App render - isAuthenticated: false authLoading: false user: null
+App.tsx:40 App render - isAuthenticated: false authLoading: false user: null
+App.tsx:40 App render - isAuthenticated: false authLoading: false user: null
+App.tsx:40 App render - isAuthenticated: false authLoading: false user: null
+App.tsx:449 🔍 Load data check - isAuthenticated: false isDemoMode: false user: null
+App.tsx:477 🚫 Skipping data load - not authenticated or in demo mode
+App.tsx:40 App render - isAuthenticated: false authLoading: true user: null
+App.tsx:40 App render - isAuthenticated: false authLoading: true user: null
+apiService.ts:73  POST http://localhost:3000/api/v1/auth/login 429 (Too Many Requests)
+dispatchXhrRequest @ axios.js?v=172ad00c:1696
+xhr @ axios.js?v=172ad00c:1573
+dispatchRequest @ axios.js?v=172ad00c:2107
+Promise.then
+_request @ axios.js?v=172ad00c:2310
+request @ axios.js?v=172ad00c:2219
+httpMethod @ axios.js?v=172ad00c:2356
+wrap @ axios.js?v=172ad00c:8
+login @ apiService.ts:73
+login @ useAuth.tsx:51
+handleSubmit @ LoginPage.tsx:39
+executeDispatch @ react-dom_client.js?v=172ad00c:13622
+runWithFiberInDEV @ react-dom_client.js?v=172ad00c:997
+processDispatchQueue @ react-dom_client.js?v=172ad00c:13658
+(anonymous) @ react-dom_client.js?v=172ad00c:14071
+batchedUpdates$1 @ react-dom_client.js?v=172ad00c:2626
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=172ad00c:13763
+dispatchEvent @ react-dom_client.js?v=172ad00c:16784
+dispatchDiscreteEvent @ react-dom_client.js?v=172ad00c:16765
+<form>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=172ad00c:247
+LoginPage @ LoginPage.tsx:69
+react_stack_bottom_frame @ react-dom_client.js?v=172ad00c:18509
+renderWithHooksAgain @ react-dom_client.js?v=172ad00c:5729
+renderWithHooks @ react-dom_client.js?v=172ad00c:5665
+updateFunctionComponent @ react-dom_client.js?v=172ad00c:7475
+beginWork @ react-dom_client.js?v=172ad00c:8525
+runWithFiberInDEV @ react-dom_client.js?v=172ad00c:997
+performUnitOfWork @ react-dom_client.js?v=172ad00c:12561
+workLoopSync @ react-dom_client.js?v=172ad00c:12424
+renderRootSync @ react-dom_client.js?v=172ad00c:12408
+performWorkOnRoot @ react-dom_client.js?v=172ad00c:11766
+performSyncWorkOnRoot @ react-dom_client.js?v=172ad00c:13517
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=172ad00c:13414
+processRootScheduleInMicrotask @ react-dom_client.js?v=172ad00c:13437
+(anonymous) @ react-dom_client.js?v=172ad00c:13531
+<LoginPage>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=172ad00c:247
+App @ App.tsx:642
+react_stack_bottom_frame @ react-dom_client.js?v=172ad00c:18509
+renderWithHooksAgain @ react-dom_client.js?v=172ad00c:5729
+renderWithHooks @ react-dom_client.js?v=172ad00c:5665
+updateFunctionComponent @ react-dom_client.js?v=172ad00c:7475
+beginWork @ react-dom_client.js?v=172ad00c:8525
+runWithFiberInDEV @ react-dom_client.js?v=172ad00c:997
+performUnitOfWork @ react-dom_client.js?v=172ad00c:12561
+workLoopSync @ react-dom_client.js?v=172ad00c:12424
+renderRootSync @ react-dom_client.js?v=172ad00c:12408
+performWorkOnRoot @ react-dom_client.js?v=172ad00c:11766
+performSyncWorkOnRoot @ react-dom_client.js?v=172ad00c:13517
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=172ad00c:13414
+processRootScheduleInMicrotask @ react-dom_client.js?v=172ad00c:13437
+(anonymous) @ react-dom_client.js?v=172ad00c:13531
+<App>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=172ad00c:247
+(anonymous) @ index.tsx:19
+App.tsx:40 App render - isAuthenticated: false authLoading: false user: null
+App.tsx:40 App render - isAuthenticated: false authLoading: false user: null
+App.tsx:40 App render - isAuthenticated: false authLoading: true user: null
+App.tsx:40 App render - isAuthenticated: false authLoading: true user: null
+apiService.ts:73  POST http://localhost:3000/api/v1/auth/login 429 (Too Many Requests)
+dispatchXhrRequest @ axios.js?v=172ad00c:1696
+xhr @ axios.js?v=172ad00c:1573
+dispatchRequest @ axios.js?v=172ad00c:2107
+Promise.then
+_request @ axios.js?v=172ad00c:2310
+request @ axios.js?v=172ad00c:2219
+httpMethod @ axios.js?v=172ad00c:2356
+wrap @ axios.js?v=172ad00c:8
+login @ apiService.ts:73
+login @ useAuth.tsx:51
+handleSubmit @ LoginPage.tsx:39
+executeDispatch @ react-dom_client.js?v=172ad00c:13622
+runWithFiberInDEV @ react-dom_client.js?v=172ad00c:997
+processDispatchQueue @ react-dom_client.js?v=172ad00c:13658
+(anonymous) @ react-dom_client.js?v=172ad00c:14071
+batchedUpdates$1 @ react-dom_client.js?v=172ad00c:2626
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=172ad00c:13763
+dispatchEvent @ react-dom_client.js?v=172ad00c:16784
+dispatchDiscreteEvent @ react-dom_client.js?v=172ad00c:16765
+<form>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=172ad00c:247
+LoginPage @ LoginPage.tsx:69
+react_stack_bottom_frame @ react-dom_client.js?v=172ad00c:18509
+renderWithHooksAgain @ react-dom_client.js?v=172ad00c:5729
+renderWithHooks @ react-dom_client.js?v=172ad00c:5665
+updateFunctionComponent @ react-dom_client.js?v=172ad00c:7475
+beginWork @ react-dom_client.js?v=172ad00c:8525
+runWithFiberInDEV @ react-dom_client.js?v=172ad00c:997
+performUnitOfWork @ react-dom_client.js?v=172ad00c:12561
+workLoopSync @ react-dom_client.js?v=172ad00c:12424
+renderRootSync @ react-dom_client.js?v=172ad00c:12408
+performWorkOnRoot @ react-dom_client.js?v=172ad00c:11766
+performWorkOnRootViaSchedulerTask @ react-dom_client.js?v=172ad00c:13505
+performWorkUntilDeadline @ react-dom_client.js?v=172ad00c:36
+<LoginPage>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=172ad00c:247
+App @ App.tsx:642
+react_stack_bottom_frame @ react-dom_client.js?v=172ad00c:18509
+renderWithHooksAgain @ react-dom_client.js?v=172ad00c:5729
+renderWithHooks @ react-dom_client.js?v=172ad00c:5665
+updateFunctionComponent @ react-dom_client.js?v=172ad00c:7475
+beginWork @ react-dom_client.js?v=172ad00c:8525
+runWithFiberInDEV @ react-dom_client.js?v=172ad00c:997
+performUnitOfWork @ react-dom_client.js?v=172ad00c:12561
+workLoopSync @ react-dom_client.js?v=172ad00c:12424
+renderRootSync @ react-dom_client.js?v=172ad00c:12408
+performWorkOnRoot @ react-dom_client.js?v=172ad00c:11766
+performWorkOnRootViaSchedulerTask @ react-dom_client.js?v=172ad00c:13505
+performWorkUntilDeadline @ react-dom_client.js?v=172ad00c:36
+<App>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=172ad00c:247
+(anonymous) @ index.tsx:19
+App.tsx:40 App render - isAuthenticated: false authLoading: false user: null
+App.tsx:40 App render - isAuthenticated: false authLoading: false user: null

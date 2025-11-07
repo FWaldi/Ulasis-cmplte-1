@@ -1,0 +1,161 @@
+# Ulasis Authentication & Subscription Issues Debug Session - November 1, 2025
+# Session 8: Real Account Authentication Flow Investigation
+
+## Session Overview
+Investigation into critical authentication issues where real user accounts cannot log in or access features, while demo mode works correctly. Identified rate limiting as the primary blocker and documented the authentication flow problems.
+
+## Issues Identified and Current Status
+
+### 1. Critical Authentication Failure for Real Accounts
+**Problem**: Real user accounts (business@ulasis.com, admin@ulasis.com, etc.) cannot log in - users remain on login page
+**Root Cause**: Frontend makes no API calls when login button is clicked for real accounts
+**Impact**: Complete inability to use the application with real accounts
+**Evidence**:
+- Demo mode login works perfectly
+- Real account login shows no network requests in browser dev tools
+- Page content remains unchanged after login attempt
+- No error messages displayed to user
+
+### 2. Backend Rate Limiting Blocking All Requests
+**Problem**: Backend rate limiting is too aggressive, blocking all API access including health checks
+**Root Cause**: General rate limiter applied to `/api/*` routes with 100 requests per 15 minutes
+**Impact**: Complete API unavailability during development and testing
+**Temporary Fix Applied**:
+```javascript
+// In Backend/src/app.js - LINE 104
+// Commented out rate limiting for development
+// app.use('/api/', rateLimiters.general);
+```
+**Status**: ✅ Temporarily disabled to allow testing
+
+### 3. Subscription-Based Feature Access Not Tested
+**Problem**: Questionnaire creation and other features not verified for different subscription tiers
+**Root Cause**: Authentication issues prevented testing of real account features
+**Impact**: Unknown if subscription limits and feature gating work correctly
+**Status**: ⏳ Blocked by authentication issues
+
+### 4. E2E Test Coverage Incomplete
+**Problem**: Tests exist for login flows but don't verify actual feature access
+**Root Cause**: Tests pass at UI level but don't validate backend integration
+**Impact**: False positive test results masking real functionality issues
+
+## Technical Investigation Results
+
+### Authentication Flow Analysis
+- **Demo Mode**: ✅ Works correctly - API calls made, navigation occurs
+- **Real Accounts**: ❌ No API calls made, no navigation, no errors shown
+- **API Endpoint**: `/api/v1/auth/login` - confirmed exists and functional
+- **Frontend Code**: LoginPage component and useAuth hook appear correct
+- **Network Monitoring**: Zero API requests during real account login attempts
+
+### Rate Limiting Configuration
+```javascript
+// Current configuration (too restrictive for development)
+rateLimiters.general = createRateLimiter(
+  15 * 60 * 1000, // 15 minutes
+  100, // 100 requests per window
+  'Too many requests from this IP, please try again later.',
+);
+```
+
+### Test Account Status
+- ✅ Accounts exist in database: business@ulasis.com, admin@ulasis.com, free@ulasis.com, starter@ulasis.com
+- ✅ Passwords verified: Test123! (users), Admin123! (admin)
+- ✅ Subscription plans assigned correctly
+- ✅ Email verification status: verified
+
+## Files Modified During Investigation
+1. `Backend/src/app.js` - Temporarily disabled rate limiting (line 104)
+2. `Frontend/tests/e2e/login.spec.ts` - Added debugging tests for API call monitoring
+
+## Current Application State
+- **Demo Mode**: ✅ Fully functional
+- **Real Accounts**: ❌ Authentication broken
+- **Backend API**: ✅ Functional (when not rate limited)
+- **Database**: ✅ Test accounts created and accessible
+- **Frontend**: ✅ Builds and runs correctly
+
+## Next Steps for Continuation
+
+### Immediate Priority (Blocker Fixes)
+1. **Fix Authentication Flow**
+   - Debug why real account login doesn't trigger API calls
+   - Compare demo mode vs real account login code paths
+   - Check for JavaScript errors in browser console during login
+   - Verify form submission handling differences
+
+2. **Re-enable Rate Limiting Safely**
+   - Implement development-specific rate limiting (higher limits)
+   - Use environment variables to control rate limits
+   - Ensure rate limiting doesn't break legitimate testing
+
+### Medium Priority (Feature Validation)
+3. **Test Subscription-Based Features**
+   - Verify questionnaire creation works for different account types
+   - Test feature limits (free: 1 questionnaire, business: unlimited)
+   - Validate subscription status display and upgrade prompts
+   - Check admin account has elevated permissions
+
+4. **Complete E2E Test Coverage**
+   - Add tests for real account feature access
+   - Test subscription limit enforcement
+   - Verify error handling for limit exceeded scenarios
+   - Add tests for admin-specific functionality
+
+### Long-term Improvements
+5. **Authentication Debugging Tools**
+   - Add better error handling and user feedback
+   - Implement authentication state logging
+   - Add API call monitoring for debugging
+
+6. **Rate Limiting Strategy**
+   - Implement tiered rate limiting (stricter for auth, relaxed for general API)
+   - Add rate limit bypass for development/testing
+   - Implement proper rate limit headers and retry logic
+
+## Development Continuation Checklist
+
+### For Next Developer:
+- [ ] Run `npm test` in Frontend to see current test status
+- [ ] Check browser console during real account login attempts
+- [ ] Monitor network tab for API calls during authentication
+- [ ] Test demo mode login (should work) vs real account login (currently broken)
+- [ ] Verify backend is running on port 3000
+- [ ] Check that test accounts exist: `cd Backend && node create-test-accounts.js`
+
+### Debug Commands:
+```bash
+# Check if backend is responding
+curl http://localhost:3000/api/v1/health/enhanced
+
+# Test login API directly
+curl -X POST http://localhost:3000/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"business@ulasis.com","password":"Test123!"}'
+
+# Run authentication tests
+cd Frontend && npx playwright test --grep "login"
+```
+
+### Key Files to Examine:
+- `Frontend/src/components/auth/LoginPage.tsx` - Login form handling
+- `Frontend/src/hooks/useAuth.tsx` - Authentication logic
+- `Backend/src/routes/auth.js` - Login API endpoint
+- `Backend/src/app.js` - Rate limiting configuration
+
+## Success Criteria for Resolution
+
+1. **Authentication Works**: Real accounts can log in and access dashboard
+2. **Features Function**: Questionnaire creation works for appropriate account types
+3. **Limits Enforced**: Subscription limits properly restrict/allow features
+4. **Tests Pass**: E2E tests validate real account functionality
+5. **Rate Limiting**: Appropriate limits without blocking development
+
+## Contact Information
+If you encounter issues continuing this work, reference this document and check the previous debug sessions (debug-test-7.txt) for additional context.
+
+---
+**Session Completed**: November 1, 2025
+**Status**: 🔍 Issues Identified - Authentication Flow Broken for Real Accounts
+**Next Priority**: Fix real account authentication to enable feature testing</content>
+<parameter name="filePath">old_docs/debug-test-8.txt

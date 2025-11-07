@@ -1,0 +1,42 @@
+# 🔑 **AVAILABLE USER CREDENTIALS** 🔑
+Here are all the user accounts and passwords available in the Ulasis system:
+## 👤 **ADMIN ACCOUNT**
+```
+📧 EMAIL: admin@ulasis.com
+🔑 PASSWORD: Admin123!
+👤 ROLE: Admin
+💳 PLAN: Business
+```
+## 🧪 **TEST ACCOUNTS**
+### Business Plan User
+```
+📧 EMAIL: business@ulasis.com
+🔑 PASSWORD: Test123!
+👤 ROLE: User
+💳 PLAN: Business
+```
+### Starter Plan User
+```
+📧 EMAIL: starter@ulasis.com
+🔑 PASSWORD: Test123!
+👤 ROLE: User
+💳 PLAN: Starter
+```
+### Free Plan User
+```
+📧 EMAIL: free@ulasis.com
+🔑 PASSWORD: Test123!
+👤 ROLE: User
+💳 PLAN: Free
+```
+### Auto-Generated Test User
+```
+📧 EMAIL: test1762225381441@example.com
+🔑 PASSWORD: [Dummy hash - for testing only]
+👤 ROLE: User
+💳 PLAN: Business
+```
+## 🎯 **RECOMMENDED LOGIN**
+For full system access, use the **Admin account**:
+- **Email**: `admin@ulasis.com`
+- **Password**: `Admin123!`

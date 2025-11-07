@@ -1,0 +1,37 @@
+PS D:\App_Project\Website\BMad-Methods\project-5\Ulasis\Backend> npm start
+
+> ulasis-backend@1.0.0 start
+> node src/app.js
+
+Environment loaded
+Express loaded
+Loading configs...
+App config loaded
+2025-10-30 11:11:50 [info]: Database security configuration loaded {"service":"ulasis-backend","environment":"development","sslEnabled":false,"poolMax":10,"poolMin":0,"connectionTimeout":15000,"multipleStatements":false}
+Database config loaded
+Swagger config loaded
+Logger loaded
+Loading error handlers...
+Error handlers loaded
+Loading security middleware...
+Security middleware loaded
+Loading monitoring middleware...
+Requiring models...
+D:\App_Project\Website\BMad-Methods\project-5\Ulasis\Backend\src\models\AuditLog.js:18
+      type: DataTypes.BIGINT.UNSIGNED,
+                      ^
+
+TypeError: Cannot read properties of undefined (reading 'BIGINT')
+    at module.exports (D:\App_Project\Website\BMad-Methods\project-5\Ulasis\Backend\src\models\AuditLog.js:18:23)
+    at Object.<anonymous> (D:\App_Project\Website\BMad-Methods\project-5\Ulasis\Backend\src\models\index.js:18:34)
+    at Module._compile (node:internal/modules/cjs/loader:1730:14)
+    at Object..js (node:internal/modules/cjs/loader:1895:10)
+    at Module.load (node:internal/modules/cjs/loader:1465:32)
+    at Function._load (node:internal/modules/cjs/loader:1282:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Module.require (node:internal/modules/cjs/loader:1487:12)
+    at require (node:internal/modules/helpers:135:16)
+
+Node.js v22.17.1
+PS D:\App_Project\Website\BMad-Methods\project-5\Ulasis\Backend> 

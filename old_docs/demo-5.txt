@@ -1,0 +1,237 @@
+(index):64 cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
+(anonymous) @ (index):64
+(anonymous) @ (index):64
+react-dom_client.js?v=9786d006:20103 Download the React DevTools for a better development experience: https://react.dev/link/react-devtools
+App.tsx:39 App render - isAuthenticated: undefined authLoading: undefined user: undefined
+App.tsx:39 App render - isAuthenticated: undefined authLoading: undefined user: undefined
+App.tsx:39 App render - isAuthenticated: undefined authLoading: undefined user: undefined
+App.tsx:39 App render - isAuthenticated: undefined authLoading: undefined user: undefined
+App.tsx:39 App render - isAuthenticated: undefined authLoading: undefined user: undefined
+App.tsx:39 App render - isAuthenticated: undefined authLoading: undefined user: undefined
+App.tsx:39 App render - isAuthenticated: undefined authLoading: undefined user: undefined
+App.tsx:39 App render - isAuthenticated: undefined authLoading: undefined user: undefined
+App.tsx:39 App render - isAuthenticated: undefined authLoading: undefined user: undefined
+App.tsx:39 App render - isAuthenticated: undefined authLoading: undefined user: undefined
+App.tsx:39 App render - isAuthenticated: undefined authLoading: undefined user: undefined
+App.tsx:39 App render - isAuthenticated: undefined authLoading: undefined user: undefined
+App.tsx:39 App render - isAuthenticated: undefined authLoading: undefined user: undefined
+App.tsx:39 App render - isAuthenticated: undefined authLoading: undefined user: undefined
+App.tsx:39 App render - isAuthenticated: undefined authLoading: undefined user: undefined
+App.tsx:39 App render - isAuthenticated: undefined authLoading: undefined user: undefined
+App.tsx:39 App render - isAuthenticated: undefined authLoading: undefined user: undefined
+App.tsx:39 App render - isAuthenticated: undefined authLoading: undefined user: undefined
+App.tsx:39 App render - isAuthenticated: undefined authLoading: undefined user: undefined
+App.tsx:39 App render - isAuthenticated: undefined authLoading: undefined user: undefined
+QuestionnaireBuilder.tsx:151 Uncaught ReferenceError: titleRef is not defined
+    at handleSave (QuestionnaireBuilder.tsx:151:23)
+    at executeDispatch (react-dom_client.js?v=9786d006:13622:11)
+    at runWithFiberInDEV (react-dom_client.js?v=9786d006:997:72)
+    at processDispatchQueue (react-dom_client.js?v=9786d006:13658:37)
+    at react-dom_client.js?v=9786d006:14071:11
+    at batchedUpdates$1 (react-dom_client.js?v=9786d006:2626:42)
+    at dispatchEventForPluginEventSystem (react-dom_client.js?v=9786d006:13763:9)
+    at dispatchEvent (react-dom_client.js?v=9786d006:16784:13)
+    at dispatchDiscreteEvent (react-dom_client.js?v=9786d006:16765:62)
+handleSave @ QuestionnaireBuilder.tsx:151
+executeDispatch @ react-dom_client.js?v=9786d006:13622
+runWithFiberInDEV @ react-dom_client.js?v=9786d006:997
+processDispatchQueue @ react-dom_client.js?v=9786d006:13658
+(anonymous) @ react-dom_client.js?v=9786d006:14071
+batchedUpdates$1 @ react-dom_client.js?v=9786d006:2626
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=9786d006:13763
+dispatchEvent @ react-dom_client.js?v=9786d006:16784
+dispatchDiscreteEvent @ react-dom_client.js?v=9786d006:16765
+<button>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=9786d006:247
+QuestionnaireBuilder @ QuestionnaireBuilder.tsx:174
+react_stack_bottom_frame @ react-dom_client.js?v=9786d006:18509
+renderWithHooksAgain @ react-dom_client.js?v=9786d006:5729
+renderWithHooks @ react-dom_client.js?v=9786d006:5665
+updateFunctionComponent @ react-dom_client.js?v=9786d006:7475
+beginWork @ react-dom_client.js?v=9786d006:8525
+runWithFiberInDEV @ react-dom_client.js?v=9786d006:997
+performUnitOfWork @ react-dom_client.js?v=9786d006:12561
+workLoopSync @ react-dom_client.js?v=9786d006:12424
+renderRootSync @ react-dom_client.js?v=9786d006:12408
+performWorkOnRoot @ react-dom_client.js?v=9786d006:11766
+performSyncWorkOnRoot @ react-dom_client.js?v=9786d006:13517
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=9786d006:13414
+processRootScheduleInMicrotask @ react-dom_client.js?v=9786d006:13437
+(anonymous) @ react-dom_client.js?v=9786d006:13531
+<QuestionnaireBuilder>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=9786d006:247
+QuestionnairesPage @ QuestionnairesPage.tsx:57
+react_stack_bottom_frame @ react-dom_client.js?v=9786d006:18509
+renderWithHooksAgain @ react-dom_client.js?v=9786d006:5729
+renderWithHooks @ react-dom_client.js?v=9786d006:5665
+updateFunctionComponent @ react-dom_client.js?v=9786d006:7475
+beginWork @ react-dom_client.js?v=9786d006:8525
+runWithFiberInDEV @ react-dom_client.js?v=9786d006:997
+performUnitOfWork @ react-dom_client.js?v=9786d006:12561
+workLoopSync @ react-dom_client.js?v=9786d006:12424
+renderRootSync @ react-dom_client.js?v=9786d006:12408
+performWorkOnRoot @ react-dom_client.js?v=9786d006:11766
+performSyncWorkOnRoot @ react-dom_client.js?v=9786d006:13517
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=9786d006:13414
+processRootScheduleInMicrotask @ react-dom_client.js?v=9786d006:13437
+(anonymous) @ react-dom_client.js?v=9786d006:13531
+<QuestionnairesPage>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=9786d006:247
+renderContent @ App.tsx:495
+App @ App.tsx:664
+react_stack_bottom_frame @ react-dom_client.js?v=9786d006:18509
+renderWithHooksAgain @ react-dom_client.js?v=9786d006:5729
+renderWithHooks @ react-dom_client.js?v=9786d006:5665
+updateFunctionComponent @ react-dom_client.js?v=9786d006:7475
+beginWork @ react-dom_client.js?v=9786d006:8525
+runWithFiberInDEV @ react-dom_client.js?v=9786d006:997
+performUnitOfWork @ react-dom_client.js?v=9786d006:12561
+workLoopSync @ react-dom_client.js?v=9786d006:12424
+renderRootSync @ react-dom_client.js?v=9786d006:12408
+performWorkOnRoot @ react-dom_client.js?v=9786d006:11766
+performSyncWorkOnRoot @ react-dom_client.js?v=9786d006:13517
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=9786d006:13414
+processRootScheduleInMicrotask @ react-dom_client.js?v=9786d006:13437
+(anonymous) @ react-dom_client.js?v=9786d006:13531
+QuestionnaireBuilder.tsx:151 Uncaught ReferenceError: titleRef is not defined
+    at handleSave (QuestionnaireBuilder.tsx:151:23)
+    at executeDispatch (react-dom_client.js?v=9786d006:13622:11)
+    at runWithFiberInDEV (react-dom_client.js?v=9786d006:997:72)
+    at processDispatchQueue (react-dom_client.js?v=9786d006:13658:37)
+    at react-dom_client.js?v=9786d006:14071:11
+    at batchedUpdates$1 (react-dom_client.js?v=9786d006:2626:42)
+    at dispatchEventForPluginEventSystem (react-dom_client.js?v=9786d006:13763:9)
+    at dispatchEvent (react-dom_client.js?v=9786d006:16784:13)
+    at dispatchDiscreteEvent (react-dom_client.js?v=9786d006:16765:62)
+handleSave @ QuestionnaireBuilder.tsx:151
+executeDispatch @ react-dom_client.js?v=9786d006:13622
+runWithFiberInDEV @ react-dom_client.js?v=9786d006:997
+processDispatchQueue @ react-dom_client.js?v=9786d006:13658
+(anonymous) @ react-dom_client.js?v=9786d006:14071
+batchedUpdates$1 @ react-dom_client.js?v=9786d006:2626
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=9786d006:13763
+dispatchEvent @ react-dom_client.js?v=9786d006:16784
+dispatchDiscreteEvent @ react-dom_client.js?v=9786d006:16765
+<button>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=9786d006:247
+QuestionnaireBuilder @ QuestionnaireBuilder.tsx:174
+react_stack_bottom_frame @ react-dom_client.js?v=9786d006:18509
+renderWithHooksAgain @ react-dom_client.js?v=9786d006:5729
+renderWithHooks @ react-dom_client.js?v=9786d006:5665
+updateFunctionComponent @ react-dom_client.js?v=9786d006:7475
+beginWork @ react-dom_client.js?v=9786d006:8525
+runWithFiberInDEV @ react-dom_client.js?v=9786d006:997
+performUnitOfWork @ react-dom_client.js?v=9786d006:12561
+workLoopSync @ react-dom_client.js?v=9786d006:12424
+renderRootSync @ react-dom_client.js?v=9786d006:12408
+performWorkOnRoot @ react-dom_client.js?v=9786d006:11766
+performSyncWorkOnRoot @ react-dom_client.js?v=9786d006:13517
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=9786d006:13414
+processRootScheduleInMicrotask @ react-dom_client.js?v=9786d006:13437
+(anonymous) @ react-dom_client.js?v=9786d006:13531
+<QuestionnaireBuilder>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=9786d006:247
+QuestionnairesPage @ QuestionnairesPage.tsx:57
+react_stack_bottom_frame @ react-dom_client.js?v=9786d006:18509
+renderWithHooksAgain @ react-dom_client.js?v=9786d006:5729
+renderWithHooks @ react-dom_client.js?v=9786d006:5665
+updateFunctionComponent @ react-dom_client.js?v=9786d006:7475
+beginWork @ react-dom_client.js?v=9786d006:8525
+runWithFiberInDEV @ react-dom_client.js?v=9786d006:997
+performUnitOfWork @ react-dom_client.js?v=9786d006:12561
+workLoopSync @ react-dom_client.js?v=9786d006:12424
+renderRootSync @ react-dom_client.js?v=9786d006:12408
+performWorkOnRoot @ react-dom_client.js?v=9786d006:11766
+performSyncWorkOnRoot @ react-dom_client.js?v=9786d006:13517
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=9786d006:13414
+processRootScheduleInMicrotask @ react-dom_client.js?v=9786d006:13437
+(anonymous) @ react-dom_client.js?v=9786d006:13531
+<QuestionnairesPage>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=9786d006:247
+renderContent @ App.tsx:495
+App @ App.tsx:664
+react_stack_bottom_frame @ react-dom_client.js?v=9786d006:18509
+renderWithHooksAgain @ react-dom_client.js?v=9786d006:5729
+renderWithHooks @ react-dom_client.js?v=9786d006:5665
+updateFunctionComponent @ react-dom_client.js?v=9786d006:7475
+beginWork @ react-dom_client.js?v=9786d006:8525
+runWithFiberInDEV @ react-dom_client.js?v=9786d006:997
+performUnitOfWork @ react-dom_client.js?v=9786d006:12561
+workLoopSync @ react-dom_client.js?v=9786d006:12424
+renderRootSync @ react-dom_client.js?v=9786d006:12408
+performWorkOnRoot @ react-dom_client.js?v=9786d006:11766
+performSyncWorkOnRoot @ react-dom_client.js?v=9786d006:13517
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=9786d006:13414
+processRootScheduleInMicrotask @ react-dom_client.js?v=9786d006:13437
+(anonymous) @ react-dom_client.js?v=9786d006:13531
+QuestionnaireBuilder.tsx:151 Uncaught ReferenceError: titleRef is not defined
+    at handleSave (QuestionnaireBuilder.tsx:151:23)
+    at executeDispatch (react-dom_client.js?v=9786d006:13622:11)
+    at runWithFiberInDEV (react-dom_client.js?v=9786d006:997:72)
+    at processDispatchQueue (react-dom_client.js?v=9786d006:13658:37)
+    at react-dom_client.js?v=9786d006:14071:11
+    at batchedUpdates$1 (react-dom_client.js?v=9786d006:2626:42)
+    at dispatchEventForPluginEventSystem (react-dom_client.js?v=9786d006:13763:9)
+    at dispatchEvent (react-dom_client.js?v=9786d006:16784:13)
+    at dispatchDiscreteEvent (react-dom_client.js?v=9786d006:16765:62)
+handleSave @ QuestionnaireBuilder.tsx:151
+executeDispatch @ react-dom_client.js?v=9786d006:13622
+runWithFiberInDEV @ react-dom_client.js?v=9786d006:997
+processDispatchQueue @ react-dom_client.js?v=9786d006:13658
+(anonymous) @ react-dom_client.js?v=9786d006:14071
+batchedUpdates$1 @ react-dom_client.js?v=9786d006:2626
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=9786d006:13763
+dispatchEvent @ react-dom_client.js?v=9786d006:16784
+dispatchDiscreteEvent @ react-dom_client.js?v=9786d006:16765
+<button>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=9786d006:247
+QuestionnaireBuilder @ QuestionnaireBuilder.tsx:174
+react_stack_bottom_frame @ react-dom_client.js?v=9786d006:18509
+renderWithHooksAgain @ react-dom_client.js?v=9786d006:5729
+renderWithHooks @ react-dom_client.js?v=9786d006:5665
+updateFunctionComponent @ react-dom_client.js?v=9786d006:7475
+beginWork @ react-dom_client.js?v=9786d006:8525
+runWithFiberInDEV @ react-dom_client.js?v=9786d006:997
+performUnitOfWork @ react-dom_client.js?v=9786d006:12561
+workLoopSync @ react-dom_client.js?v=9786d006:12424
+renderRootSync @ react-dom_client.js?v=9786d006:12408
+performWorkOnRoot @ react-dom_client.js?v=9786d006:11766
+performSyncWorkOnRoot @ react-dom_client.js?v=9786d006:13517
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=9786d006:13414
+processRootScheduleInMicrotask @ react-dom_client.js?v=9786d006:13437
+(anonymous) @ react-dom_client.js?v=9786d006:13531
+<QuestionnaireBuilder>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=9786d006:247
+QuestionnairesPage @ QuestionnairesPage.tsx:57
+react_stack_bottom_frame @ react-dom_client.js?v=9786d006:18509
+renderWithHooksAgain @ react-dom_client.js?v=9786d006:5729
+renderWithHooks @ react-dom_client.js?v=9786d006:5665
+updateFunctionComponent @ react-dom_client.js?v=9786d006:7475
+beginWork @ react-dom_client.js?v=9786d006:8525
+runWithFiberInDEV @ react-dom_client.js?v=9786d006:997
+performUnitOfWork @ react-dom_client.js?v=9786d006:12561
+workLoopSync @ react-dom_client.js?v=9786d006:12424
+renderRootSync @ react-dom_client.js?v=9786d006:12408
+performWorkOnRoot @ react-dom_client.js?v=9786d006:11766
+performSyncWorkOnRoot @ react-dom_client.js?v=9786d006:13517
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=9786d006:13414
+processRootScheduleInMicrotask @ react-dom_client.js?v=9786d006:13437
+(anonymous) @ react-dom_client.js?v=9786d006:13531
+<QuestionnairesPage>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=9786d006:247
+renderContent @ App.tsx:495
+App @ App.tsx:664
+react_stack_bottom_frame @ react-dom_client.js?v=9786d006:18509
+renderWithHooksAgain @ react-dom_client.js?v=9786d006:5729
+renderWithHooks @ react-dom_client.js?v=9786d006:5665
+updateFunctionComponent @ react-dom_client.js?v=9786d006:7475
+beginWork @ react-dom_client.js?v=9786d006:8525
+runWithFiberInDEV @ react-dom_client.js?v=9786d006:997
+performUnitOfWork @ react-dom_client.js?v=9786d006:12561
+workLoopSync @ react-dom_client.js?v=9786d006:12424
+renderRootSync @ react-dom_client.js?v=9786d006:12408
+performWorkOnRoot @ react-dom_client.js?v=9786d006:11766
+performSyncWorkOnRoot @ react-dom_client.js?v=9786d006:13517
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=9786d006:13414
+processRootScheduleInMicrotask @ react-dom_client.js?v=9786d006:13437
+(anonymous) @ react-dom_client.js?v=9786d006:13531

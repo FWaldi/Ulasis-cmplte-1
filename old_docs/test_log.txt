@@ -1,0 +1,465 @@
+NPM TEST RESULTS ANALYSIS & SOLUTIONS
+=====================================
+
+DATE: 2025-10-27 (Latest Analysis)
+TEST STATUS: CRITICAL FAILURES ACROSS MULTIPLE COMPONENTS
+
+CURRENT TEST RESULTS:
+=====================
+Test Suites: 7 failed, 6 passed, 13 total
+Tests:       26 failed, 223 passed, 249 total
+
+FAILED TEST FILES:
+- questionnaire.test.js: 1 failure (Access control - returning 200 instead of 404)
+- qr-code.test.js: 2 failures (Logo deletion returning 400, soft delete returning 200 instead of 404)
+- question.test.js: 4 failures (Non-existent questionnaire returning 200, wrong question text, reorder 500 error, delete returning 200 instead of 404)
+- auth-mock.test.js: 9 failures (Authentication service completely broken in mocked tests)
+- monitoring.test.js: 1 failure (System uptime returning 0)
+- auth.test.js: 4 failures (Inactive user login, login attempts tracking, email verification, password reset)
+- auth.integration.test.js: 4 failures (Profile endpoints returning 404/400 instead of expected statuses)
+
+LATEST ROOT CAUSE ANALYSIS:
+==========================
+
+1. CRITICAL AUTHENTICATION SERVICE BREAKDOWN:
+   - Mock tests completely failing due to improper User model mocking
+   - Real auth tests failing on inactive user validation (should reject but allows login)
+   - Login attempts tracking not working (stays at 0 instead of incrementing to 5)
+   - Email verification accepting expired tokens (should reject)
+   - Password reset not properly hashing new passwords
+   - Token refresh and profile management failing with "User not found" errors
+   - Integration tests returning 404/400 instead of expected auth responses
+
+2. QUESTION API LOGIC ERRORS:
+   - Non-existent questionnaire creation returning 200 instead of 404
+   - Question retrieval returning wrong text ("Test question" instead of expected)
+   - Question reordering throwing 500 Internal Server Error
+   - Question deletion returning 200 instead of 404 after soft delete
+
+3. QR CODE FUNCTIONALITY ISSUES:
+   - Logo removal returning 400 Bad Request instead of 200
+   - Soft delete returning 200 instead of 404 when trying to access deleted QR code
+
+4. QUESTIONNAIRE ACCESS CONTROL:
+   - Users can access other users' questionnaires (returns 200 instead of 404)
+
+5. MONITORING SYSTEM METRICS:
+   - System uptime consistently returning 0 in test environment
+
+6. INTEGRATION ENDPOINT FAILURES:
+   - Profile GET returning 404 instead of 200
+   - Profile PUT returning 400 instead of 200
+   - Change password returning 400 instead of 200
+   - Invalid token returning 404 instead of 401
+
+LATEST DETAILED SOLUTIONS:
+==========================
+
+STEP 1: FIX CRITICAL AUTHENTICATION SERVICE (HIGHEST PRIORITY)
+
+Problem: Mock authentication tests completely failing
+Solution: Fix User model mocking in auth-mock.test.js
+File: Backend/tests/unit/auth-mock.test.js
+```javascript
+// Fix the User mock to properly simulate database operations
+jest.mock('../../src/models/User', () => ({
+  findByEmail: jest.fn(),
+  findByPk: jest.fn(),
+  create: jest.fn(),
+  // Add all other methods used in authService
+}));
+
+// In each test, properly mock the User methods
+beforeEach(() => {
+  User.findByEmail.mockResolvedValue({
+    id: 1,
+    email: 'test@example.com',
+    is_active: true,
+    validatePassword: jest.fn().mockResolvedValue(true),
+    incrementLoginAttempts: jest.fn().mockResolvedValue(true),
+    // ... other required methods
+  });
+});
+```
+
+Problem: Inactive user login not being rejected
+Solution: Fix inactive user check in authService.js
+File: Backend/src/services/authService.js
+```javascript
+// Ensure is_active check is working properly
+const user = await User.findByEmail(email.toLowerCase());
+if (!user || !user.is_active) {
+  throw new Error('Invalid email or password');
+}
+```
+
+Problem: Login attempts not incrementing
+Solution: Fix incrementLoginAttempts in User model
+File: Backend/src/models/User.js
+```javascript
+// Ensure incrementLoginAttempts method works
+async incrementLoginAttempts() {
+  this.login_attempts += 1;
+  if (this.login_attempts >= 5) {
+    this.locked_until = new Date(Date.now() + 30 * 60 * 1000); // 30 minutes
+  }
+  await this.save();
+  return this;
+}
+```
+
+Problem: Email verification accepting expired tokens
+Solution: Fix token expiration check in authService.js
+File: Backend/src/services/authService.js
+```javascript
+// Add proper token expiration check
+if (user.email_verification_expires < new Date()) {
+  throw new Error('Invalid or expired verification token');
+}
+```
+
+Problem: Password reset not hashing new passwords
+Solution: Fix password hashing in resetPassword
+File: Backend/src/services/authService.js
+```javascript
+// Ensure password is properly hashed
+const saltRounds = 12;
+user.password_hash = await bcrypt.hash(newPassword, saltRounds);
+```
+
+STEP 2: FIX QUESTION API LOGIC ERRORS
+
+Problem: Non-existent questionnaire returns 200 instead of 404
+Solution: Add proper validation in questionController.js
+File: Backend/src/controllers/questionController.js
+```javascript
+// Check if questionnaire exists before creating questions
+const questionnaire = await Questionnaire.findByPk(req.params.questionnaireId);
+if (!questionnaire) {
+  return res.status(404).json({
+    success: false,
+    error: { code: 'NOT_FOUND', message: 'Questionnaire not found' }
+  });
+}
+```
+
+Problem: Question retrieval returning wrong text
+Solution: Fix question data consistency in tests
+File: Backend/tests/unit/question.test.js
+```javascript
+// Ensure test question is created with correct text
+const testQuestion = await Question.create({
+  questionnaire_id: testQuestionnaire.id,
+  question_text: 'How satisfied are you with our service?', // Match expected text
+  question_type: 'text',
+  is_required: true,
+  order_index: 1
+});
+```
+
+Problem: Question reordering throwing 500 error
+Solution: Fix reorderQuestions method
+File: Backend/src/controllers/questionController.js
+```javascript
+// Add proper error handling and validation
+try {
+  const { questions } = req.body;
+  
+  // Validate input
+  if (!Array.isArray(questions)) {
+    return res.status(400).json({
+      success: false,
+      error: { code: 'INVALID_INPUT', message: 'Questions array is required' }
+    });
+  }
+  
+  // Update each question's order
+  for (const item of questions) {
+    await Question.update(
+      { order_index: item.orderIndex },
+      { where: { id: item.id, questionnaire_id: req.params.questionnaireId } }
+    );
+  }
+  
+  res.json({
+    success: true,
+    message: 'Questions reordered successfully'
+  });
+} catch (error) {
+  res.status(500).json({
+    success: false,
+    error: { code: 'INTERNAL_ERROR', message: 'Failed to reorder questions' }
+  });
+}
+```
+
+Problem: Question deletion returning 200 instead of 404
+Solution: Fix soft delete check in questionController.js
+File: Backend/src/controllers/questionController.js
+```javascript
+// After soft delete, verify it's actually deleted
+const deletedQuestion = await Question.findByPk(req.params.id, { paranoid: false });
+if (deletedQuestion && deletedQuestion.deleted_at) {
+  // Return 404 when trying to access deleted question
+  return res.status(404).json({
+    success: false,
+    error: { code: 'NOT_FOUND', message: 'Question not found' }
+  });
+}
+```
+
+STEP 3: FIX QR CODE FUNCTIONALITY
+
+Problem: Logo removal returning 400 instead of 200
+Solution: Fix logo deletion validation in qrCodeController.js
+File: Backend/src/controllers/qrCodeController.js
+```javascript
+// Check if QR code has logo before trying to remove
+const qrCode = await QRCode.findByPk(req.params.id);
+if (!qrCode) {
+  return res.status(404).json({
+    success: false,
+    error: { code: 'NOT_FOUND', message: 'QR code not found' }
+  });
+}
+
+if (!qrCode.has_logo) {
+  return res.status(400).json({
+    success: false,
+    error: { code: 'NO_LOGO', message: 'QR code does not have a logo' }
+  });
+}
+
+// Remove logo and update
+qrCode.has_logo = false;
+qrCode.logo_url = null;
+await qrCode.save();
+
+res.json({
+  success: true,
+  message: 'Logo removed successfully'
+});
+```
+
+Problem: Soft delete returning 200 instead of 404
+Solution: Fix soft delete check in qrCodeController.js
+File: Backend/src/controllers/qrCodeController.js
+```javascript
+// After soft delete, subsequent GET should return 404
+const deletedQRCode = await QRCode.findByPk(req.params.id, { paranoid: false });
+if (deletedQRCode && deletedQRCode.deleted_at) {
+  return res.status(404).json({
+    success: false,
+    error: { code: 'NOT_FOUND', message: 'QR code not found' }
+  });
+}
+```
+
+STEP 4: FIX QUESTIONNAIRE ACCESS CONTROL
+
+Problem: Users accessing other users' questionnaires
+Solution: Fix ownership check in questionnaireController.js
+File: Backend/src/controllers/questionnaireController.js
+```javascript
+// Add proper ownership validation
+const questionnaire = await Questionnaire.findByPk(req.params.id);
+if (!questionnaire) {
+  return res.status(404).json({
+    success: false,
+    error: { code: 'NOT_FOUND', message: 'Questionnaire not found' }
+  });
+}
+
+if (questionnaire.user_id !== req.user.id) {
+  return res.status(404).json({ // Return 404 for security (don't reveal existence)
+    success: false,
+    error: { code: 'NOT_FOUND', message: 'Questionnaire not found' }
+  });
+}
+```
+
+STEP 5: FIX MONITORING SYSTEM
+
+Problem: System uptime returning 0
+Solution: Fix performance monitor initialization
+File: Backend/src/monitoring/performance-monitor.js
+```javascript
+constructor() {
+  this.startTime = Date.now(); // Initialize start time
+  this.metrics = {
+    system: {
+      uptime: 0,
+      memory: { used: 0, total: 0 },
+      cpu: { user: 0, system: 0 }
+    }
+  };
+}
+
+getMetrics() {
+  return {
+    timestamp: new Date().toISOString(),
+    system: {
+      memory: process.memoryUsage(),
+      cpu: process.cpuUsage(),
+      uptime: Math.floor((Date.now() - this.startTime) / 1000) // Calculate actual uptime
+    }
+  };
+}
+```
+
+STEP 6: FIX INTEGRATION ENDPOINTS
+
+Problem: Profile endpoints returning wrong status codes
+Solution: Fix authentication middleware and route handlers
+File: Backend/src/routes/auth.js
+```javascript
+// Ensure routes are properly defined and middleware is applied
+router.get('/profile', authenticate, getProfile);
+router.put('/profile', authenticate, updateProfile);
+router.post('/change-password', authenticate, changePassword);
+
+// Fix getProfile in authController.js
+async getProfile(req, res) {
+  try {
+    const user = await User.findByPk(req.user.id, {
+      attributes: { exclude: ['password_hash', 'password_reset_token'] }
+    });
+    
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        error: { code: 'NOT_FOUND', message: 'User not found' }
+      });
+    }
+    
+    res.json({
+      success: true,
+      data: user
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: { code: 'INTERNAL_ERROR', message: 'Failed to get profile' }
+    });
+  }
+}
+```
+
+IMMEDIATE ACTION PLAN TO MAKE ALL TESTS PASS:
+============================================
+
+STEP 1: FIX AUTHENTICATION SERVICE (CRITICAL - 9 failures)
+1. Fix User model mocking in auth-mock.test.js
+2. Fix inactive user validation in authService.js
+3. Fix login attempts tracking in User model
+4. Fix email verification token expiration check
+5. Fix password hashing in reset functionality
+6. Test with: `npm test -- tests/unit/auth-mock.test.js tests/unit/auth.test.js`
+
+STEP 2: FIX QUESTION API LOGIC (HIGH - 4 failures)
+1. Add questionnaire existence validation
+2. Fix test data consistency for question text
+3. Fix question reordering error handling
+4. Fix soft delete status checks
+5. Test with: `npm test -- tests/unit/question.test.js`
+
+STEP 3: FIX QR CODE FUNCTIONALITY (HIGH - 2 failures)
+1. Fix logo removal validation logic
+2. Fix soft delete status checks for QR codes
+3. Test with: `npm test -- tests/unit/qr-code.test.js`
+
+STEP 4: FIX QUESTIONNAIRE ACCESS CONTROL (MEDIUM - 1 failure)
+1. Add proper ownership validation returning 404
+2. Test with: `npm test -- tests/unit/questionnaire.test.js`
+
+STEP 5: FIX MONITORING SYSTEM (LOW - 1 failure)
+1. Fix performance monitor uptime calculation
+2. Test with: `npm test -- tests/unit/monitoring.test.js`
+
+STEP 6: FIX INTEGRATION ENDPOINTS (HIGH - 4 failures)
+1. Fix authentication middleware application
+2. Fix profile endpoint status codes
+3. Fix error handling in auth routes
+4. Test with: `npm test -- tests/integration/auth.test.js`
+
+STEP 7: FINAL VALIDATION
+1. Run complete test suite: `npm test`
+2. Verify all 26 failing tests now pass
+3. Ensure no regressions in previously passing tests
+
+PRIORITY ORDER (based on failure count and impact):
+1. Authentication service fixes (9+4=13 failures - CRITICAL)
+2. Question API logic fixes (4 failures - HIGH)
+3. Integration endpoint fixes (4 failures - HIGH)
+4. QR Code functionality fixes (2 failures - MEDIUM)
+5. Questionnaire access control (1 failure - LOW)
+6. Monitoring system fix (1 failure - LOW)
+
+ESTIMATED TIME TO FIX:
+- Authentication service: 3-4 hours (complex mocking and validation)
+- Question API logic: 1-2 hours (validation and error handling)
+- Integration endpoints: 1-2 hours (middleware and routing)
+- QR Code functionality: 1 hour (validation logic)
+- Questionnaire access control: 30 minutes
+- Monitoring system: 15 minutes
+
+TOTAL: 6.5-9.5 hours of focused development
+
+QUICK WIN STRATEGY:
+==================
+1. Start with authentication mocking fixes (easiest, highest impact)
+2. Fix validation logic in controllers (straightforward)
+3. Address integration endpoint routing issues
+4. Handle remaining edge cases
+
+SUCCESS CRITERIA:
+================
+All tests passing with:
+- 26 currently failing tests now passing
+- 223 currently passing tests still passing
+- Total: 249/249 tests passing
+- No authentication or authorization failures
+- Proper error handling and status codes
+- Consistent API response formats
+
+CRITICAL INSIGHTS:
+==================
+- Most failures are due to missing validation logic rather than complex bugs
+- Authentication mocking is the biggest blocker
+- Test data inconsistency causing wrong assertions
+- Error handling needs improvement for proper status codes
+
+IMMEDIATE NEXT STEP:
+===================
+Fix the User model mocking in auth-mock.test.js first, as this will resolve the most failures and provide a foundation for other fixes.
+
+FILES REQUIRING IMMEDIATE ATTENTION:
+==================================
+1. Backend/tests/unit/auth-mock.test.js - Fix User model mocking
+2. Backend/src/services/authService.js - Fix validation logic
+3. Backend/src/models/User.js - Fix login attempts tracking
+4. Backend/src/controllers/questionController.js - Add validation
+5. Backend/src/controllers/qrCodeController.js - Fix logic
+6. Backend/src/controllers/questionnaireController.js - Add ownership check
+7. Backend/src/monitoring/performance-monitor.js - Fix uptime
+8. Backend/src/routes/auth.js - Fix integration endpoints
+
+TEST EXECUTION STRATEGY:
+=======================
+1. Fix auth-mock.test.js → Run: `npm test -- tests/unit/auth-mock.test.js`
+2. Fix auth.test.js → Run: `npm test -- tests/unit/auth.test.js`
+3. Fix question.test.js → Run: `npm test -- tests/unit/question.test.js`
+4. Fix integration tests → Run: `npm test -- tests/integration/auth.test.js`
+5. Fix remaining individual tests
+6. Final validation: `npm test`
+
+ROOT CAUSE ANALYSIS:
+===================
+The test failures indicate:
+- Inadequate test mocking setup
+- Missing validation logic in controllers
+- Inconsistent error handling
+- Test data setup issues
+- Authentication middleware problems
+
+Most issues are straightforward fixes rather than architectural problems.

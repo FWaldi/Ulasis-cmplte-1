@@ -1,0 +1,105 @@
+# Frontend-Backend-Database Communication Audit Report
+
+## Project Overview
+- **Frontend**: React/Vite application with TypeScript
+- **Backend**: Node.js/Express API with Sequelize ORM
+- **Database**: MySQL (production) / SQLite (testing)
+
+## Communication Architecture
+
+### 1. API Base URLs
+**Issue: Inconsistent API base URLs in Frontend**
+
+- `apiService.ts`: Uses `http://localhost:3001/api/v1` (default)
+- `authService.ts`: Uses `http://localhost:3000/api/v1` (default)
+- `questionnaireService.ts`: Uses `http://localhost:3000/api/v1` (default)
+- **Backend runs on port 3000**
+
+**Impact**: `apiService` calls will fail due to wrong port (3001 vs 3000).
+
+**Recommendation**: Standardize all frontend services to use the same base URL via environment variable `VITE_API_BASE_URL` set to `http://localhost:3000/api/v1`.
+
+### 2. Authentication Services
+**Issue: Duplicate and inconsistent auth implementations**
+
+- Two separate auth services: `apiService.ts` and `authService.ts`
+- Different HTTP clients: axios vs fetch
+- Different token storage keys: 'authToken' vs 'accessToken'
+- Different error handling approaches
+
+**Impact**: Potential token management conflicts, inconsistent user experience.
+
+**Recommendation**: Consolidate to single auth service using axios with interceptors for consistency.
+
+### 3. HTTP Client Usage
+**Issue: Mixed HTTP clients**
+
+- `apiService.ts`: Uses axios with request/response interceptors
+- `authService.ts` & `questionnaireService.ts`: Use native fetch
+- No unified error handling or retry logic
+
+**Impact**: Inconsistent error handling, no centralized request management.
+
+**Recommendation**: Standardize on axios for all API calls with consistent interceptors.
+
+### 4. CORS Configuration
+**Status: Properly configured**
+
+- Backend CORS allows `http://localhost:5173` (Vite default)
+- Credentials enabled for cookie/auth support
+- Appropriate headers allowed
+
+### 5. Database Integration
+**Status: Well implemented**
+
+- Sequelize ORM with proper migrations
+- Security configurations in place
+- Connection pooling configured
+- Test database isolation (SQLite)
+- Production database (MySQL) with security validations
+
+### 6. API Route Matching
+**Status: Routes align correctly**
+
+Backend endpoints match frontend calls:
+- `/api/v1/auth/*` - Authentication
+- `/api/v1/questionnaires/*` - CRUD operations
+- `/api/v1/qr-codes/*` - QR code management
+- `/api/v1/analytics/*` - Data analytics
+- `/api/v1/responses/*` - Anonymous submissions
+
+### 7. Data Flow Issues
+**Potential Issues Identified:**
+
+1. **Token Refresh Logic**: Only `apiService` has automatic token refresh via interceptors
+2. **Error Response Handling**: Inconsistent error formats between services
+3. **Loading States**: No unified loading state management across services
+
+## Recommendations for Improvement
+
+### High Priority
+1. **Fix API Base URL**: Update `apiService.ts` default from 3001 to 3000
+2. **Consolidate Auth Services**: Merge `authService.ts` and `apiService.ts` auth methods
+3. **Standardize HTTP Client**: Migrate all services to use axios
+
+### Medium Priority
+4. **Environment Variables**: Ensure all services use `VITE_API_BASE_URL`
+5. **Error Handling**: Implement consistent error handling across all services
+6. **Token Management**: Unify token storage keys and refresh logic
+
+### Low Priority
+7. **Type Safety**: Add proper TypeScript interfaces for all API responses
+8. **Retry Logic**: Implement retry mechanisms for failed requests
+9. **Request Caching**: Add caching layer for frequently accessed data
+
+## Testing Recommendations
+1. Test all API endpoints with correct base URL
+2. Verify token refresh works across all services
+3. Test CORS in different environments
+4. Validate database connections and migrations
+5. Run integration tests for full request-response cycles
+
+## Conclusion
+The core communication architecture is sound, but inconsistent implementations in the frontend create potential failure points. Standardizing the API client and consolidating auth services will significantly improve reliability and maintainability.
+
+**Overall Communication Health: 75% - Functional but needs standardization**

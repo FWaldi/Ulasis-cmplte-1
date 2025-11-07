@@ -1,0 +1,122 @@
+react-dom_client.js?v=172ad00c:20103 Download the React DevTools for a better development experience: https://react.dev/link/react-devtools
+App.tsx:40 App render - isAuthenticated: false authLoading: true user: null
+App.tsx:40 App render - isAuthenticated: false authLoading: true user: null
+App.tsx:449 🔍 Load data check - isAuthenticated: false isDemoMode: false user: null
+App.tsx:477 🚫 Skipping data load - not authenticated or in demo mode
+App.tsx:449 🔍 Load data check - isAuthenticated: false isDemoMode: false user: null
+App.tsx:477 🚫 Skipping data load - not authenticated or in demo mode
+App.tsx:40 App render - isAuthenticated: false authLoading: false user: null
+App.tsx:40 App render - isAuthenticated: false authLoading: false user: null
+App.tsx:40 App render - isAuthenticated: false authLoading: true user: null
+App.tsx:40 App render - isAuthenticated: false authLoading: true user: null
+App.tsx:40 App render - isAuthenticated: true authLoading: false user: {id: 2, email: 'admin@ulasis.com', first_name: 'Admin', last_name: 'User', subscription_plan: 'business', …}
+App.tsx:40 App render - isAuthenticated: true authLoading: false user: {id: 2, email: 'admin@ulasis.com', first_name: 'Admin', last_name: 'User', subscription_plan: 'business', …}
+App.tsx:449 🔍 Load data check - isAuthenticated: true isDemoMode: false user: {id: 2, email: 'admin@ulasis.com', first_name: 'Admin', last_name: 'User', subscription_plan: 'business', …}
+App.tsx:451 📡 Loading data for authenticated user...
+App.tsx:40 App render - isAuthenticated: true authLoading: false user: {id: 2, email: 'admin@ulasis.com', first_name: 'Admin', last_name: 'User', subscription_plan: 'business', …}
+App.tsx:40 App render - isAuthenticated: true authLoading: false user: {id: 2, email: 'admin@ulasis.com', first_name: 'Admin', last_name: 'User', subscription_plan: 'business', …}
+App.tsx:458 ✅ Questionnaires response: {success: true, data: {…}}
+App.tsx:459 ✅ QR codes response: undefined
+App.tsx:460 📊 Setting questionnaires: 0
+App.tsx:40 App render - isAuthenticated: true authLoading: false user: {id: 2, email: 'admin@ulasis.com', first_name: 'Admin', last_name: 'User', subscription_plan: 'business', …}
+App.tsx:40 App render - isAuthenticated: true authLoading: false user: {id: 2, email: 'admin@ulasis.com', first_name: 'Admin', last_name: 'User', subscription_plan: 'business', …}
+App.tsx:40 App render - isAuthenticated: true authLoading: false user: {id: 2, email: 'admin@ulasis.com', first_name: 'Admin', last_name: 'User', subscription_plan: 'business', …}
+App.tsx:40 App render - isAuthenticated: true authLoading: false user: {id: 2, email: 'admin@ulasis.com', first_name: 'Admin', last_name: 'User', subscription_plan: 'business', …}
+App.tsx:40 App render - isAuthenticated: true authLoading: false user: {id: 2, email: 'admin@ulasis.com', first_name: 'Admin', last_name: 'User', subscription_plan: 'business', …}
+App.tsx:40 App render - isAuthenticated: true authLoading: false user: {id: 2, email: 'admin@ulasis.com', first_name: 'Admin', last_name: 'User', subscription_plan: 'business', …}
+App.tsx:40 App render - isAuthenticated: true authLoading: false user: {id: 2, email: 'admin@ulasis.com', first_name: 'Admin', last_name: 'User', subscription_plan: 'business', …}
+App.tsx:40 App render - isAuthenticated: true authLoading: false user: {id: 2, email: 'admin@ulasis.com', first_name: 'Admin', last_name: 'User', subscription_plan: 'business', …}
+App.tsx:40 App render - isAuthenticated: true authLoading: false user: {id: 2, email: 'admin@ulasis.com', first_name: 'Admin', last_name: 'User', subscription_plan: 'business', …}
+App.tsx:40 App render - isAuthenticated: true authLoading: false user: {id: 2, email: 'admin@ulasis.com', first_name: 'Admin', last_name: 'User', subscription_plan: 'business', …}
+App.tsx:501 TypeError: Cannot read properties of undefined (reading 'length')
+    at QRCodes (QRCodes.tsx:226:23)
+    at Object.react_stack_bottom_frame (react-dom_client.js?v=172ad00c:18509:20)
+    at renderWithHooks (react-dom_client.js?v=172ad00c:5654:24)
+    at updateFunctionComponent (react-dom_client.js?v=172ad00c:7475:21)
+    at beginWork (react-dom_client.js?v=172ad00c:8525:20)
+    at runWithFiberInDEV (react-dom_client.js?v=172ad00c:997:72)
+    at performUnitOfWork (react-dom_client.js?v=172ad00c:12561:98)
+    at workLoopSync (react-dom_client.js?v=172ad00c:12424:43)
+    at renderRootSync (react-dom_client.js?v=172ad00c:12408:13)
+    at performWorkOnRoot (react-dom_client.js?v=172ad00c:11827:37)
+
+The above error occurred in the <QRCodes> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, ErrorBoundary.
+
+defaultOnCaughtError @ react-dom_client.js?v=172ad00c:7001
+logCaughtError @ react-dom_client.js?v=172ad00c:7033
+runWithFiberInDEV @ react-dom_client.js?v=172ad00c:997
+inst.componentDidCatch.update.callback @ react-dom_client.js?v=172ad00c:7078
+callCallback @ react-dom_client.js?v=172ad00c:5491
+commitCallbacks @ react-dom_client.js?v=172ad00c:5503
+runWithFiberInDEV @ react-dom_client.js?v=172ad00c:997
+commitClassCallbacks @ react-dom_client.js?v=172ad00c:9490
+commitLayoutEffectOnFiber @ react-dom_client.js?v=172ad00c:9958
+recursivelyTraverseLayoutEffects @ react-dom_client.js?v=172ad00c:10792
+commitLayoutEffectOnFiber @ react-dom_client.js?v=172ad00c:10074
+recursivelyTraverseLayoutEffects @ react-dom_client.js?v=172ad00c:10792
+commitLayoutEffectOnFiber @ react-dom_client.js?v=172ad00c:9963
+flushLayoutEffects @ react-dom_client.js?v=172ad00c:12924
+commitRoot @ react-dom_client.js?v=172ad00c:12803
+commitRootWhenReady @ react-dom_client.js?v=172ad00c:12016
+performWorkOnRoot @ react-dom_client.js?v=172ad00c:11950
+performSyncWorkOnRoot @ react-dom_client.js?v=172ad00c:13517
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=172ad00c:13414
+processRootScheduleInMicrotask @ react-dom_client.js?v=172ad00c:13437
+(anonymous) @ react-dom_client.js?v=172ad00c:13531
+<QRCodes>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=172ad00c:247
+renderContent @ App.tsx:501
+App @ App.tsx:672
+react_stack_bottom_frame @ react-dom_client.js?v=172ad00c:18509
+renderWithHooksAgain @ react-dom_client.js?v=172ad00c:5729
+renderWithHooks @ react-dom_client.js?v=172ad00c:5665
+updateFunctionComponent @ react-dom_client.js?v=172ad00c:7475
+beginWork @ react-dom_client.js?v=172ad00c:8525
+runWithFiberInDEV @ react-dom_client.js?v=172ad00c:997
+performUnitOfWork @ react-dom_client.js?v=172ad00c:12561
+workLoopSync @ react-dom_client.js?v=172ad00c:12424
+renderRootSync @ react-dom_client.js?v=172ad00c:12408
+performWorkOnRoot @ react-dom_client.js?v=172ad00c:11827
+performSyncWorkOnRoot @ react-dom_client.js?v=172ad00c:13517
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=172ad00c:13414
+processRootScheduleInMicrotask @ react-dom_client.js?v=172ad00c:13437
+(anonymous) @ react-dom_client.js?v=172ad00c:13531
+<App>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=172ad00c:247
+(anonymous) @ index.tsx:19
+ErrorBoundary.tsx:25 ErrorBoundary caught an error: TypeError: Cannot read properties of undefined (reading 'length')
+    at QRCodes (QRCodes.tsx:226:23)
+    at Object.react_stack_bottom_frame (react-dom_client.js?v=172ad00c:18509:20)
+    at renderWithHooks (react-dom_client.js?v=172ad00c:5654:24)
+    at updateFunctionComponent (react-dom_client.js?v=172ad00c:7475:21)
+    at beginWork (react-dom_client.js?v=172ad00c:8525:20)
+    at runWithFiberInDEV (react-dom_client.js?v=172ad00c:997:72)
+    at performUnitOfWork (react-dom_client.js?v=172ad00c:12561:98)
+    at workLoopSync (react-dom_client.js?v=172ad00c:12424:43)
+    at renderRootSync (react-dom_client.js?v=172ad00c:12408:13)
+    at performWorkOnRoot (react-dom_client.js?v=172ad00c:11827:37) {componentStack: '\n    at QRCodes (http://localhost:3001/src/compone…ost:3001/src/components/ui/ErrorBoundary.tsx:6:5)'}
+componentDidCatch @ ErrorBoundary.tsx:25
+react_stack_bottom_frame @ react-dom_client.js?v=172ad00c:18547
+inst.componentDidCatch.update.callback @ react-dom_client.js?v=172ad00c:7086
+callCallback @ react-dom_client.js?v=172ad00c:5491
+commitCallbacks @ react-dom_client.js?v=172ad00c:5503
+runWithFiberInDEV @ react-dom_client.js?v=172ad00c:997
+commitClassCallbacks @ react-dom_client.js?v=172ad00c:9490
+commitLayoutEffectOnFiber @ react-dom_client.js?v=172ad00c:9958
+recursivelyTraverseLayoutEffects @ react-dom_client.js?v=172ad00c:10792
+commitLayoutEffectOnFiber @ react-dom_client.js?v=172ad00c:10074
+recursivelyTraverseLayoutEffects @ react-dom_client.js?v=172ad00c:10792
+commitLayoutEffectOnFiber @ react-dom_client.js?v=172ad00c:9963
+flushLayoutEffects @ react-dom_client.js?v=172ad00c:12924
+commitRoot @ react-dom_client.js?v=172ad00c:12803
+commitRootWhenReady @ react-dom_client.js?v=172ad00c:12016
+performWorkOnRoot @ react-dom_client.js?v=172ad00c:11950
+performSyncWorkOnRoot @ react-dom_client.js?v=172ad00c:13517
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=172ad00c:13414
+processRootScheduleInMicrotask @ react-dom_client.js?v=172ad00c:13437
+(anonymous) @ react-dom_client.js?v=172ad00c:13531
+<ErrorBoundary>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=172ad00c:247
+(anonymous) @ index.tsx:17

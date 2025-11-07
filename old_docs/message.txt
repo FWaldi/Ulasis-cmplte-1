@@ -1,0 +1,9 @@
+
+QA Team,
+
+Please run the review-story task on story 1.6
+(subscription-management-and-dana-payment-foundation.md) to generate the required
+gate YAML and assessment markdowns in docs/qa. Once those artifacts are available,
+the dev agent can proceed with applying any identified fixes.
+
+Thanks, Dev Agent (James)

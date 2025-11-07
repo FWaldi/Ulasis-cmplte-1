@@ -1,0 +1,816 @@
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:07 [error]: Password change failed
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:07 [error]: Change password controller error {"service":"ulasis-backend","error":"Current password is incorrect","userId":1,"requestId":"req_1761719947616_3t9dy6w67"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:07 [error]: Change password controller error
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:07 [info]: Request completed {"service":"ulasis-backend","requestId":"req_1761719947616_3t9dy6w67","method":"POST","path":"/change-password","statusCode":400,"responseTime":224,"ip":"::ffff:127.0.0.1"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:07 [info]: ::ffff:127.0.0.1 - - [29/Oct/2025:06:39:07 +0000] "POST /api/v1/auth/change-password HTTP/1.1" 400 173 "-" "-" {"service":"ulasis-backend"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:08 [info]: Request started {"service":"ulasis-backend","requestId":"req_1761719948172_8isibk7tm","method":"POST","path":"/api/v1/auth/login","ip":"::ffff:127.0.0.1"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:08 [info]: User logged in successfully {"service":"ulasis-backend","userId":3,"email":"test@example.com"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:08 [warn]: Performance alert: High error rate {"service":"ulasis-backend","endpoint":"POST /login","errorRate":"21.43%","threshold":"5%"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:08 [warn]: Performance alert: High error rate
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:08 [info]: Request completed {"service":"ulasis-backend","requestId":"req_1761719948172_8isibk7tm","method":"POST","path":"/login","statusCode":200,"responseTime":224,"ip":"::ffff:127.0.0.1"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:08 [info]: ::ffff:127.0.0.1 - - [29/Oct/2025:06:39:08 +0000] "POST /api/v1/auth/login HTTP/1.1" 200 415 "-" "-" {"service":"ulasis-backend"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:08 [info]: Request started {"service":"ulasis-backend","requestId":"req_1761719948403_u3nflcrhe","method":"POST","path":"/api/v1/auth/change-password","ip":"::ffff:127.0.0.1"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:08 [error]: Password change failed {"service":"ulasis-backend","userId":1,"error":"Current password is incorrect"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:08 [error]: Password change failed
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:08 [error]: Change password controller error {"service":"ulasis-backend","error":"Current password is incorrect","userId":1,"requestId":"req_1761719948403_u3nflcrhe"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:08 [error]: Change password controller error
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:08 [info]: Request completed {"service":"ulasis-backend","requestId":"req_1761719948403_u3nflcrhe","method":"POST","path":"/change-password","statusCode":400,"responseTime":225,"ip":"::ffff:127.0.0.1"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:08 [info]: ::ffff:127.0.0.1 - - [29/Oct/2025:06:39:08 +0000] "POST /api/v1/auth/change-password HTTP/1.1" 400 173 "-" "-" {"service":"ulasis-backend"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:08 [info]: Request started {"service":"ulasis-backend","requestId":"req_1761719948963_jr77nu6fo","method":"POST","path":"/api/v1/auth/login","ip":"::ffff:127.0.0.1"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:09 [info]: User logged in successfully {"service":"ulasis-backend","userId":3,"email":"test@example.com"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:09 [warn]: Performance alert: High error rate {"service":"ulasis-backend","endpoint":"POST /login","errorRate":"20.00%","threshold":"5%"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:09 [warn]: Performance alert: High error rate
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:09 [info]: Request completed {"service":"ulasis-backend","requestId":"req_1761719948963_jr77nu6fo","method":"POST","path":"/login","statusCode":200,"responseTime":223,"ip":"::ffff:127.0.0.1"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:09 [info]: ::ffff:127.0.0.1 - - [29/Oct/2025:06:39:09 +0000] "POST /api/v1/auth/login HTTP/1.1" 200 415 "-" "-" {"service":"ulasis-backend"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:09 [info]: Request started {"service":"ulasis-backend","requestId":"req_1761719949193_68p3qldj4","method":"POST","path":"/api/v1/auth/change-password","ip":"::ffff:127.0.0.1"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:09 [info]: Request completed {"service":"ulasis-backend","requestId":"req_1761719949193_68p3qldj4","method":"POST","path":"/change-password","statusCode":400,"responseTime":2,"ip":"::ffff:127.0.0.1"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:09 [info]: ::ffff:127.0.0.1 - - [29/Oct/2025:06:39:09 +0000] "POST /api/v1/auth/change-password HTTP/1.1" 400 552 "-" "-" {"service":"ulasis-backend"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:09 [info]: Request started {"service":"ulasis-backend","requestId":"req_1761719949533_wejf7vsz1","method":"POST","path":"/api/v1/auth/login","ip":"::ffff:127.0.0.1"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:09 [info]: User logged in successfully {"service":"ulasis-backend","userId":3,"email":"test@example.com"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:09 [warn]: Performance alert: High error rate {"service":"ulasis-backend","endpoint":"POST /login","errorRate":"18.75%","threshold":"5%"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:09 [warn]: Performance alert: High error rate
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:09 [info]: Request completed {"service":"ulasis-backend","requestId":"req_1761719949533_wejf7vsz1","method":"POST","path":"/login","statusCode":200,"responseTime":226,"ip":"::ffff:127.0.0.1"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:09 [info]: ::ffff:127.0.0.1 - - [29/Oct/2025:06:39:09 +0000] "POST /api/v1/auth/login HTTP/1.1" 200 415 "-" "-" {"service":"ulasis-backend"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:09 [info]: Request started {"service":"ulasis-backend","requestId":"req_1761719949768_sjk8m8f0g","method":"POST","path":"/api/v1/auth/logout","ip":"::ffff:127.0.0.1"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:09 [info]: User logged out successfully {"service":"ulasis-backend","userId":1,"tokenJti":"test-jti"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:09 [info]: Request completed {"service":"ulasis-backend","requestId":"req_1761719949768_sjk8m8f0g","method":"POST","path":"/logout","statusCode":200,"responseTime":2,"ip":"::ffff:127.0.0.1"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:09 [info]: ::ffff:127.0.0.1 - - [29/Oct/2025:06:39:09 +0000] "POST /api/v1/auth/logout HTTP/1.1" 200 127 "-" "-" {"service":"ulasis-backend"}        
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:10 [info]: Request started {"service":"ulasis-backend","requestId":"req_1761719950100_prvc7sk1e","method":"POST","path":"/api/v1/auth/login","ip":"::ffff:127.0.0.1"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:10 [info]: User logged in successfully {"service":"ulasis-backend","userId":3,"email":"test@example.com"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:10 [warn]: Performance alert: High error rate {"service":"ulasis-backend","endpoint":"POST /login","errorRate":"17.65%","threshold":"5%"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:10 [warn]: Performance alert: High error rate
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:10 [info]: Request completed {"service":"ulasis-backend","requestId":"req_1761719950100_prvc7sk1e","method":"POST","path":"/login","statusCode":200,"responseTime":233,"ip":"::ffff:127.0.0.1"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:10 [info]: ::ffff:127.0.0.1 - - [29/Oct/2025:06:39:10 +0000] "POST /api/v1/auth/login HTTP/1.1" 200 415 "-" "-" {"service":"ulasis-backend"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:10 [info]: Request started {"service":"ulasis-backend","requestId":"req_1761719950340_t4mxrfuej","method":"POST","path":"/api/v1/auth/logout","ip":"::ffff:127.0.0.1"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:10 [info]: User logged out successfully {"service":"ulasis-backend","userId":1,"tokenJti":"test-jti"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:10 [info]: Request completed {"service":"ulasis-backend","requestId":"req_1761719950340_t4mxrfuej","method":"POST","path":"/logout","statusCode":200,"responseTime":2,"ip":"::ffff:127.0.0.1"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:10 [info]: ::ffff:127.0.0.1 - - [29/Oct/2025:06:39:10 +0000] "POST /api/v1/auth/logout HTTP/1.1" 200 127 "-" "-" {"service":"ulasis-backend"}        
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:10 [info]: Request started {"service":"ulasis-backend","requestId":"req_1761719950684_fj4yq3mel","method":"POST","path":"/api/v1/auth/register","ip":"192.168.1.0"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:10 [info]: User registered successfully {"service":"ulasis-backend","userId":4,"email":"ratelimit0@example.com","subscriptionPlan":"free"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:10 [info]: Request completed {"service":"ulasis-backend","requestId":"req_1761719950684_fj4yq3mel","method":"POST","path":"/register","statusCode":201,"responseTime":225,"ip":"192.168.1.0"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:10 [info]: 192.168.1.0 - - [29/Oct/2025:06:39:10 +0000] "POST /api/v1/auth/register HTTP/1.1" 201 319 "-" "-" {"service":"ulasis-backend"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:10 [info]: Request started {"service":"ulasis-backend","requestId":"req_1761719950931_kzupw5a16","method":"POST","path":"/api/v1/auth/register","ip":"192.168.1.1"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:11 [info]: User registered successfully {"service":"ulasis-backend","userId":6,"email":"ratelimit1@example.com","subscriptionPlan":"free"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:11 [info]: Request completed {"service":"ulasis-backend","requestId":"req_1761719950931_kzupw5a16","method":"POST","path":"/register","statusCode":201,"responseTime":235,"ip":"192.168.1.1"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:11 [info]: 192.168.1.1 - - [29/Oct/2025:06:39:11 +0000] "POST /api/v1/auth/register HTTP/1.1" 201 319 "-" "-" {"service":"ulasis-backend"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:11 [info]: Request started {"service":"ulasis-backend","requestId":"req_1761719951199_ifm9iuvkm","method":"POST","path":"/api/v1/auth/register","ip":"192.168.1.2"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:11 [info]: User registered successfully {"service":"ulasis-backend","userId":8,"email":"ratelimit2@example.com","subscriptionPlan":"free"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:11 [info]: Request completed {"service":"ulasis-backend","requestId":"req_1761719951199_ifm9iuvkm","method":"POST","path":"/register","statusCode":201,"responseTime":228,"ip":"192.168.1.2"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:11 [info]: 192.168.1.2 - - [29/Oct/2025:06:39:11 +0000] "POST /api/v1/auth/register HTTP/1.1" 201 319 "-" "-" {"service":"ulasis-backend"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:11 [info]: Request started {"service":"ulasis-backend","requestId":"req_1761719951447_o0hzt7hnv","method":"POST","path":"/api/v1/auth/register","ip":"192.168.1.3"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:11 [info]: User registered successfully {"service":"ulasis-backend","userId":10,"email":"ratelimit3@example.com","subscriptionPlan":"free"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:11 [info]: Request completed {"service":"ulasis-backend","requestId":"req_1761719951447_o0hzt7hnv","method":"POST","path":"/register","statusCode":201,"responseTime":223,"ip":"192.168.1.3"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:11 [info]: 192.168.1.3 - - [29/Oct/2025:06:39:11 +0000] "POST /api/v1/auth/register HTTP/1.1" 201 320 "-" "-" {"service":"ulasis-backend"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:11 [info]: Request started {"service":"ulasis-backend","requestId":"req_1761719951686_g6evlmwiq","method":"POST","path":"/api/v1/auth/register","ip":"192.168.1.4"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:11 [info]: User registered successfully {"service":"ulasis-backend","userId":12,"email":"ratelimit4@example.com","subscriptionPlan":"free"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:11 [info]: Request completed {"service":"ulasis-backend","requestId":"req_1761719951686_g6evlmwiq","method":"POST","path":"/register","statusCode":201,"responseTime":235,"ip":"192.168.1.4"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:11 [info]: 192.168.1.4 - - [29/Oct/2025:06:39:11 +0000] "POST /api/v1/auth/register HTTP/1.1" 201 320 "-" "-" {"service":"ulasis-backend"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:11 [info]: Request started {"service":"ulasis-backend","requestId":"req_1761719951943_weu5ndtqp","method":"POST","path":"/api/v1/auth/register","ip":"192.168.1.5"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:12 [info]: User registered successfully {"service":"ulasis-backend","userId":14,"email":"ratelimit5@example.com","subscriptionPlan":"free"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:12 [warn]: Performance alert: High error rate {"service":"ulasis-backend","endpoint":"POST /register","errorRate":"30.00%","threshold":"5%"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:12 [warn]: Performance alert: High error rate
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:12 [info]: Request completed {"service":"ulasis-backend","requestId":"req_1761719951943_weu5ndtqp","method":"POST","path":"/register","statusCode":201,"responseTime":223,"ip":"192.168.1.5"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:12 [info]: 192.168.1.5 - - [29/Oct/2025:06:39:12 +0000] "POST /api/v1/auth/register HTTP/1.1" 201 320 "-" "-" {"service":"ulasis-backend"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:12 [info]: Request started {"service":"ulasis-backend","requestId":"req_1761719952533_huo6snbxe","method":"POST","path":"/api/v1/auth/login","ip":"::ffff:127.0.0.1"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:12 [error]: User login failed {"service":"ulasis-backend","email":"test@example.com","error":"Invalid email or password"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:12 [error]: User login failed
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:12 [error]: Login controller error {"service":"ulasis-backend","error":"Invalid email or password","email":"test@example.com","requestId":"req_1761719952533_huo6snbxe"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:12 [error]: Login controller error
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:12 [warn]: Performance alert: High error rate {"service":"ulasis-backend","endpoint":"POST /login","errorRate":"22.22%","threshold":"5%"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:12 [warn]: Performance alert: High error rate
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:12 [info]: Request completed {"service":"ulasis-backend","requestId":"req_1761719952533_huo6snbxe","method":"POST","path":"/login","statusCode":401,"responseTime":224,"ip":"::ffff:127.0.0.1"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:12 [warn]: Security event recorded {"service":"ulasis-backend","eventId":"18e7dc21-af7c-4ae7-bd41-b2e6657e57d4","type":"unauthorized_access_attempt","severity":"MEDIUM","details":{"requestId":"req_1761719952533_huo6snbxe","path":"/login","method":"POST","ip":"::ffff:127.0.0.1"}}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:12 [warn]: Security event recorded
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:12 [info]: ::ffff:127.0.0.1 - - [29/Oct/2025:06:39:12 +0000] "POST /api/v1/auth/login HTTP/1.1" 401 168 "-" "-" {"service":"ulasis-backend"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:12 [info]: Request started {"service":"ulasis-backend","requestId":"req_1761719952780_1byqmj2cn","method":"POST","path":"/api/v1/auth/login","ip":"::ffff:127.0.0.1"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [error]: User login failed {"service":"ulasis-backend","email":"test@example.com","error":"Invalid email or password"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [error]: User login failed
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [error]: Login controller error {"service":"ulasis-backend","error":"Invalid email or password","email":"test@example.com","requestId":"req_1761719952780_1byqmj2cn"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [error]: Login controller error
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [warn]: Performance alert: High error rate {"service":"ulasis-backend","endpoint":"POST /login","errorRate":"26.32%","threshold":"5%"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [warn]: Performance alert: High error rate
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [info]: Request completed {"service":"ulasis-backend","requestId":"req_1761719952780_1byqmj2cn","method":"POST","path":"/login","statusCode":401,"responseTime":224,"ip":"::ffff:127.0.0.1"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [warn]: Security event recorded {"service":"ulasis-backend","eventId":"8e503dc1-140e-4e8f-ab59-90b2e6c74e74","type":"unauthorized_access_attempt","severity":"MEDIUM","details":{"requestId":"req_1761719952780_1byqmj2cn","path":"/login","method":"POST","ip":"::ffff:127.0.0.1"}}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [warn]: Security event recorded
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [info]: ::ffff:127.0.0.1 - - [29/Oct/2025:06:39:13 +0000] "POST /api/v1/auth/login HTTP/1.1" 401 168 "-" "-" {"service":"ulasis-backend"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [info]: Request started {"service":"ulasis-backend","requestId":"req_1761719953029_xt0d1lhx9","method":"POST","path":"/api/v1/auth/login","ip":"::ffff:127.0.0.1"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [error]: User login failed {"service":"ulasis-backend","email":"test@example.com","error":"Invalid email or password"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [error]: User login failed
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [error]: Login controller error {"service":"ulasis-backend","error":"Invalid email or password","email":"test@example.com","requestId":"req_1761719953029_xt0d1lhx9"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [error]: Login controller error
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [warn]: Performance alert: High error rate {"service":"ulasis-backend","endpoint":"POST /login","errorRate":"30.00%","threshold":"5%"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [warn]: Performance alert: High error rate
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [info]: Request completed {"service":"ulasis-backend","requestId":"req_1761719953029_xt0d1lhx9","method":"POST","path":"/login","statusCode":401,"responseTime":226,"ip":"::ffff:127.0.0.1"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [warn]: Security event recorded {"service":"ulasis-backend","eventId":"5e2ee550-0126-431d-a3ed-34c98a4a900f","type":"unauthorized_access_attempt","severity":"MEDIUM","details":{"requestId":"req_1761719953029_xt0d1lhx9","path":"/login","method":"POST","ip":"::ffff:127.0.0.1"}}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [warn]: Security event recorded
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [info]: ::ffff:127.0.0.1 - - [29/Oct/2025:06:39:13 +0000] "POST /api/v1/auth/login HTTP/1.1" 401 168 "-" "-" {"service":"ulasis-backend"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [info]: Request started {"service":"ulasis-backend","requestId":"req_1761719953276_d8l96cla5","method":"POST","path":"/api/v1/auth/login","ip":"::ffff:127.0.0.1"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [error]: User login failed {"service":"ulasis-backend","email":"test@example.com","error":"Invalid email or password"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [error]: User login failed
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [error]: Login controller error {"service":"ulasis-backend","error":"Invalid email or password","email":"test@example.com","requestId":"req_1761719953276_d8l96cla5"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [error]: Login controller error
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [warn]: Performance alert: High error rate {"service":"ulasis-backend","endpoint":"POST /login","errorRate":"33.33%","threshold":"5%"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [warn]: Performance alert: High error rate
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [info]: Request completed {"service":"ulasis-backend","requestId":"req_1761719953276_d8l96cla5","method":"POST","path":"/login","statusCode":401,"responseTime":224,"ip":"::ffff:127.0.0.1"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [warn]: Security event recorded {"service":"ulasis-backend","eventId":"7ecedcb0-7429-44c7-9ce8-46c86fcdfa5b","type":"unauthorized_access_attempt","severity":"MEDIUM","details":{"requestId":"req_1761719953276_d8l96cla5","path":"/login","method":"POST","ip":"::ffff:127.0.0.1"}}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [warn]: Security event recorded
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [info]: ::ffff:127.0.0.1 - - [29/Oct/2025:06:39:13 +0000] "POST /api/v1/auth/login HTTP/1.1" 401 168 "-" "-" {"service":"ulasis-backend"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [info]: Request started {"service":"ulasis-backend","requestId":"req_1761719953528_xlhpzzndi","method":"POST","path":"/api/v1/auth/login","ip":"::ffff:127.0.0.1"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [error]: User login failed {"service":"ulasis-backend","email":"test@example.com","error":"Invalid email or password"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [error]: User login failed
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [error]: Login controller error {"service":"ulasis-backend","error":"Invalid email or password","email":"test@example.com","requestId":"req_1761719953528_xlhpzzndi"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [error]: Login controller error
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [warn]: Performance alert: High error rate {"service":"ulasis-backend","endpoint":"POST /login","errorRate":"36.36%","threshold":"5%"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [warn]: Performance alert: High error rate
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [info]: Request completed {"service":"ulasis-backend","requestId":"req_1761719953528_xlhpzzndi","method":"POST","path":"/login","statusCode":401,"responseTime":225,"ip":"::ffff:127.0.0.1"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [warn]: Security event recorded {"service":"ulasis-backend","eventId":"942154f4-a913-4f59-9fe7-4cbde8b79be9","type":"unauthorized_access_attempt","severity":"MEDIUM","details":{"requestId":"req_1761719953528_xlhpzzndi","path":"/login","method":"POST","ip":"::ffff:127.0.0.1"}}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [warn]: Security event recorded
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [info]: ::ffff:127.0.0.1 - - [29/Oct/2025:06:39:13 +0000] "POST /api/v1/auth/login HTTP/1.1" 401 168 "-" "-" {"service":"ulasis-backend"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [info]: Request started {"service":"ulasis-backend","requestId":"req_1761719953771_vqzhzy570","method":"POST","path":"/api/v1/auth/login","ip":"::ffff:127.0.0.1"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [error]: User login failed {"service":"ulasis-backend","email":"test@example.com","error":"Invalid email or password"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [error]: User login failed
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [error]: Login controller error {"service":"ulasis-backend","error":"Invalid email or password","email":"test@example.com","requestId":"req_1761719953771_vqzhzy570"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [error]: Login controller error
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [warn]: Performance alert: High error rate {"service":"ulasis-backend","endpoint":"POST /login","errorRate":"39.13%","threshold":"5%"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [warn]: Performance alert: High error rate
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [info]: Request completed {"service":"ulasis-backend","requestId":"req_1761719953771_vqzhzy570","method":"POST","path":"/login","statusCode":401,"responseTime":224,"ip":"::ffff:127.0.0.1"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [warn]: Security event recorded {"service":"ulasis-backend","eventId":"9a3fd6a8-bf72-48c0-8347-dcdfcbc521d6","type":"unauthorized_access_attempt","severity":"MEDIUM","details":{"requestId":"req_1761719953771_vqzhzy570","path":"/login","method":"POST","ip":"::ffff:127.0.0.1"}}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [warn]: Security event recorded
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:13 [info]: ::ffff:127.0.0.1 - - [29/Oct/2025:06:39:13 +0000] "POST /api/v1/auth/login HTTP/1.1" 401 168 "-" "-" {"service":"ulasis-backend"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:14 [info]: Request started {"service":"ulasis-backend","requestId":"req_1761719954355_pserfdt04","method":"POST","path":"/api/v1/auth/forgot-password","ip":"::ffff:127.0.0.1"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:14 [info]: Password reset requested {"service":"ulasis-backend","userId":3,"email":"test@example.com"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:14 [info]: Request completed {"service":"ulasis-backend","requestId":"req_1761719954355_pserfdt04","method":"POST","path":"/forgot-password","statusCode":200,"responseTime":2,"ip":"::ffff:127.0.0.1"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:14 [info]: ::ffff:127.0.0.1 - - [29/Oct/2025:06:39:14 +0000] "POST /api/v1/auth/forgot-password HTTP/1.1" 200 184 "-" "-" {"service":"ulasis-backend"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:14 [info]: Request started {"service":"ulasis-backend","requestId":"req_1761719954374_n3r1zg2fj","method":"POST","path":"/api/v1/auth/forgot-password","ip":"::ffff:127.0.0.1"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:14 [info]: Password reset requested {"service":"ulasis-backend","userId":3,"email":"test@example.com"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:14 [info]: Request completed {"service":"ulasis-backend","requestId":"req_1761719954374_n3r1zg2fj","method":"POST","path":"/forgot-password","statusCode":200,"responseTime":2,"ip":"::ffff:127.0.0.1"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:14 [info]: ::ffff:127.0.0.1 - - [29/Oct/2025:06:39:14 +0000] "POST /api/v1/auth/forgot-password HTTP/1.1" 200 184 "-" "-" {"service":"ulasis-backend"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:14 [info]: Request started {"service":"ulasis-backend","requestId":"req_1761719954405_jpghyjn2e","method":"POST","path":"/api/v1/auth/forgot-password","ip":"::ffff:127.0.0.1"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:14 [info]: Password reset requested {"service":"ulasis-backend","userId":3,"email":"test@example.com"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:14 [info]: Request completed {"service":"ulasis-backend","requestId":"req_1761719954405_jpghyjn2e","method":"POST","path":"/forgot-password","statusCode":200,"responseTime":2,"ip":"::ffff:127.0.0.1"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:14 [info]: ::ffff:127.0.0.1 - - [29/Oct/2025:06:39:14 +0000] "POST /api/v1/auth/forgot-password HTTP/1.1" 200 184 "-" "-" {"service":"ulasis-backend"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:14 [info]: Request started {"service":"ulasis-backend","requestId":"req_1761719954437_en0o7i8jp","method":"POST","path":"/api/v1/auth/forgot-password","ip":"::ffff:127.0.0.1"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:14 [info]: Password reset requested {"service":"ulasis-backend","userId":3,"email":"test@example.com"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:14 [info]: Request completed {"service":"ulasis-backend","requestId":"req_1761719954437_en0o7i8jp","method":"POST","path":"/forgot-password","statusCode":200,"responseTime":2,"ip":"::ffff:127.0.0.1"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:14 [info]: ::ffff:127.0.0.1 - - [29/Oct/2025:06:39:14 +0000] "POST /api/v1/auth/forgot-password HTTP/1.1" 200 184 "-" "-" {"service":"ulasis-backend"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:14 [error]: Error closing test database: SQLITE_MISUSE: Database is closed {"service":"ulasis-backend","errno":21,"code":"SQLITE_MISUSE","stack":"Error: SQLITE_MISUSE: Database is closed\n    at D:\\App_Project\\Website\\BMad-Methods\\project-5\\Ulasis\\Backend\\node_modules\\sequelize\\src\\dialects\\sqlite\\connection-manager.js:31:79\n    at node:internal/util:472:21\n    at new Promise (<anonymous>)\n    at node:internal/util:458:12\n    at D:\\App_Project\\Website\\BMad-Methods\\project-5\\Ulasis\\Backend\\node_modules\\sequelize\\src\\dialects\\sqlite\\connection-manager.js:31:85\n    at Array.map (<anonymous>)\n    at ConnectionManager._onProcessExit (D:\\App_Project\\Website\\BMad-Methods\\project-5\\Ulasis\\Backend\\node_modules\\sequelize\\src\\dialects\\sqlite\\connection-manager.js:31:10)\n    at ConnectionManager.close (D:\\App_Project\\Website\\BMad-Methods\\project-5\\Ulasis\\Backend\\node_modules\\sequelize\\src\\dialects\\abstract\\connection-manager.js:116:23)\n    at Sequelize.close (D:\\App_Project\\Website\\BMad-Methods\\project-5\\Ulasis\\Backend\\node_modules\\sequelize\\src\\sequelize.js:1294:35)\n    at close (D:\\App_Project\\Website\\BMad-Methods\\project-5\\Ulasis\\Backend\\src\\config\\database-test.js:65:21)\n    at Object.close (D:\\App_Project\\Website\\BMad-Methods\\project-5\\Ulasis\\Backend\\tests\\setup.js:1494:9)\n    at Promise.then.completed (D:\\App_Project\\Website\\BMad-Methods\\project-5\\Ulasis\\Backend\\node_modules\\jest-circus\\build\\utils.js:298:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (D:\\App_Project\\Website\\BMad-Methods\\project-5\\Ulasis\\Backend\\node_modules\\jest-circus\\build\\utils.js:231:10)\n    at _callCircusHook (D:\\App_Project\\Website\\BMad-Methods\\project-5\\Ulasis\\Backend\\node_modules\\jest-circus\\build\\run.js:281:40)\n    at _runTestsForDescribeBlock (D:\\App_Project\\Website\\BMad-Methods\\project-5\\Ulasis\\Backend\\node_modules\\jest-circus\\build\\run.js:154:7)\n    at run (D:\\App_Project\\Website\\BMad-Methods\\project-5\\Ulasis\\Backend\\node_modules\\jest-circus\\build\\run.js:71:3)\n    at runAndTransformResultsToJestFormat (D:\\App_Project\\Website\\BMad-Methods\\project-5\\Ulasis\\Backend\\node_modules\\jest-circus\\build\\legacy-code-todo-rewrite\\jestAdapterInit.js:122:21)\n    at jestAdapter (D:\\App_Project\\Website\\BMad-Methods\\project-5\\Ulasis\\Backend\\node_modules\\jest-circus\\build\\legacy-code-todo-rewrite\\jestAdapter.js:79:19)\n    at runTestInternal (D:\\App_Project\\Website\\BMad-Methods\\project-5\\Ulasis\\Backend\\node_modules\\jest-runner\\build\\runTest.js:367:16)\n    at runTest (D:\\App_Project\\Website\\BMad-Methods\\project-5\\Ulasis\\Backend\\node_modules\\jest-runner\\build\\runTest.js:444:34)\n    at Object.worker (D:\\App_Project\\Website\\BMad-Methods\\project-5\\Ulasis\\Backend\\node_modules\\jest-runner\\build\\testWorker.js:106:12)"}
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+    console.log
+      2025-10-29 13:39:14 [error]: Error closing test database: SQLITE_MISUSE: Database is closed
+
+      at Console.log (node_modules/winston/lib/winston/transports/console.js:90:12)   
+
+  ● Authentication API Integration Tests › Protected Routes › POST /api/v1/auth/change-password › should change password with valid token                                   
+                                                                                      
+    expected 200 "OK", got 400 "Bad Request"                                          
+                                                                                      
+      427 |             new_password: 'NewPassword123',                               
+      428 |           })                                                              
+    > 429 |           .expect(200);
+          |            ^
+      430 |
+      431 |         expect(response.body.success).toBe(true);
+      432 |         expect(response.body.message).toContain('Password changed successfully');
+
+      at Object.expect (tests/integration/auth.test.js:429:12)
+      ----
+      at Test._assertStatus (node_modules/supertest/lib/test.js:252:14)
+      at node_modules/supertest/lib/test.js:308:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:285:13)
+      at Test.assert (node_modules/supertest/lib/test.js:164:23)
+      at Server.localAssert (node_modules/supertest/lib/test.js:120:14)
+
+A worker process has failed to exit gracefully and has been force exited. This is likely caused by tests leaking due to improper teardown. Try running with --detectOpenHandles to find leaks. Active timers can also cause this, ensure that .unref() was called on them.
+Test Suites: 6 failed, 13 passed, 19 total                                            
+Tests:       18 failed, 262 passed, 280 total                                         
+Snapshots:   0 total                                                                  
+Time:        25.514 s, estimated 32 s                                                 
+Ran all test suites.                                                                  
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?
+PS D:\App_Project\Website\BMad-Methods\project-5\Ulasis\Backend> 
