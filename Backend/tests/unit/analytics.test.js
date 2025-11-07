@@ -1,0 +1,559 @@
+'use strict';
+
+// Mock the models for analytics testing
+jest.mock('../../src/models', () => ({
+  Response: {
+    count: jest.fn(),
+    average: jest.fn(),
+    destroy: jest.fn(),
+  },
+  Answer: {
+    count: jest.fn(),
+    findOne: jest.fn(),
+    findAll: jest.fn(),
+    _setMockData: jest.fn(),
+    _clearMockData: jest.fn(),
+    destroy: jest.fn(),
+  },
+  Questionnaire: {
+    findOne: jest.fn(),
+    findByPk: jest.fn(),
+    destroy: jest.fn(),
+  },
+  Question: {
+    findByPk: jest.fn(),
+    findAll: jest.fn(),
+    destroy: jest.fn(),
+  },
+  QRCode: {
+    destroy: jest.fn(),
+  },
+  SubscriptionUsage: {
+    destroy: jest.fn(),
+  },
+  PaymentTransaction: {
+    destroy: jest.fn(),
+  },
+  NotificationHistory: {
+    destroy: jest.fn(),
+  },
+  AuditLog: {
+    destroy: jest.fn(),
+  },
+  sequelize: {
+    Op: {},
+  },
+}));
+
+// Get the mocked models
+const { Response, Answer, Questionnaire, Question } = require('../../src/models');
+
+
+const bubbleAnalyticsService = require('../../src/services/bubbleAnalyticsService');
+const timeComparisonService = require('../../src/services/timeComparisonService');
+const reportService = require('../../src/services/reportService');
+const cacheService = require('../../src/services/cacheService');
+
+describe('Analytics Service Tests', () => {
+  beforeEach(() => {
+    // Reset all mocks
+    jest.clearAllMocks();
+    // Clear custom mock data
+    if (Answer && Answer._clearMockData) {
+      Answer._clearMockData();
+    }
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  describe('Bubble Analytics Service', () => {
+    describe('getBubbleAnalytics', () => {
+      it('should return bubble analytics for valid questionnaire', async () => {
+        // Arrange
+        const questionnaireId = 1;
+        const mockQuestionnaireData = {
+          id: questionnaireId,
+          title: 'Test Questionnaire',
+          categoryMapping: {
+            'service': { improvementArea: 'Service Quality', weight: 1.0 },
+            'product': { improvementArea: 'Product Quality', weight: 1.0 },
+          },
+        };
+
+        const mockAnswers = [
+          {
+            ratingScore: 2.0,
+            isSkipped: false,
+            validationStatus: 'valid',
+            questionId: 1,
+            question: { category: 'service', questionnaireId: 1 },
+            response: { id: 1, isComplete: true },
+          },
+          {
+            ratingScore: 3.0,
+            isSkipped: false,
+            validationStatus: 'valid',
+            questionId: 1,
+            question: { category: 'service', questionnaireId: 1 },
+            response: { id: 2, isComplete: true },
+          },
+          {
+            ratingScore: 4.5,
+            isSkipped: false,
+            validationStatus: 'valid',
+            questionId: 1,
+            question: { category: 'service', questionnaireId: 1 },
+            response: { id: 3, isComplete: true },
+          },
+          {
+            ratingScore: 3.2,
+            isSkipped: false,
+            validationStatus: 'valid',
+            questionId: 2,
+            question: { category: 'product', questionnaireId: 1 },
+            response: { id: 4, isComplete: true },
+          },
+        ];
+
+        Questionnaire.findOne.mockResolvedValue(mockQuestionnaireData);
+        Question.findAll.mockResolvedValue([
+          { id: 1, category: 'service' },
+          { id: 2, category: 'product' },
+        ]);
+        Answer.findAll.mockResolvedValue(mockAnswers);
+        Answer._setMockData(mockAnswers);
+        Response.count.mockResolvedValue(3);
+
+        // Clear specific cache key to prevent test interference
+        const specificCacheKey = `analytics:bubble:${questionnaireId}:all:all:week`;
+        await cacheService.deleteCache(specificCacheKey);
+
+        // Act
+        const result = await bubbleAnalyticsService.getBubbleAnalytics(questionnaireId);
+
+        // Assert
+        const serviceCategory = result.categories.find(cat => cat.name === 'Service' || cat.name === 'Service Quality');
+        expect(serviceCategory).toBeDefined();
+        expect(serviceCategory.rating).toBeCloseTo(3.17, 1); // Average of 2.0, 3.0, and 4.5
+        expect(serviceCategory.color).toBe('yellow'); // 3.17 is in yellow range (2.5-3.5)
+      });
+
+      it('should handle empty category mapping', async () => {
+        // Arrange
+        const questionnaireId = 1;
+        const mockQuestionnaireData = {
+          id: questionnaireId,
+          categoryMapping: {},
+        };
+
+        Questionnaire.findOne.mockResolvedValue(mockQuestionnaireData);
+
+        // Act & Assert
+        const result = await bubbleAnalyticsService.validateQuestionnaireForBubbleAnalytics(questionnaireId);
+        expect(result.isValid).toBe(false);
+        expect(result.error).toBe('ANALYTICS_ERROR_002');
+      });
+
+      it('should apply correct color coding based on ratings', async () => {
+        // Clear all cache first to ensure clean state
+        await cacheService.clearCacheByPattern('analytics:*');
+
+        // Arrange
+        const questionnaireId = 1;
+        const mockQuestionnaireData = {
+          id: questionnaireId,
+          categoryMapping: { 'service': { improvementArea: 'Service' } },
+        };
+
+        const mockAnswers = [
+          { ratingScore: 2.0, isSkipped: false, validationStatus: 'valid', questionId: 1, question: { category: 'service', questionnaireId: 1 }, response: { id: 1, isComplete: true } }, // Red
+          { ratingScore: 3.0, isSkipped: false, validationStatus: 'valid', questionId: 1, question: { category: 'service', questionnaireId: 1 }, response: { id: 2, isComplete: true } }, // Yellow
+          { ratingScore: 4.5, isSkipped: false, validationStatus: 'valid', questionId: 1, question: { category: 'service', questionnaireId: 1 }, response: { id: 3, isComplete: true } },  // Green
+        ];
+
+        // Ensure clean mock state
+        Questionnaire.findOne.mockReset();
+        Question.findAll.mockReset();
+        Questionnaire.findOne.mockResolvedValue(mockQuestionnaireData);
+
+        // Mock Question.findAll to return only service questions for this test
+        Question.findAll.mockResolvedValue([
+          { id: 1, category: 'service', questionnaireId: 1 },
+        ]);
+
+        Answer._setMockData(mockAnswers);
+        Response.count.mockResolvedValue(3);
+
+        // Act
+        const result = await bubbleAnalyticsService.getBubbleAnalytics(questionnaireId);
+
+        // Assert
+        const serviceCategory = result.categories.find(cat => cat.name === 'Service' || cat.name === 'Service Quality');
+        expect(serviceCategory).toBeDefined();
+        expect(serviceCategory.rating).toBeCloseTo(3.17, 1); // Average of 2.0, 3.0, and 4.5
+        expect(serviceCategory.color).toBe('yellow'); // 3.17 is in yellow range (2.5-3.5)
+      });
+    });
+
+    describe('getColorIndicator', () => {
+      it('should return red for ratings <= 2.5', () => {
+        expect(bubbleAnalyticsService.getColorIndicator(2.0)).toBe('red');
+        expect(bubbleAnalyticsService.getColorIndicator(2.5)).toBe('red');
+      });
+
+      it('should return yellow for ratings > 2.5 and <= 3.5', () => {
+        expect(bubbleAnalyticsService.getColorIndicator(2.6)).toBe('yellow');
+        expect(bubbleAnalyticsService.getColorIndicator(3.5)).toBe('yellow');
+      });
+
+      it('should return green for ratings > 3.5', () => {
+        expect(bubbleAnalyticsService.getColorIndicator(3.6)).toBe('green');
+        expect(bubbleAnalyticsService.getColorIndicator(5.0)).toBe('green');
+      });
+    });
+
+    describe('validateQuestionnaireForBubbleAnalytics', () => {
+      it('should validate active questionnaire with category mapping', async () => {
+        // Arrange
+        const questionnaireId = 1;
+        const mockQuestionnaireData = {
+          id: questionnaireId,
+          isActive: true,
+          categoryMapping: { 'service': { improvementArea: 'Service' } },
+        };
+
+        Questionnaire.findOne.mockResolvedValue(mockQuestionnaireData);
+
+        // Act
+        const result = await bubbleAnalyticsService.validateQuestionnaireForBubbleAnalytics(questionnaireId);
+
+        // Assert
+        expect(result.isValid).toBe(true);
+      });
+
+      it('should reject inactive questionnaire', async () => {
+        // Arrange
+        const questionnaireId = 1;
+        const mockQuestionnaireData = {
+          id: questionnaireId,
+          isActive: false,
+          categoryMapping: { 'service': { improvementArea: 'Service' } },
+        };
+
+        Questionnaire.findOne.mockResolvedValue(mockQuestionnaireData);
+
+        // Act
+        const result = await bubbleAnalyticsService.validateQuestionnaireForBubbleAnalytics(questionnaireId);
+
+        // Assert
+        expect(result.isValid).toBe(false);
+        expect(result.error).toBe('ANALYTICS_ERROR_002');
+      });
+    });
+  });
+
+  describe('Time Comparison Service', () => {
+    describe('getTimePeriodComparison', () => {
+      it('should generate time period comparison', async () => {
+        // Arrange
+        const questionnaireId = 1;
+        const mockQuestionnaireData = {
+          id: questionnaireId,
+          categoryMapping: { 'service': { improvementArea: 'Service' } },
+        };
+
+        const mockAnswers = [
+          { ratingScore: 4.0, isSkipped: false, validationStatus: 'valid', question: { category: 'service', questionnaireId: 1 }, response: { id: 1, isComplete: true } },
+        ];
+
+        Questionnaire.findOne.mockResolvedValue(mockQuestionnaireData);
+        Answer.findAll.mockResolvedValue(mockAnswers);
+        Response.count.mockResolvedValue(5);
+
+        // Act
+        const result = await timeComparisonService.getTimePeriodComparison(questionnaireId, {
+          comparisonType: 'week_over_week',
+        });
+
+        // Assert
+        expect(result).toHaveProperty('questionnaire_id', questionnaireId);
+        expect(result).toHaveProperty('comparison_type', 'week_over_week');
+        expect(result).toHaveProperty('current_period');
+        expect(result).toHaveProperty('previous_period');
+        expect(result).toHaveProperty('comparison_metrics');
+        expect(result.comparison_metrics).toHaveProperty('response_count_change');
+        expect(result.comparison_metrics).toHaveProperty('overall_rating_change');
+        expect(result.comparison_metrics).toHaveProperty('category_comparisons');
+      });
+
+      it('should handle invalid date ranges', async () => {
+        // Arrange
+        const questionnaireId = 1;
+        const mockQuestionnaireData = {
+          id: questionnaireId,
+          categoryMapping: { 'service': { improvementArea: 'Service' } },
+        };
+
+        Questionnaire.findOne.mockResolvedValue(mockQuestionnaireData);
+
+        // Act & Assert
+        await expect(timeComparisonService.getTimePeriodComparison(questionnaireId, {
+          comparison_type: 'custom',
+          currentPeriodStart: '2025-01-01',
+          currentPeriodEnd: '2024-01-01', // End before start
+        })).rejects.toThrow('Invalid date range for time-period comparison');
+      });
+    });
+
+    describe('calculatePercentageChange', () => {
+      it('should calculate positive percentage change', () => {
+        const result = timeComparisonService.calculatePercentageChange(100, 150);
+        expect(result.percentage_change).toBe(50);
+        expect(result.trend).toBe('increasing');
+      });
+
+      it('should calculate negative percentage change', () => {
+        const result = timeComparisonService.calculatePercentageChange(100, 75);
+        expect(result.percentage_change).toBe(-25);
+        expect(result.trend).toBe('decreasing');
+      });
+
+      it('should handle zero previous value', () => {
+        const result = timeComparisonService.calculatePercentageChange(0, 50);
+        expect(result.percentage_change).toBe(100);
+        expect(result.trend).toBe('increasing');
+      });
+    });
+
+    describe('determineOverallTrend', () => {
+      it('should determine improving trend', () => {
+        const responseChange = { trend: 'increasing' };
+        const ratingChange = { trend: 'increasing' };
+        const categoryComparisons = [
+          { rating_trend: 'increasing' },
+          { rating_trend: 'stable' },
+        ];
+
+        const trend = timeComparisonService.determineOverallTrend(
+          responseChange, ratingChange, categoryComparisons,
+        );
+
+        expect(trend).toBe('improving');
+      });
+
+      it('should determine declining trend', () => {
+        const responseChange = { trend: 'decreasing' };
+        const ratingChange = { trend: 'decreasing' };
+        const categoryComparisons = [
+          { rating_trend: 'decreasing' },
+          { rating_trend: 'stable' },
+        ];
+
+        const trend = timeComparisonService.determineOverallTrend(
+          responseChange, ratingChange, categoryComparisons,
+        );
+
+        expect(trend).toBe('declining');
+      });
+    });
+  });
+
+  describe('Report Service', () => {
+    describe('generateAnalyticsReport', () => {
+      it('should generate CSV report', async () => {
+        // Arrange
+        const questionnaireId = 1;
+        const mockAnalytics = {
+          questionnaire_id: questionnaireId,
+          categories: [
+            { name: 'Service', rating: 4.2, response_count: 10, color: 'green', trend: 'improving' },
+          ],
+          total_responses: 10,
+          response_rate: 0.8,
+          period_comparison: {
+            current_period: '2025-10-20 to 2025-10-26',
+            overall_trend: 'improving',
+          },
+          generated_at: new Date().toISOString(),
+        };
+
+        jest.spyOn(bubbleAnalyticsService, 'getBubbleAnalytics').mockResolvedValue(mockAnalytics);
+
+        // Act
+        const result = await reportService.generateAnalyticsReport(questionnaireId, {
+          format: 'csv',
+        });
+
+        // Assert
+        expect(typeof result).toBe('string');
+        expect(result).toContain('Analytics Report');
+        expect(result).toContain('Category Analytics');
+        expect(result).toContain('Service');
+        expect(result).toContain('4.2');
+      });
+
+      it('should include comparison data when requested', async () => {
+        // Arrange
+        const questionnaireId = 1;
+        const mockAnalytics = {
+          questionnaire_id: questionnaireId,
+          categories: [],
+          total_responses: 10,
+          response_rate: 0.8,
+          period_comparison: { current_period: '2025-10-20 to 2025-10-26' },
+          generated_at: new Date().toISOString(),
+        };
+
+        const mockComparison = {
+          comparison_metrics: {
+            response_count_change: { current: 10, previous: 5, change: 5, percentage_change: 100, trend: 'increasing' },
+            overall_rating_change: { current: 4.0, previous: 3.5, change: 0.5, percentage_change: 14.29, trend: 'increasing' },
+            category_comparisons: [],
+            insights: [],
+          },
+        };
+
+        jest.spyOn(bubbleAnalyticsService, 'getBubbleAnalytics').mockResolvedValue(mockAnalytics);
+        jest.spyOn(timeComparisonService, 'getTimePeriodComparison').mockResolvedValue(mockComparison);
+
+        // Act
+        const result = await reportService.generateAnalyticsReport(questionnaireId, {
+          format: 'csv',
+          includeComparison: true,
+        });
+
+        // Assert
+        expect(result).toContain('Period Comparison');
+        expect(result).toContain('Total Responses');
+        expect(result).toContain('100%');
+      });
+    });
+
+    describe('validateExportPermissions', () => {
+      it('should allow CSV export for starter plan', () => {
+        const result = reportService.validateExportPermissions('csv', 'starter');
+        expect(result.allowed).toBe(true);
+      });
+
+      it('should allow Excel export for business plan', () => {
+        const result = reportService.validateExportPermissions('excel', 'business');
+        expect(result.allowed).toBe(true);
+      });
+
+      it('should reject any export for free plan', () => {
+        const result = reportService.validateExportPermissions('csv', 'free');
+        expect(result.allowed).toBe(false);
+        expect(result.error).toBe('SUBSCRIPTION_ERROR_001');
+      });
+
+      it('should reject Excel export for starter plan', () => {
+        const result = reportService.validateExportPermissions('excel', 'starter');
+        expect(result.allowed).toBe(false);
+        expect(result.error).toBe('SUBSCRIPTION_ERROR_002');
+      });
+    });
+  });
+
+  describe('Cache Service', () => {
+    describe('setCache and getCache', () => {
+      it('should set and get cache values', async () => {
+        // Arrange
+        const key = 'test-key';
+        const value = { test: 'data' };
+
+        // Act
+        const setResult = await cacheService.setCache(key, value);
+        const getResult = await cacheService.getCache(key);
+
+        // Assert
+        expect(setResult).toBe(true);
+        expect(getResult).toEqual(value);
+      });
+
+      it('should return null for non-existent key', async () => {
+        // Act
+        const result = await cacheService.getCache('non-existent-key');
+
+        // Assert
+        expect(result).toBeNull();
+      });
+
+      it('should respect TTL', async () => {
+        // Arrange
+        const key = 'test-ttl-key';
+        const value = { test: 'data' };
+        const shortTTL = 1; // 1 second
+
+        // Act
+        await cacheService.setCache(key, value, shortTTL);
+        const immediateResult = await cacheService.getCache(key);
+
+        // Wait for expiration
+        await new Promise(resolve => setTimeout(resolve, 1100));
+        const expiredResult = await cacheService.getCache(key);
+
+        // Assert
+        expect(immediateResult).toEqual(value);
+        expect(expiredResult).toBeNull();
+      });
+    });
+
+    describe('cacheAnalyticsData', () => {
+      it('should cache analytics data with correct key', async () => {
+        // Arrange
+        const questionnaireId = 1;
+        const analyticsData = { categories: [] };
+        const options = { dateFrom: '2025-01-01', dateTo: '2025-01-31' };
+
+        // Act
+        const result = await cacheService.cacheAnalyticsData(questionnaireId, analyticsData, options);
+        const cached = await cacheService.getCachedAnalyticsData(questionnaireId, options);
+
+        // Assert
+        expect(result).toBe(true);
+        expect(cached).toEqual(analyticsData);
+      });
+    });
+
+    describe('invalidateQuestionnaireCache', () => {
+      it('should invalidate all cache entries for questionnaire', async () => {
+        // Arrange
+        const questionnaireId = 1;
+
+        // Set some cache entries
+        await cacheService.cacheAnalyticsData(questionnaireId, { test: 'analytics' });
+        await cacheService.cacheComparisonData(questionnaireId, { test: 'comparison' });
+
+        // Verify they exist
+        const analyticsBefore = await cacheService.getCachedAnalyticsData(questionnaireId);
+        const comparisonBefore = await cacheService.getCachedComparisonData(questionnaireId);
+        expect(analyticsBefore).not.toBeNull();
+        expect(comparisonBefore).not.toBeNull();
+
+        // Act
+        const result = await cacheService.invalidateQuestionnaireCache(questionnaireId);
+
+        // Assert
+        expect(result).toBe(true);
+        const analyticsAfter = await cacheService.getCachedAnalyticsData(questionnaireId);
+        const comparisonAfter = await cacheService.getCachedComparisonData(questionnaireId);
+        expect(analyticsAfter).toBeNull();
+        expect(comparisonAfter).toBeNull();
+      });
+    });
+
+    describe('healthCheck', () => {
+      it('should return healthy status', async () => {
+        // Act
+        const result = await cacheService.healthCheck();
+
+        // Assert
+        expect(result).toHaveProperty('status', 'healthy');
+        expect(result).toHaveProperty('type');
+        expect(result).toHaveProperty('responseTime');
+      });
+    });
+  });
+});

@@ -1,0 +1,209 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - button "ULASIS" [ref=e6] [cursor=pointer]:
+        - img [ref=e8]
+        - heading "ULASIS" [level=1] [ref=e10]
+      - generic [ref=e11]:
+        - button "Toggle theme" [ref=e12] [cursor=pointer]:
+          - img [ref=e13]
+        - button [ref=e15] [cursor=pointer]:
+          - img [ref=e16]
+  - main [ref=e20]:
+    - generic [ref=e22]:
+      - heading "Setiap Ulasan Adalah Cerita. Sudahkah Anda Mendengarkan?" [level=2] [ref=e23]
+      - paragraph [ref=e24]: Di balik setiap rating, ada narasi pelanggan yang menunggu didengar. ULASIS membantu Anda membaca di antara baris dan mengubahnya menjadi babak baru kesuksesan bisnis Anda.
+  - generic [ref=e27]:
+    - generic [ref=e30]:
+      - generic [ref=e31]: "\"Pelayanannya lama sekali...\""
+      - generic [ref=e32]: "\"Kopinya juara!\""
+      - generic [ref=e33]: "\"AC panas, tidak nyaman.\""
+      - generic [ref=e34]: "\"Parkirnya susah...\""
+      - generic [ref=e35]: "\"Pasti kembali lagi!\""
+    - generic [ref=e36]:
+      - heading "Cerita Pelanggan Tercecer di Mana-mana." [level=3] [ref=e37]
+      - paragraph [ref=e38]: Dari media sosial, kasir, hingga ulasan online—feedback datang dari segala arah. Tanpa alat yang tepat, suara mereka menjadi bising tak bermakna. Kesempatan untuk berkembang hilang dalam kekacauan.
+      - list [ref=e39]:
+        - listitem [ref=e40]:
+          - generic [ref=e41]: ✗
+          - text: Keluhan kritis terlewatkan.
+        - listitem [ref=e42]:
+          - generic [ref=e43]: ✗
+          - text: Tren positif tidak termanfaatkan.
+        - listitem [ref=e44]:
+          - generic [ref=e45]: ✗
+          - text: Keputusan bisnis tanpa data solid.
+  - generic [ref=e47]:
+    - generic [ref=e48]:
+      - 'heading "ULASIS: Penerjemah Cerita Pelanggan Anda" [level=3] [ref=e49]'
+      - paragraph [ref=e50]: Kami mengubah kebisingan menjadi sinyal yang jelas, memberikan Anda kekuatan untuk mendengar, memahami, dan bertindak.
+    - generic [ref=e51]:
+      - generic [ref=e52]:
+        - img [ref=e54]
+        - heading "Mendengar Saat Cerita Terjadi" [level=3] [ref=e56]
+        - paragraph [ref=e57]: Tangkap setiap ulasan secara instan melalui QR code dinamis, tepat saat pengalaman pelanggan masih hangat.
+      - generic [ref=e58]:
+        - img [ref=e60]
+        - heading "Analisis Topik Otomatis" [level=3] [ref=e62]
+        - paragraph [ref=e63]: Sistem kami menganalisis setiap komentar untuk mengungkap sentimen, topik utama, dan insight tersembunyi secara otomatis.
+      - generic [ref=e64]:
+        - img [ref=e66]
+        - heading "Menulis Babak Berikutnya" [level=3] [ref=e68]
+        - paragraph [ref=e69]: Ubah insight menjadi aksi. Tugaskan tim, lacak penyelesaian, dan tunjukkan pada pelanggan bahwa suara mereka didengar.
+  - generic [ref=e71]:
+    - heading "Dari Kekacauan Menjadi Kejelasan" [level=3] [ref=e73]
+    - generic [ref=e74]:
+      - generic [ref=e75]:
+        - generic [ref=e76]: "1"
+        - heading "Pindai QR" [level=4] [ref=e77]
+        - paragraph [ref=e78]: Pelanggan memindai QR code di meja, struk, atau lokasi strategis lainnya.
+      - generic [ref=e79]:
+        - generic [ref=e80]: "2"
+        - heading "Beri Ulasan" [level=4] [ref=e81]
+        - paragraph [ref=e82]: Mereka langsung memberikan rating dan komentar melalui form sederhana.
+      - generic [ref=e83]:
+        - generic [ref=e84]: "3"
+        - heading "Dapatkan Insight" [level=4] [ref=e85]
+        - paragraph [ref=e86]: Data masuk dianalisis dan disajikan di dashboard Anda secara real-time.
+      - generic [ref=e87]:
+        - generic [ref=e88]: "4"
+        - heading "Ambil Tindakan" [level=4] [ref=e89]
+        - paragraph [ref=e90]: Tim Anda menerima notifikasi dan dapat langsung menindaklanjuti ulasan.
+  - generic [ref=e92]:
+    - heading "Kisah Sukses yang Telah Ditulis" [level=3] [ref=e94]
+    - generic [ref=e95]:
+      - generic [ref=e96]:
+        - img [ref=e97]
+        - paragraph [ref=e99]: "\"ULASIS mengubah cara kami menangani keluhan. Sekarang kami bisa menyelesaikan masalah sebelum pelanggan meninggalkan restoran.\""
+        - paragraph [ref=e100]: Rahmat Hidayat
+        - paragraph [ref=e101]: Manajer, Kopi Kenangan
+      - generic [ref=e102]:
+        - img [ref=e103]
+        - paragraph [ref=e105]: "\"Melihat tren mingguan dari analisis topik sangat membantu kami dalam menentukan prioritas perbaikan layanan kamar.\""
+        - paragraph [ref=e106]: Siti Aisyah
+        - paragraph [ref=e107]: GM, Hotel Artotel
+      - generic [ref=e108]:
+        - img [ref=e109]
+        - paragraph [ref=e111]: "\"Dengan data per lokasi, kami bisa membandingkan kinerja cabang dan menerapkan praktik terbaik secara merata.\""
+        - paragraph [ref=e112]: Budi Santoso
+        - paragraph [ref=e113]: Area-Lead, Uniqlo
+  - generic [ref=e116]:
+    - heading "Siap Menulis Cerita Sukses Anda?" [level=3] [ref=e117]
+    - paragraph [ref=e118]: Ubah setiap feedback menjadi kesempatan. Mulai gratis hari ini dan dengarkan apa yang sebenarnya ingin dikatakan oleh pelanggan Anda.
+    - button "Daftar Gratis & Mulai Sekarang" [ref=e119] [cursor=pointer]
+  - generic [ref=e121]:
+    - generic [ref=e122]:
+      - heading "Harga Fleksibel untuk UKM Indonesia" [level=3] [ref=e123]
+      - paragraph [ref=e124]: Mulai gratis, lalu pilih paket yang tumbuh bersama bisnis Anda. Tanpa kontrak, tanpa ribet.
+    - generic [ref=e125]:
+      - generic [ref=e126]:
+        - heading "GRATIS" [level=4] [ref=e127]
+        - paragraph [ref=e128]: Rp 0
+        - paragraph [ref=e129]: Untuk coba-coba atau bisnis yang baru mulai.
+        - list [ref=e130]:
+          - listitem [ref=e131]:
+            - img [ref=e132]
+            - text: 1 Kuesioner Aktif
+          - listitem [ref=e134]:
+            - img [ref=e135]
+            - text: 50 Ulasan / bulan
+          - listitem [ref=e137]:
+            - img [ref=e138]
+            - text: Dashboard KPI Utama
+          - listitem [ref=e140]:
+            - img [ref=e141]
+            - text: Manajemen Ulasan (Inbox)
+          - listitem [ref=e143]:
+            - img [ref=e144]
+            - text: QR Code Standar
+        - button "Mulai Gratis" [ref=e146] [cursor=pointer]
+      - generic [ref=e147]:
+        - generic [ref=e148]: PALING POPULER
+        - heading "STARTER" [level=4] [ref=e149]
+        - paragraph [ref=e150]: Rp 49rb/bln
+        - paragraph [ref=e151]: Untuk bisnis yang sedang bertumbuh.
+        - list [ref=e152]:
+          - listitem [ref=e153]:
+            - img [ref=e154]
+            - text: 5 Kuesioner Aktif
+          - listitem [ref=e156]:
+            - img [ref=e157]
+            - text: Ulasan Tak Terbatas
+          - listitem [ref=e159]:
+            - img [ref=e160]
+            - text: Kustomisasi Warna QR Code
+          - listitem [ref=e162]:
+            - img [ref=e163]
+            - text: Analisis Sentimen & Topik
+          - listitem [ref=e165]:
+            - img [ref=e166]
+            - text: Grafik Tren Kinerja
+        - button "Pilih Paket" [ref=e168] [cursor=pointer]
+      - generic [ref=e169]:
+        - heading "BUSINESS" [level=4] [ref=e170]
+        - paragraph [ref=e171]: Rp 199rb/bln
+        - paragraph [ref=e172]: Untuk bisnis dengan banyak cabang dan kebutuhan analisis mendalam.
+        - list [ref=e173]:
+          - listitem [ref=e174]:
+            - img [ref=e175]
+            - text: Kuesioner Tak Terbatas
+          - listitem [ref=e177]:
+            - img [ref=e178]
+            - text: Kustomisasi Logo QR Code
+          - listitem [ref=e180]:
+            - img [ref=e181]
+            - text: Unduh Laporan PDF
+          - listitem [ref=e183]:
+            - img [ref=e184]
+            - text: Analisis per Sumber Ulasan
+          - listitem [ref=e186]:
+            - img [ref=e187]
+            - text: Manajemen Tim & Peran
+        - button "Pilih Paket" [ref=e189] [cursor=pointer]
+  - contentinfo [ref=e190]:
+    - generic [ref=e191]:
+      - generic [ref=e192]:
+        - generic [ref=e193]:
+          - generic [ref=e194]:
+            - img [ref=e196]
+            - heading "ULASIS" [level=1] [ref=e198]
+          - paragraph [ref=e199]: Ubah ulasan menjadi pertumbuhan.
+        - generic [ref=e200]:
+          - heading "Produk" [level=4] [ref=e201]
+          - list [ref=e202]:
+            - listitem [ref=e203]:
+              - button "Fitur" [ref=e204] [cursor=pointer]
+            - listitem [ref=e205]:
+              - button "Harga" [ref=e206] [cursor=pointer]
+        - generic [ref=e207]:
+          - heading "Perusahaan" [level=4] [ref=e208]
+          - list [ref=e209]:
+            - listitem [ref=e210]:
+              - button "Tentang Kami" [ref=e211] [cursor=pointer]
+            - listitem [ref=e212]:
+              - button "Blog" [ref=e213] [cursor=pointer]
+            - listitem [ref=e214]:
+              - button "Karir" [ref=e215] [cursor=pointer]
+        - generic [ref=e216]:
+          - heading "Bantuan" [level=4] [ref=e217]
+          - list [ref=e218]:
+            - listitem [ref=e219]:
+              - button "Pusat Bantuan" [ref=e220] [cursor=pointer]
+            - listitem [ref=e221]:
+              - button "Kontak" [ref=e222] [cursor=pointer]
+      - generic [ref=e223]:
+        - paragraph [ref=e224]: © 2025 ULASIS. Semua hak cipta dilindungi.
+        - generic [ref=e225]:
+          - link [ref=e226]:
+            - /url: "#"
+            - img [ref=e227]
+          - link [ref=e229]:
+            - /url: "#"
+            - img [ref=e230]
+          - link [ref=e232]:
+            - /url: "#"
+            - img [ref=e233]
+```

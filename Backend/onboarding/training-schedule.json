@@ -1,0 +1,151 @@
+{
+  "admin": "New Admin User",
+  "role": "Admin",
+  "startDate": "2025-11-07",
+  "schedule": [
+    {
+      "week": 1,
+      "title": "Foundation Training",
+      "modules": [
+        {
+          "name": "System Overview",
+          "duration": "30 minutes",
+          "type": "video"
+        },
+        {
+          "name": "Security Basics",
+          "duration": "45 minutes",
+          "type": "interactive"
+        },
+        {
+          "name": "Dashboard Navigation",
+          "duration": "20 minutes",
+          "type": "hands-on"
+        },
+        {
+          "name": "User Management Basics",
+          "duration": "40 minutes",
+          "type": "video"
+        }
+      ],
+      "assessments": [
+        "Security Quiz",
+        "Navigation Test"
+      ]
+    },
+    {
+      "week": 2,
+      "title": "Core Features",
+      "modules": [
+        {
+          "name": "Advanced User Management",
+          "duration": "60 minutes",
+          "type": "hands-on"
+        },
+        {
+          "name": "Analytics and Reporting",
+          "duration": "45 minutes",
+          "type": "video"
+        },
+        {
+          "name": "Security Monitoring",
+          "duration": "30 minutes",
+          "type": "interactive"
+        },
+        {
+          "name": "Troubleshooting Basics",
+          "duration": "25 minutes",
+          "type": "video"
+        }
+      ],
+      "assessments": [
+        "User Management Practical",
+        "Report Generation Test"
+      ]
+    },
+    {
+      "week": 3,
+      "title": "Advanced Features",
+      "modules": [
+        {
+          "name": "Automation and Workflows",
+          "duration": "50 minutes",
+          "type": "hands-on"
+        },
+        {
+          "name": "API Integration",
+          "duration": "40 minutes",
+          "type": "technical"
+        },
+        {
+          "name": "Custom Dashboards",
+          "duration": "35 minutes",
+          "type": "hands-on"
+        },
+        {
+          "name": "Advanced Security",
+          "duration": "45 minutes",
+          "type": "interactive"
+        }
+      ],
+      "assessments": [
+        "Automation Project",
+        "Security Scenario Test"
+      ]
+    },
+    {
+      "week": 4,
+      "title": "Mastery and Optimization",
+      "modules": [
+        {
+          "name": "Performance Optimization",
+          "duration": "30 minutes",
+          "type": "video"
+        },
+        {
+          "name": "Best Practices",
+          "duration": "25 minutes",
+          "type": "workshop"
+        },
+        {
+          "name": "Community Contribution",
+          "duration": "20 minutes",
+          "type": "discussion"
+        },
+        {
+          "name": "Final Assessment",
+          "duration": "60 minutes",
+          "type": "comprehensive"
+        }
+      ],
+      "assessments": [
+        "Final Practical Exam",
+        "Knowledge Review"
+      ]
+    }
+  ],
+  "resources": {
+    "videos": "https://training.ulasis.com/videos",
+    "documentation": "https://docs.ulasis.com",
+    "community": "https://community.ulasis.com",
+    "support": "support@ulasis.com"
+  },
+  "milestones": [
+    {
+      "week": 1,
+      "goal": "Complete basic setup and security"
+    },
+    {
+      "week": 2,
+      "goal": "Master core admin functions"
+    },
+    {
+      "week": 3,
+      "goal": "Implement advanced features"
+    },
+    {
+      "week": 4,
+      "goal": "Achieve operational mastery"
+    }
+  ]
+}

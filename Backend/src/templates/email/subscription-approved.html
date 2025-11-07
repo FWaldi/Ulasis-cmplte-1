@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscription Request Approved</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            border-bottom: 3px solid #28a745;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #28a745;
+            margin: 0;
+            font-size: 28px;
+        }
+        .success-icon {
+            font-size: 48px;
+            color: #28a745;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .approval-details {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .approval-details h3 {
+            margin-top: 0;
+            color: #155724;
+        }
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+            padding: 8px 0;
+            border-bottom: 1px solid #c3e6cb;
+        }
+        .detail-label {
+            font-weight: bold;
+            color: #155724;
+        }
+        .detail-value {
+            color: #155724;
+        }
+        .plan-change {
+            background-color: #e7f3ff;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 20px 0;
+            border: 2px solid #007bff;
+        }
+        .plan-change .from {
+            font-size: 18px;
+            color: #6c757d;
+        }
+        .plan-change .to {
+            font-size: 24px;
+            color: #007bff;
+            font-weight: bold;
+        }
+        .next-steps {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .next-steps h4 {
+            margin-top: 0;
+            color: #856404;
+        }
+        .cta-button {
+            display: inline-block;
+            padding: 12px 30px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+            transition: all 0.3s ease;
+        }
+        .cta-button:hover {
+            background-color: #0056b3;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #dee2e6;
+            color: #6c757d;
+            font-size: 14px;
+        }
+        .admin-notes {
+            background-color: #f8f9fa;
+            border-left: 4px solid #6c757d;
+            padding: 15px;
+            margin: 20px 0;
+            font-style: italic;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>✅ Subscription Request Approved!</h1>
+            <p>Your subscription change request has been approved</p>
+        </div>
+
+        <div class="success-icon">
+            🎉
+        </div>
+
+        <div class="approval-details">
+            <h3>Approval Details</h3>
+            <div class="detail-row">
+                <span class="detail-label">Request ID:</span>
+                <span class="detail-value">{{request_id}}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Approved Date:</span>
+                <span class="detail-value">{{approved_date}}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Processed By:</span>
+                <span class="detail-value">{{admin_name}}</span>
+            </div>
+        </div>
+
+        <div class="plan-change">
+            <div class="from">From: {{old_plan}}</div>
+            <div class="to">To: {{new_plan}}</div>
+        </div>
+
+        {{#if payment_required}}
+        <div class="next-steps">
+            <h4>💳 Next Steps - Payment Required</h4>
+            <p>Your subscription change has been approved, but payment is required to complete the process.</p>
+            <p><strong>Amount:</strong> {{amount}} {{currency}}</p>
+            {{#if payment_url}}
+            <p><strong>Payment URL:</strong> <a href="{{payment_url}}">Complete Payment</a></p>
+            {{/if}}
+            <p>Your new plan will be activated once payment is confirmed.</p>
+        </div>
+        {{else}}
+        <div class="next-steps">
+            <h4>🚀 Next Steps - Plan Activated</h4>
+            <p>Congratulations! Your subscription has been successfully updated to the {{new_plan}} plan.</p>
+            <p>You now have access to all features and benefits of your new plan.</p>
+        </div>
+        {{/if}}
+
+        {{#if admin_notes}}
+        <div class="admin-notes">
+            <strong>📝 Admin Notes:</strong> {{admin_notes}}
+        </div>
+        {{/if}}
+
+        <div style="text-align: center;">
+            <a href="{{dashboard_url}}" class="cta-button">Go to Dashboard</a>
+        </div>
+
+        <div class="footer">
+            <p>Thank you for choosing Ulasis!</p>
+            <p>If you have any questions, please contact our support team.</p>
+        </div>
+    </div>
+</body>
+</html>

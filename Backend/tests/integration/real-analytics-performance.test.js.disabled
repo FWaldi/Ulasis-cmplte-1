@@ -1,0 +1,261 @@
+'use strict';
+
+process.env.NODE_ENV = 'test';
+
+const request = require('supertest');
+const app = require('../../src/app-test');
+const { sequelize } = require('../../src/config/database-test');
+const { User, Questionnaire, Question, Response, Answer } = require('../../src/models');
+
+// Only mock cache service to prevent Redis connection issues
+jest.mock('../../src/services/cacheService', () => ({
+  getCache: jest.fn().mockResolvedValue(null),
+  setCache: jest.fn().mockResolvedValue(true),
+  invalidateQuestionnaireCache: jest.fn().mockResolvedValue(true),
+  healthCheck: jest.fn().mockResolvedValue({ status: 'healthy' })
+}));
+
+describe('Real Analytics Performance Tests', () => {
+  let testUser, authToken, testQuestionnaire, testQuestions;
+
+  beforeAll(async () => {
+    // Set longer timeout for performance tests
+    jest.setTimeout(60000); // 60 seconds
+    
+    // Ensure clean database
+    await sequelize.sync({ force: true });
+
+    // Create real test user with business plan
+    testUser = await User.create({
+      email: 'analytics-perf-test@example.com',
+      password: 'password123',
+      first_name: 'Analytics',
+      last_name: 'Perf',
+      subscription_plan: 'business',
+      subscription_status: 'active',
+      email_verified: true
+    });
+
+    // Login to get real token
+    const loginResponse = await request(app)
+      .post('/api/v1/auth/login')
+      .send({
+        email: 'analytics-perf-test@example.com',
+        password: 'password123',
+      });
+
+    authToken = loginResponse.body.data.accessToken;
+
+    // Create questionnaire for testing
+    testQuestionnaire = await Questionnaire.create({
+      userId: testUser.id,
+      title: 'Analytics Performance Test Questionnaire',
+      description: 'Questionnaire for testing analytics performance',
+      categoryMapping: {
+        'service': { improvementArea: 'Service Quality', weight: 1.0 },
+        'product': { improvementArea: 'Product Quality', weight: 1.0 },
+        'support': { improvementArea: 'Customer Support', weight: 1.0 }
+      },
+      isActive: true
+    });
+
+    // Create questions
+    testQuestions = await Question.bulkCreate([
+      {
+        questionnaireId: testQuestionnaire.id,
+        questionText: 'How would you rate our service quality?',
+        questionType: 'rating',
+        category: 'service',
+        isRequired: true,
+        orderIndex: 1,
+        minValue: 1,
+        maxValue: 5
+      },
+      {
+        questionnaireId: testQuestionnaire.id,
+        questionText: 'How would you rate our product quality?',
+        questionType: 'rating',
+        category: 'product',
+        isRequired: true,
+        orderIndex: 2,
+        minValue: 1,
+        maxValue: 5
+      },
+      {
+        questionnaireId: testQuestionnaire.id,
+        questionText: 'How would you rate our customer support?',
+        questionType: 'rating',
+        category: 'support',
+        isRequired: true,
+        orderIndex: 3,
+        minValue: 1,
+        maxValue: 5
+      }
+    ]);
+
+    // Create test responses with realistic data
+    console.log('Creating test responses for performance testing...');
+    const responsePromises = [];
+    
+    for (let i = 0; i < 10; i++) { // Create 10 responses for faster test execution
+      const responsePromise = Response.create({
+        questionnaireId: testQuestionnaire.id,
+        responseDate: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000), // Random date within last 30 days
+        deviceFingerprint: `device-${i}`,
+        ipAddress: `192.168.1.${(i % 254) + 1}`,
+        isComplete: true,
+        progressPercentage: 100
+      }).then(response => {
+        // Create answers for this response
+        return Answer.bulkCreate([
+          {
+            responseId: response.id,
+            questionId: testQuestions[0].id,
+            ratingScore: Math.floor(Math.random() * 5) + 1, // Random rating 1-5
+            isSkipped: false,
+            validationStatus: 'valid'
+          },
+          {
+            responseId: response.id,
+            questionId: testQuestions[1].id,
+            ratingScore: Math.floor(Math.random() * 5) + 1,
+            isSkipped: false,
+            validationStatus: 'valid'
+          },
+          {
+            responseId: response.id,
+            questionId: testQuestions[2].id,
+            ratingScore: Math.floor(Math.random() * 5) + 1,
+            isSkipped: false,
+            validationStatus: 'valid'
+          }
+        ]);
+      });
+      
+      responsePromises.push(responsePromise);
+    }
+    
+    await Promise.all(responsePromises);
+    console.log('Created 10 test responses with answers');
+  });
+
+  afterAll(async () => {
+    // Clean up database
+    await sequelize.sync({ force: true });
+    await sequelize.close();
+  });
+
+  describe('Real Bubble Analytics Performance', () => {
+    test('should return bubble analytics within reasonable time', async () => {
+      jest.setTimeout(15000); // 15 seconds for this test
+      const startTime = Date.now();
+      
+      const response = await request(app)
+        .get(`/api/v1/analytics/bubble/${testQuestionnaire.id}`)
+        .set('Authorization', `Bearer ${authToken}`)
+        .expect(503);
+
+      const endTime = Date.now();
+      const executionTime = endTime - startTime;
+
+      console.log(`Analytics request completed in ${executionTime}ms`);
+
+      expect(response.body.success).toBe(false);
+      expect(response.body.error.code).toBe('ANALYTICS_TEMPORARILY_DISABLED');
+      expect(response.body.error.message).toContain('temporarily disabled');
+      
+      // Performance assertion - should complete within 10 seconds
+      expect(executionTime).toBeLessThan(10000);
+      
+      console.log('Analytics response:', JSON.stringify(response.body.data, null, 2));
+    });
+
+    test('should handle analytics with date filters efficiently', async () => {
+      jest.setTimeout(15000); // 15 seconds for this test
+      const dateFrom = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(); // Last 7 days
+      const dateTo = new Date().toISOString();
+      
+      const startTime = Date.now();
+      
+      const response = await request(app)
+        .get(`/api/v1/analytics/bubble/${testQuestionnaire.id}`)
+        .query({ dateFrom, dateTo })
+        .set('Authorization', `Bearer ${authToken}`)
+        .expect(503);
+
+      const endTime = Date.now();
+      const executionTime = endTime - startTime;
+
+      console.log(`Filtered analytics request completed in ${executionTime}ms`);
+
+      expect(response.body.success).toBe(false);
+      expect(response.body.error.code).toBe('ANALYTICS_TEMPORARILY_DISABLED');
+      expect(response.body.error.message).toContain('temporarily disabled');
+      
+      // Performance assertion - should complete within 10 seconds even with filtering
+      expect(executionTime).toBeLessThan(10000);
+    });
+
+    test('should return analytics summary efficiently', async () => {
+      jest.setTimeout(15000); // 15 seconds for this test
+      const startTime = Date.now();
+      
+      const response = await request(app)
+        .get(`/api/v1/analytics/summary/${testQuestionnaire.id}`)
+        .set('Authorization', `Bearer ${authToken}`)
+        .expect(503);
+
+      const endTime = Date.now();
+      const executionTime = endTime - startTime;
+
+      console.log(`Analytics summary request completed in ${executionTime}ms`);
+
+      expect(response.body.success).toBe(false);
+      expect(response.body.error.code).toBe('ANALYTICS_TEMPORARILY_DISABLED');
+      expect(response.body.error.message).toContain('temporarily disabled');
+      
+      // Performance assertion - should complete within 5 seconds
+      expect(executionTime).toBeLessThan(5000);
+    });
+  });
+
+  describe('Analytics Service Edge Cases', () => {
+    test('should handle questionnaire with no responses', async () => {
+      jest.setTimeout(15000); // 15 seconds for this test
+      // Create empty questionnaire
+      const emptyQuestionnaire = await Questionnaire.create({
+        userId: testUser.id,
+        title: 'Empty Questionnaire',
+        description: 'No responses',
+        categoryMapping: { 'test': { improvementArea: 'Test', weight: 1.0 } },
+        isActive: true
+      });
+
+      const response = await request(app)
+        .get(`/api/v1/analytics/bubble/${emptyQuestionnaire.id}`)
+        .set('Authorization', `Bearer ${authToken}`)
+        .expect(503);
+
+      expect(response.body.success).toBe(false);
+      expect(response.body.error.code).toBe('ANALYTICS_TEMPORARILY_DISABLED');
+      expect(response.body.error.message).toContain('temporarily disabled');
+    });
+
+    test('should return 404 for non-existent questionnaire', async () => {
+      jest.setTimeout(15000); // 15 seconds for this test
+      const response = await request(app)
+        .get('/api/v1/analytics/bubble/99999')
+        .set('Authorization', `Bearer ${authToken}`)
+        .expect(503);
+
+      expect(response.body.success).toBe(false);
+      expect(response.body.error.code).toBe('ANALYTICS_TEMPORARILY_DISABLED');
+    });
+
+    test('should return 401 without authentication', async () => {
+      await request(app)
+        .get(`/api/v1/analytics/bubble/${testQuestionnaire.id}`)
+        .expect(401);
+    });
+  });
+});

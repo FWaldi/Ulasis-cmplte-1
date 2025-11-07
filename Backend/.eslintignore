@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+
+# Coverage reports
+coverage/
+
+# Test files
+tests/fixtures/
+tests/coverage/
+
+# Logs
+logs/
+*.log
+
+# Database
+*.sqlite
+*.db
+
+# Uploads
+uploads/
+
+# Environment files
+.env*
+
+# Package manager files
+package-lock.json
+yarn.lock

@@ -1,0 +1,18 @@
+'use strict';
+
+process.env.NODE_ENV = 'test';
+
+const request = require('supertest');
+const app = require('../../src/app-test');
+
+describe('Analytics Minimal Test', () => {
+  it('should handle analytics endpoint without hanging', async () => {
+    // Test with a very short timeout to catch hanging quickly
+    const response = await request(app)
+      .get('/api/v1/analytics/bubble/99999')
+      .set('Authorization', 'Bearer test-access-token-analytics-business')
+      .timeout(5000); // 5 second timeout
+    
+    expect(response.status).toBe(404);
+  }, 10000); // Test timeout of 10 seconds
+});

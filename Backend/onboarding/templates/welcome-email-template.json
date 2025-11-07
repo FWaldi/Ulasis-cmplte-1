@@ -1,0 +1,6 @@
+{
+  "name": "Welcome Email Template",
+  "type": "email",
+  "subject": "Welcome to Ulasis Enterprise Admin Team!",
+  "body": "Dear New Admin User,\n\nWelcome to the Ulasis Enterprise Admin team! We're excited to have you join us as Admin.\n\nYour onboarding journey begins today, and we're here to support you every step of the way.\n\n📋 Your First Week:\n1. Complete your profile setup\n2. Enable two-factor authentication\n3. Review the security policies\n4. Take the interactive dashboard tour\n\n📚 Resources Available:\n- Admin Dashboard Guide: [Link to documentation]\n- Video Tutorials: [Link to training videos]\n- Community Forum: [Link to community]\n- Support Team: support@ulasis.com\n\n🚀 Quick Start:\n- Login URL: https://admin.ulasis.com\n- Your email: admin@company.com\n- Temporary password: [Will be sent separately]\n\nIf you have any questions, don't hesitate to reach out to your manager, IT Manager, or the support team.\n\nBest regards,\nThe Ulasis Team"
+}

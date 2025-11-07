@@ -1,0 +1,314 @@
+
+# ===================================================
+# ==         ULASIS - Backend Requirements         ==
+# ===================================================
+# 
+# Version: 1.0
+# Date: 29 Oktober 2023
+#
+# Dokumen ini menguraikan spesifikasi teknis untuk pengembangan backend
+# aplikasi ULASIS. Ini berfungsi sebagai panduan utama bagi tim backend
+# untuk membangun model data, API, dan logika bisnis yang diperlukan
+# untuk mendukung fungsionalitas frontend yang ada.
+#
+
+# ===================================================
+# BAGIAN 1: MODEL DATA (STRUKTUR DATABASE)
+# ===================================================
+
+# 1.1. Tabel: users
+# --------------------
+# Menyimpan informasi pengguna dan status langganan.
+#
+# - id: INT, Primary Key, Auto Increment
+# - name: VARCHAR(255)
+# - email: VARCHAR(255), UNIQUE
+# - password_hash: VARCHAR(255)
+# - plan: ENUM('free', 'starter', 'business'), DEFAULT 'free'
+# - subscription_status: ENUM('active', 'canceled', 'past_due'), DEFAULT 'active'
+# - payment_gateway_customer_id: VARCHAR(255), NULLABLE (untuk integrasi Midtrans/Stripe)
+# - created_at: TIMESTAMP
+# - updated_at: TIMESTAMP
+
+# 1.2. Tabel: questionnaires
+# ---------------------------
+# Menyimpan kuesioner yang dibuat oleh pengguna.
+#
+# - id: INT, Primary Key, Auto Increment
+# - user_id: INT, Foreign Key (users.id)
+# - name: VARCHAR(255)
+# - description: TEXT, NULLABLE
+# - created_at: TIMESTAMP
+# - updated_at: TIMESTAMP
+
+# 1.3. Tabel: questions
+# ----------------------
+# Menyimpan setiap pertanyaan dalam sebuah kuesioner.
+#
+# - id: INT, Primary Key, Auto Increment
+# - questionnaire_id: INT, Foreign Key (questionnaires.id)
+# - text: VARCHAR(255)
+# - type: ENUM('short_text', 'long_text', 'multiple_choice', 'dropdown', 'yes_no', 'rating_5', 'rating_10')
+# - options: JSON, NULLABLE (untuk 'multiple_choice', 'dropdown')
+# - `order`: INT (untuk menjaga urutan pertanyaan)
+
+# 1.4. Tabel: qr_codes
+# ---------------------
+# Menyimpan konfigurasi QR code yang dibuat pengguna.
+#
+# - id: INT, Primary Key, Auto Increment
+# - user_id: INT, Foreign Key (users.id)
+# - questionnaire_id: INT, Foreign Key (questionnaires.id)
+# - name: VARCHAR(255)
+# - color: VARCHAR(7), DEFAULT '#007A7A'
+# - logo_url: VARCHAR(255), NULLABLE
+
+# 1.5. Tabel: responses
+# ----------------------
+# Mewakili satu kali pengisian kuesioner oleh pelanggan.
+#
+# - id: INT, Primary Key, Auto Increment
+# - questionnaire_id: INT, Foreign Key (questionnaires.id)
+# - qr_code_id: INT, Foreign Key (qr_codes.id), NULLABLE
+# - source: VARCHAR(50)
+# - created_at: TIMESTAMP
+
+# 1.6. Tabel: answers
+# --------------------
+# Menyimpan jawaban untuk setiap pertanyaan dalam sebuah `response`.
+#
+# - id: INT, Primary Key, Auto Increment
+# - response_id: INT, Foreign Key (responses.id)
+# - question_id: INT, Foreign Key (questions.id)
+# - value: TEXT (menyimpan semua jenis jawaban dalam format teks/JSON)
+
+# 1.7. Tabel: reviews
+# --------------------
+# Entitas yang diproses untuk ditampilkan di Inbox. Dibuat setelah `response` masuk.
+#
+# - id: INT, Primary Key, Auto Increment
+# - user_id: INT, Foreign Key (users.id)
+# - response_id: INT, Foreign Key (responses.id)
+# - rating: INT (1-5)
+# - comment: TEXT
+# - status: ENUM('New', 'In Progress', 'Resolved'), DEFAULT 'New'
+# - sentiment: ENUM('Positive', 'Neutral', 'Negative')
+# - topics: JSON (array of strings)
+# - timestamp: TIMESTAMP
+
+
+# ===================================================
+# BAGIAN 2: SPESIFIKASI API ENDPOINTS
+# ===================================================
+
+# ---
+# 2.1. Otentikasi (/api/auth)
+# ---
+
+# [POST] /api/auth/register
+# Deskripsi: Mendaftarkan pengguna baru.
+# Request Body: { "name": "Fitri Waldi", "email": "fitri@example.com", "password": "securepassword" }
+# Response (201 Created): { "message": "Pendaftaran berhasil. Silakan verifikasi email Anda." }
+
+# [POST] /api/auth/login
+# Deskripsi: Mengautentikasi pengguna dan mengembalikan token JWT.
+# Request Body: { "email": "fitri@example.com", "password": "securepassword" }
+# Response (200 OK): { "token": "jwt.token.string", "user": { "id": 1, "name": "Fitri Waldi", "email": "fitri@example.com", "plan": "business" } }
+
+# [GET] /api/auth/me
+# Deskripsi: Mengambil detail pengguna yang sedang login.
+# Auth: Wajib (Bearer Token)
+# Response (200 OK): { "id": 1, "name": "Fitri Waldi", "email": "fitri@example.com", "plan": "business" }
+
+# ---
+# 2.2. Kuesioner (/api/questionnaires)
+# ---
+
+# [GET] /api/questionnaires
+# Deskripsi: Mengambil daftar semua kuesioner milik pengguna.
+# Auth: Wajib
+# Response (200 OK): [ { "id": 1, "name": "Feedback Umum", "description": "...", "question_count": 2, "response_count": 342, "last_modified": "..." }, ... ]
+
+# [POST] /api/questionnaires
+# Deskripsi: Membuat kuesioner baru.
+# Auth: Wajib
+# Request Body: { "name": "Survey Baru", "description": "...", "questions": [ { "text": "...", "type": "rating_5", "order": 1 }, ... ] }
+# Response (201 Created): { "id": 2, "name": "Survey Baru", ... }
+
+# [PUT] /api/questionnaires/{id}
+# Deskripsi: Memperbarui kuesioner yang ada.
+# Auth: Wajib
+# Request Body: { "name": "Survey Baru (Updated)", ... }
+# Response (200 OK): { "id": 2, "name": "Survey Baru (Updated)", ... }
+
+# [DELETE] /api/questionnaires/{id}
+# Deskripsi: Menghapus kuesioner.
+# Auth: Wajib
+# Response (204 No Content)
+
+# ---
+# 2.3. Formulir Publik (/api/public/forms) - Tanpa Otentikasi
+# ---
+
+# [GET] /api/public/forms/{questionnaireId}
+# Deskripsi: Mengambil detail kuesioner untuk ditampilkan ke pelanggan.
+# Response (200 OK): { "id": 1, "name": "Feedback Umum", "description": "...", "questions": [ ... ] }
+
+# [POST] /api/public/forms/{questionnaireId}/submit
+# Deskripsi: Menerima kiriman jawaban dari pelanggan. Memicu pembuatan Response, Answer, dan Review.
+# Request Body: { "source": "QR Scan", "answers": { "question_id_1": "5", "question_id_2": "Komentar pengguna" } }
+# Response (201 Created): { "message": "Terima kasih atas feedback Anda." }
+
+# ---
+# 2.4. QR Codes (/api/qrcodes)
+# ---
+
+# [GET] /api/qrcodes
+# Deskripsi: Mengambil daftar semua QR code milik pengguna.
+# Auth: Wajib
+# Response (200 OK): [ { "id": 1, "name": "QR Meja - Umum", "questionnaire_id": 1, "scan_count": 120, ... }, ... ]
+
+# [POST] /api/qrcodes
+# Deskripsi: Membuat QR code baru.
+# Auth: Wajib
+# Request Body: { "name": "QR Pintu Keluar", "questionnaire_id": 1, "color": "#4A4A4A", "logo_url": null }
+# Response (201 Created): { "id": 2, ... }
+
+# [PUT] /api/qrcodes/{id}
+# Deskripsi: Memperbarui QR code.
+# Auth: Wajib
+# Request Body: { "name": "QR Pintu Keluar (Updated)", ... }
+# Response (200 OK): { "id": 2, ... }
+
+# [DELETE] /api/qrcodes/{id}
+# Deskripsi: Menghapus QR code.
+# Auth: Wajib
+# Response (204 No Content)
+
+# ---
+# 2.5. Inbox (/api/reviews)
+# ---
+
+# [GET] /api/reviews
+# Deskripsi: Mengambil daftar ulasan dengan filter.
+# Auth: Wajib
+# Query Params: ?status=New&questionnaireId=1&search=parkir&page=1&limit=20
+# Response (200 OK): { "data": [ { "id": 1, "rating": 5, "comment": "...", "status": "New", ... } ], "pagination": { ... } }
+
+# [PUT] /api/reviews/{id}/status
+# Deskripsi: Memperbarui status satu ulasan.
+# Auth: Wajib
+# Request Body: { "status": "In Progress" }
+# Response (200 OK): { "id": 1, "status": "In Progress", ... }
+
+# [POST] /api/reviews/batch-update-status
+# Deskripsi: Memperbarui status beberapa ulasan sekaligus.
+# Auth: Wajib
+# Request Body: { "review_ids": [1, 2, 5], "status": "Resolved" }
+# Response (200 OK): { "message": "3 ulasan telah diperbarui." }
+
+# ---
+# 2.6. Dashboard & Analytics (/api/dashboard, /api/analytics)
+# ---
+
+# [GET] /api/dashboard/kpis
+# Deskripsi: Endpoint agregat untuk mengambil data KPI.
+# Auth: Wajib
+# Response (200 OK): { "avg_rating": 4.5, "total_reviews": 234, "response_rate": 88 }
+
+# [GET] /api/dashboard/trend
+# Deskripsi: Mengambil data untuk grafik tren skor rata-rata (misal, 7 hari terakhir).
+# Auth: Wajib
+# Response (200 OK): [ { "date": "Oct 22", "average_rating": 4.3 }, ... ]
+
+# [GET] /api/analytics
+# Deskripsi: Endpoint komprehensif untuk halaman Analytics.
+# Auth: Wajib
+# Response (200 OK): { "sentiment_distribution": { ... }, "topic_analysis": { ... }, "review_sources": [ ... ] }
+
+# ---
+# 2.7. Laporan (/api/reports)
+# ---
+
+# [GET] /api/reports/{questionnaireId}/responses
+# Deskripsi: Mengambil data respons mentah dengan paginasi.
+# Auth: Wajib
+# Query Params: ?page=1&limit=10
+# Response (200 OK): { "data": [ { "response_id": 1, "timestamp": "...", "answers": { ... } } ], "pagination": { ... } }
+
+# [GET] /api/reports/{questionnaireId}/download
+# Deskripsi: Menghasilkan dan mengirimkan file CSV.
+# Auth: Wajib
+# Response (200 OK): File CSV
+
+# ---
+# 2.8. Pengaturan & Penagihan (/api/settings, /api/billing)
+# ---
+
+# [PUT] /api/settings/profile
+# Deskripsi: Memperbarui profil pengguna.
+# Auth: Wajib
+# Request Body: { "name": "Fitri Waldi Baru" }
+# Response (200 OK): { "id": 1, "name": "Fitri Waldi Baru", ... }
+
+# [PUT] /api/settings/password
+# Deskripsi: Memperbarui kata sandi pengguna.
+# Auth: Wajib
+# Request Body: { "current_password": "...", "new_password": "..." }
+# Response (200 OK): { "message": "Kata sandi berhasil diperbarui." }
+
+# [GET] /api/settings/notifications
+# Deskripsi: Mengambil pengaturan notifikasi.
+# Auth: Wajib
+# Response (200 OK): { "instant_negative": true, ... }
+
+# [PUT] /api/settings/notifications
+# Deskripsi: Memperbarui pengaturan notifikasi.
+# Auth: Wajib
+# Request Body: { "instant_negative": false, ... }
+# Response (200 OK): { "instant_negative": false, ... }
+
+# [GET] /api/billing/invoices
+# Deskripsi: Mengambil riwayat tagihan.
+# Auth: Wajib
+# Response (200 OK): [ { "id": "INV-2023-010", "date": "...", "amount": 49000, "status": "Paid" }, ... ]
+
+# [POST] /api/billing/create-checkout-session
+# Deskripsi: Membuat sesi pembayaran untuk upgrade paket.
+# Auth: Wajib
+# Request Body: { "new_plan": "business" }
+# Response (200 OK): { "checkout_url": "https://payment-gateway.com/..." }
+
+# [POST] /api/billing/webhooks
+# Deskripsi: Endpoint untuk menerima notifikasi dari payment gateway (misal: pembayaran berhasil).
+# Auth: Tidak Wajib (menggunakan signature key dari gateway)
+# Request Body: (Sesuai spesifikasi payment gateway)
+# Response (200 OK)
+
+
+# ===================================================
+# BAGIAN 3: LOGIKA BISNIS & PERTIMBANGAN LAINNYA
+# ===================================================
+
+# 3.1. Analisis Sentimen & Topik
+# - Harus dijalankan di backend setiap kali `Review` baru dibuat dari `Response`.
+# - Untuk MVP, bisa menggunakan sistem berbasis kata kunci. Untuk jangka panjang, pertimbangkan integrasi dengan layanan ML (misal: Google Cloud Natural Language API).
+
+# 3.2. Otentikasi & Otorisasi
+# - Gunakan JSON Web Tokens (JWT) untuk otentikasi.
+# - Setiap endpoint yang membutuhkan otentikasi harus memvalidasi token.
+# - Pastikan pengguna hanya dapat mengakses data miliknya sendiri (misal: user A tidak bisa melihat kuesioner user B).
+
+# 3.3. Validasi & Penanganan Error
+# - Semua data yang masuk dari request body dan query params harus divalidasi dengan ketat.
+# - Gunakan respons error yang konsisten, contoh: { "error": { "message": "Pesan error yang jelas", "status_code": 400 } }.
+
+# 3.4. Batasan Paket (Plan Limitations)
+# - Backend HARUS memberlakukan batasan berdasarkan `plan` pengguna.
+# - Contoh: Saat `POST /api/questionnaires`, periksa apakah pengguna dengan paket 'free' sudah memiliki 1 kuesioner. Jika ya, kembalikan error 403 Forbidden.
+# - Fitur seperti download laporan CSV atau kustomisasi logo QR harus dibatasi untuk paket yang lebih tinggi.
+
+# 3.5. Tugas Asinkron
+# - Pengiriman email (verifikasi, notifikasi, laporan mingguan) harus dijalankan sebagai tugas latar belakang (background job) untuk tidak memblokir respons API.
+
+# --- AKHIR DOKUMEN ---

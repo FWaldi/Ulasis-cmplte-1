@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>New Review Notification - Ulasis</title>
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background: #059669; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
+    .content { background: #f9fafb; padding: 30px; border-radius: 0 0 8px 8px; }
+    .button { display: inline-block; background: #059669; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; margin: 20px 0; }
+    .footer { text-align: center; margin-top: 30px; color: #6b7280; font-size: 14px; }
+    .review-box { background: white; border: 1px solid #e5e7eb; padding: 20px; border-radius: 6px; margin: 20px 0; }
+    .rating { color: #f59e0b; font-size: 18px; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>New Review Received!</h1>
+  </div>
+  <div class="content">
+    <h2>You Have a New Review</h2>
+    <p>Hi {{first_name}},</p>
+    <p>Great news! Someone has submitted a new review for your questionnaire "{{questionnaire_title}}".</p>
+
+    <div class="review-box">
+      <h3>Review Details:</h3>
+      <p><strong>Rating:</strong> <span class="rating">{{rating}} ⭐</span></p>
+      <p><strong>Reviewer:</strong> {{reviewer_name}}</p>
+      <p><strong>Submitted:</strong> {{submitted_at}}</p>
+      {{#if review_text}}
+      <p><strong>Review:</strong></p>
+      <p style="background: #f3f4f6; padding: 15px; border-radius: 4px;">{{review_text}}</p>
+      {{/if}}
+    </div>
+
+    <p style="text-align: center;">
+      <a href="{{questionnaire_url}}" class="button">View Full Review</a>
+    </p>
+
+    <p>You can manage all your reviews and responses in your Ulasis dashboard.</p>
+  </div>
+  <div class="footer">
+    <p>&copy; 2025 Ulasis. All rights reserved.</p>
+    <p>If you have questions, contact us at support@ulasis.com</p>
+  </div>
+</body>
+</html>

@@ -1,0 +1,43 @@
+{
+  "admin": "admin@company.com",
+  "role": "Admin",
+  "generatedAt": "2025-11-07T09:37:02.781Z",
+  "securitySettings": {
+    "authentication": {
+      "twoFactorEnabled": true,
+      "backupCodesGenerated": false,
+      "sessionTimeout": 30,
+      "maxLoginAttempts": 5,
+      "lockoutDuration": 15
+    },
+    "permissions": {
+      "userManagement": true,
+      "analytics": true,
+      "security": true,
+      "reports": true,
+      "settings": false
+    },
+    "monitoring": {
+      "loginAlerts": true,
+      "failedLoginThreshold": 3,
+      "dataExportAlerts": true,
+      "permissionChangeAlerts": true
+    },
+    "dataProtection": {
+      "exportRestrictions": true,
+      "auditLogging": true,
+      "dataRetention": "7 years",
+      "encryptionEnabled": true
+    }
+  },
+  "actionItems": [
+    "Enable two-factor authentication immediately",
+    "Save backup codes in secure location",
+    "Review and understand data access permissions",
+    "Set up security alerts and notifications",
+    "Complete security training module",
+    "Review emergency contact procedures",
+    "Test incident response workflow",
+    "Document custom security procedures"
+  ]
+}

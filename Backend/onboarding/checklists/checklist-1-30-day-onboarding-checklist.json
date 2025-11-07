@@ -1,0 +1,126 @@
+{
+  "title": "30-Day Onboarding Checklist",
+  "description": "Essential tasks to complete in your first 30 days",
+  "items": [
+    {
+      "category": "Week 1: Foundation",
+      "tasks": [
+        {
+          "task": "Complete account registration",
+          "completed": false,
+          "priority": "high"
+        },
+        {
+          "task": "Set up two-factor authentication",
+          "completed": false,
+          "priority": "high"
+        },
+        {
+          "task": "Review security policies",
+          "completed": false,
+          "priority": "high"
+        },
+        {
+          "task": "Complete profile configuration",
+          "completed": false,
+          "priority": "medium"
+        },
+        {
+          "task": "Take dashboard tour",
+          "completed": false,
+          "priority": "medium"
+        }
+      ]
+    },
+    {
+      "category": "Week 2: Core Features",
+      "tasks": [
+        {
+          "task": "Add test users",
+          "completed": false,
+          "priority": "medium"
+        },
+        {
+          "task": "Generate first report",
+          "completed": false,
+          "priority": "medium"
+        },
+        {
+          "task": "Explore analytics dashboard",
+          "completed": false,
+          "priority": "medium"
+        },
+        {
+          "task": "Configure notifications",
+          "completed": false,
+          "priority": "low"
+        },
+        {
+          "task": "Review user permissions",
+          "completed": false,
+          "priority": "medium"
+        }
+      ]
+    },
+    {
+      "category": "Week 3: Advanced Features",
+      "tasks": [
+        {
+          "task": "Set up automated workflows",
+          "completed": false,
+          "priority": "low"
+        },
+        {
+          "task": "Create custom dashboard",
+          "completed": false,
+          "priority": "low"
+        },
+        {
+          "task": "Test API access",
+          "completed": false,
+          "priority": "low"
+        },
+        {
+          "task": "Review audit logs",
+          "completed": false,
+          "priority": "medium"
+        },
+        {
+          "task": "Complete advanced training",
+          "completed": false,
+          "priority": "low"
+        }
+      ]
+    },
+    {
+      "category": "Week 4: Optimization",
+      "tasks": [
+        {
+          "task": "Fine-tune notification settings",
+          "completed": false,
+          "priority": "low"
+        },
+        {
+          "task": "Set up scheduled reports",
+          "completed": false,
+          "priority": "low"
+        },
+        {
+          "task": "Document custom processes",
+          "completed": false,
+          "priority": "low"
+        },
+        {
+          "task": "Join community forums",
+          "completed": false,
+          "priority": "low"
+        },
+        {
+          "task": "Review performance metrics",
+          "completed": false,
+          "priority": "medium"
+        }
+      ]
+    }
+  ]
+}

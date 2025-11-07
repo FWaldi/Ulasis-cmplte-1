@@ -1,0 +1,149 @@
+{
+  "admin": "New Admin User",
+  "role": "Admin",
+  "preferences": {
+    "language": "en",
+    "notifications": "immediate",
+    "reports": "weekly"
+  },
+  "layout": {
+    "theme": "light",
+    "language": "en",
+    "timezone": "America/New_York",
+    "dateFormat": "MM/DD/YYYY",
+    "timeFormat": "12h"
+  },
+  "widgets": [
+    {
+      "id": "user-overview",
+      "type": "metric-card",
+      "title": "User Overview",
+      "position": {
+        "row": 1,
+        "col": 1
+      },
+      "size": {
+        "width": 3,
+        "height": 2
+      },
+      "metrics": [
+        "totalUsers",
+        "activeUsers",
+        "newUsers"
+      ]
+    },
+    {
+      "id": "system-health",
+      "type": "status-card",
+      "title": "System Health",
+      "position": {
+        "row": 1,
+        "col": 4
+      },
+      "size": {
+        "width": 2,
+        "height": 2
+      },
+      "metrics": [
+        "uptime",
+        "responseTime",
+        "errorRate"
+      ]
+    },
+    {
+      "id": "recent-activities",
+      "type": "activity-feed",
+      "title": "Recent Activities",
+      "position": {
+        "row": 3,
+        "col": 1
+      },
+      "size": {
+        "width": 4,
+        "height": 3
+      },
+      "filters": {
+        "limit": 10,
+        "types": [
+          "login",
+          "user_update",
+          "security_event"
+        ]
+      }
+    },
+    {
+      "id": "quick-actions",
+      "type": "action-buttons",
+      "title": "Quick Actions",
+      "position": {
+        "row": 3,
+        "col": 5
+      },
+      "size": {
+        "width": 1,
+        "height": 3
+      },
+      "actions": [
+        "addUser",
+        "generateReport",
+        "securityAudit",
+        "systemSettings"
+      ]
+    },
+    {
+      "id": "analytics-chart",
+      "type": "chart",
+      "title": "User Analytics",
+      "position": {
+        "row": 6,
+        "col": 1
+      },
+      "size": {
+        "width": 6,
+        "height": 4
+      },
+      "chartType": "line",
+      "metrics": [
+        "userGrowth",
+        "activeUsers"
+      ],
+      "timeRange": "30d"
+    }
+  ],
+  "notifications": {
+    "email": {
+      "critical": true,
+      "warnings": true,
+      "info": false,
+      "digest": "weekly"
+    },
+    "inApp": {
+      "critical": true,
+      "warnings": true,
+      "info": true,
+      "systemUpdates": true
+    }
+  },
+  "shortcuts": [
+    {
+      "name": "Add User",
+      "url": "/users/add",
+      "icon": "user-plus"
+    },
+    {
+      "name": "Generate Report",
+      "url": "/reports/generate",
+      "icon": "chart-bar"
+    },
+    {
+      "name": "Security Logs",
+      "url": "/security/logs",
+      "icon": "shield"
+    },
+    {
+      "name": "System Settings",
+      "url": "/settings",
+      "icon": "cog"
+    }
+  ]
+}
