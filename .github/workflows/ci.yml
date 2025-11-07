@@ -1,0 +1,92 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  backend-tests:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./Backend
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: Backend/package-lock.json
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Run linting
+      run: npm run lint
+
+    - name: Run unit tests
+      run: npm test
+
+  frontend-tests:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./Frontend
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: Frontend/package-lock.json
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Run unit tests
+      run: npm run test:unit
+
+    - name: Build application
+      run: npm run build
+
+  # E2E tests are commented out due to server startup complexity
+  # Uncomment and configure when server startup issues are resolved
+  # e2e-tests:
+  #   runs-on: ubuntu-latest
+  #   needs: [backend-tests, frontend-tests]
+
+  #   steps:
+  #   - uses: actions/checkout@v4
+
+  #   - name: Setup Node.js
+  #     uses: actions/setup-node@v4
+  #     with:
+  #       node-version: '18'
+
+  #   - name: Install backend dependencies
+  #     working-directory: ./Backend
+  #     run: npm ci
+
+  #   - name: Install frontend dependencies
+  #     working-directory: ./Frontend
+  #     run: npm ci
+
+  #   - name: Install Playwright
+  #     working-directory: ./Frontend
+  #     run: npx playwright install --with-deps
+
+  #   - name: Run E2E tests
+  #     working-directory: ./Frontend
+  #     run: npm run test:e2e
+  #     env:
+  #       CI: true
