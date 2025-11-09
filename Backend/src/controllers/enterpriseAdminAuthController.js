@@ -36,23 +36,39 @@ class EnterpriseAdminAuthController {
         });
       }
 
+      console.log('DEBUG: Looking for user with email:', email.toLowerCase());
+
       // Find user by email
-      const user = await User.findOne({
-        where: { email: email.toLowerCase() },
-        include: [
-          {
-            model: AdminUser,
-            as: 'adminUser',
-            include: [
-              {
-                model: require('../models').AdminRole,
-                as: 'role',
-                attributes: ['id', 'name', 'permissions', 'level'],
-              },
-            ],
-          },
-        ],
-      });
+      const models = require('../models');
+      let user;
+      try {
+        user = await User.findOne({
+          where: { email: email.toLowerCase() },
+          include: [
+            {
+              model: AdminUser,
+              as: 'adminUser',
+              include: [
+                {
+                  model: models.AdminRole,
+                  as: 'role',
+                  attributes: ['id', 'name', 'permissions', 'level'],
+                },
+              ],
+            },
+          ],
+        });
+        console.log('DEBUG: User found:', !!user);
+        if (user) {
+          console.log('DEBUG: User has adminUser:', !!user.adminUser);
+          if (user.adminUser) {
+            console.log('DEBUG: AdminUser has role:', !!user.adminUser.role);
+          }
+        }
+      } catch (dbError) {
+        console.error('DEBUG: Database error:', dbError.message);
+        throw dbError;
+      }
 
       if (!user) {
         EnterpriseAdminAuthMiddleware.trackFailedAttempt(email);
@@ -683,6 +699,94 @@ class EnterpriseAdminAuthController {
         success: false,
         error: 'Session Info Error',
         message: 'An error occurred while retrieving session information',
+        timestamp: new Date().toISOString(),
+        requestId: req.requestId,
+      });
+    }
+  }
+
+  /**
+   * Change admin password
+   */
+  static async changePassword(req, res) {
+    try {
+      const { currentPassword, newPassword } = req.body;
+      const adminUserId = req.adminUser?.id;
+
+      if (!currentPassword || !newPassword) {
+        return res.status(400).json({
+          success: false,
+          error: 'Validation Error',
+          message: 'Current password and new password are required',
+          timestamp: new Date().toISOString(),
+          requestId: req.requestId,
+        });
+      }
+
+      // Get admin user with user data to access password
+      const adminUser = await AdminUser.findByPk(adminUserId, {
+        include: [
+          {
+            model: User,
+            as: 'user',
+            attributes: ['id', 'email', 'password_hash', 'is_active']
+          }
+        ]
+      });
+
+      if (!adminUser || !adminUser.user) {
+        return res.status(404).json({
+          success: false,
+          error: 'Admin Not Found',
+          message: 'Admin user not found',
+          timestamp: new Date().toISOString(),
+          requestId: req.requestId,
+        });
+      }
+
+      // Verify current password
+      const isCurrentPasswordValid = await bcrypt.compare(currentPassword, adminUser.user.password_hash);
+      if (!isCurrentPasswordValid) {
+        return res.status(401).json({
+          success: false,
+          error: 'Invalid Current Password',
+          message: 'The current password provided is incorrect',
+          timestamp: new Date().toISOString(),
+          requestId: req.requestId,
+        });
+      }
+
+      // Hash new password
+      const hashedNewPassword = await bcrypt.hash(newPassword, 12);
+
+      // Update password in User table
+      await adminUser.user.update({ password_hash: hashedNewPassword });
+
+      // Invalidate all existing sessions for this user for security
+      EnterpriseAdminAuthMiddleware.invalidateAllUserSessions(adminUserId);
+
+      logger.info('Admin password changed successfully', {
+        adminUserId: adminUser.id,
+        email: adminUser.email,
+        timestamp: new Date().toISOString(),
+      });
+
+      res.json({
+        success: true,
+        message: 'Password changed successfully',
+        timestamp: new Date().toISOString(),
+        requestId: req.requestId,
+      });
+    } catch (error) {
+      logger.error('Change password error', {
+        error: error.message,
+        adminUserId: req.adminUser?.id,
+      });
+
+      res.status(500).json({
+        success: false,
+        error: 'Password Change Error',
+        message: 'An error occurred while changing password',
         timestamp: new Date().toISOString(),
         requestId: req.requestId,
       });

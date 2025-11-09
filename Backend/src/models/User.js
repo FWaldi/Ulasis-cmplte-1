@@ -28,7 +28,7 @@ module.exports = (sequelize) => {
       },
       password_hash: {
         type: DataTypes.STRING(255),
-        allowNull: false,
+        allowNull: true, // Allow null initially, will be set by beforeCreate hook
         comment: 'Hashed password using bcrypt',
       },
       password: {

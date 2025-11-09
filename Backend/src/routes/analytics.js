@@ -1,7 +1,7 @@
 'use strict';
 
 const express = require('express');
-const { param, query } = require('express-validator');
+const { param, query, validationResult } = require('express-validator');
 const analyticsController = require('../controllers/analyticsController');
 const AuthMiddleware = require('../middleware/auth');
 const { rateLimiters } = require('../middleware/security');
@@ -64,6 +64,19 @@ router.get(
       .isISO8601()
       .withMessage('customDateTo must be a valid date'),
   ],
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        success: false,
+        error: 'Validation Error',
+        message: errors.array().map(error => error.msg).join(', '),
+        details: errors.array(),
+        timestamp: new Date().toISOString(),
+      });
+    }
+    next();
+  },
   analyticsController.getBubbleAnalytics,
 );
 

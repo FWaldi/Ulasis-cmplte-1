@@ -17,7 +17,9 @@ class AuthMiddleware {
     try {
       // Extract token from Authorization header
       const authHeader = req.headers.authorization;
+      console.log('DEBUG AUTH: authHeader =', authHeader);
       const token = tokenUtils.extractTokenFromHeader(authHeader);
+      console.log('DEBUG AUTH: extracted token =', token);
 
       if (!token) {
         return res.status(401).json({
@@ -30,7 +32,9 @@ class AuthMiddleware {
       }
 
       // Verify the token
+      console.log('DEBUG AUTH: Verifying token...');
       const decoded = await tokenUtils.verifyAccessToken(token);
+      console.log('DEBUG AUTH: Token decoded =', decoded);
 
       // Check if token is of correct type
       if (decoded.type !== 'access') {

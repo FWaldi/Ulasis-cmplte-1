@@ -157,7 +157,9 @@ class AuthController {
    */
   static async register(req, res) {
     try {
+      console.log('🔍 Registration controller called with:', req.body.email);
       const result = await authService.register(req.body);
+      console.log('✅ Registration successful:', result.success);
 
       res.status(201).json({
         ...result,
@@ -165,6 +167,7 @@ class AuthController {
         requestId: req.requestId,
       });
     } catch (error) {
+      console.log('❌ Registration failed:', error.message);
       logger.error('Registration controller error', {
         error: error.message,
         body: req.body,
@@ -186,7 +189,9 @@ class AuthController {
     */
   static async login(req, res) {
     try {
+      console.log('🔐 Login controller called with:', req.body.email);
       const result = await authService.login(req.body);
+      console.log('✅ Login successful:', result.success);
 
       res.status(200).json({
         ...result,
@@ -194,17 +199,33 @@ class AuthController {
         requestId: req.requestId,
       });
     } catch (error) {
+      console.log('❌ Login failed:', error.message);
       logger.error('Login controller error', {
         error: error.message,
         email: req.body.email,
         requestId: req.requestId,
       });
 
-      res.status(401).json({
+      // Return proper status codes based on error type
+      let statusCode = 401;
+      let errorMessage = 'Authentication Failed';
+      
+      if (error.code === 'INVALID_CREDENTIALS') {
+        statusCode = 401;
+        errorMessage = 'Invalid Credentials';
+      } else if (error.code === 'RATE_LIMIT') {
+        statusCode = 429;
+        errorMessage = 'Rate limit exceeded';
+      } else if (error.message.includes('locked')) {
+        statusCode = 423;
+        errorMessage = 'Account locked';
+      }
+
+      res.status(statusCode).json({
         success: false,
         error: {
           code: error.code || 'AUTHENTICATION_FAILED',
-          message: error.message,
+          message: errorMessage,
         },
         message: error.message,
         timestamp: new Date().toISOString(),

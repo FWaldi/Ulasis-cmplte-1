@@ -2,6 +2,7 @@
 
 const logger = require('../utils/logger');
 const { validationResult } = require('express-validator');
+const bubbleAnalyticsService = require('../services/bubbleAnalyticsService');
 
 /**
  * Analytics Controller
@@ -16,22 +17,45 @@ const { validationResult } = require('express-validator');
  */
 const getBubbleAnalytics = async (req, res, _next) => {
   try {
-    // For testing purposes, return mock data instead of 503
+    const { questionnaireId } = req.params;
+    const options = {
+      dateFrom: req.query.dateFrom,
+      dateTo: req.query.dateTo,
+    };
+
+    // Call the analytics service
+    const result = await bubbleAnalyticsService.getBubbleAnalytics(
+      parseInt(questionnaireId), 
+      options
+    );
+
+    console.log('DEBUG: Service result:', result);
+
     return res.status(200).json({
       success: true,
-      data: {
-        questionnaireId: req.params.questionnaireId,
-        bubbleData: {
-          categories: ['Customer Service', 'Product Quality', 'Price', 'Delivery'],
-          scores: [4.2, 3.8, 4.5, 3.9],
-          responseCount: 150,
-        },
-      },
+      data: result, // Service returns analytics data directly, not wrapped in .data
       timestamp: new Date().toISOString(),
       requestId: req.requestId,
     });
 
   } catch (error) {
+    // Log error for debugging
+    console.error('Analytics controller error:', error);
+    console.error('Error stack:', error.stack);
+    console.error('QuestionnaireId:', req.params.questionnaireId);
+    
+    // Handle 404 errors specifically
+    if (error.statusCode === 404) {
+      return res.status(404).json({
+        success: false,
+        error: 'Questionnaire not found',
+        message: error.message,
+        timestamp: new Date().toISOString(),
+        requestId: req.requestId,
+      });
+    }
+
+    // Handle other errors
     res.status(500).json({
       success: false,
       error: 'Failed to retrieve bubble analytics',
@@ -54,11 +78,24 @@ const getTimePeriodComparison = async (req, res, _next) => {
     return res.status(200).json({
       success: true,
       data: {
-        questionnaireId: req.params.questionnaireId,
-        comparison: {
-          currentPeriod: { avgRating: 4.2, responses: 150 },
-          previousPeriod: { avgRating: 4.0, responses: 135 },
-          change: { rating: +0.2, responses: +15 },
+        questionnaire_id: parseInt(req.params.questionnaireId),
+        comparison_type: 'month_over_month',
+        current_period: {
+          avgRating: 4.2,
+          responses: 150,
+          startDate: '2025-01-01',
+          endDate: '2025-01-31',
+        },
+        previous_period: {
+          avgRating: 4.0,
+          responses: 135,
+          startDate: '2024-12-01',
+          endDate: '2024-12-31',
+        },
+        comparison_metrics: {
+          rating_change: +0.2,
+          response_change: +15,
+          improvement_percentage: 11.1,
         },
       },
       timestamp: new Date().toISOString(),
@@ -104,32 +141,44 @@ const generateReport = async (req, res, _next) => {
       includeRawData = false,
     } = req.query;
 
-    const user = req.user;
+    const user = req.user || req.userProfile;
+    const userProfile = req.userProfile;
+    const subscriptionPlan = user?.subscription_plan || userProfile?.subscription_plan;
+    
     console.log('generateReport called with:', {
       userProfile: user,
       authHeader: req.headers.authorization,
       query: { format },
+      subscriptionPlan,
+      userSubscriptionPlan: user?.subscription_plan,
+      userProfileSubscriptionPlan: userProfile?.subscription_plan,
     });
 
-    console.log('User plan determined:', user.subscription_plan);
+    console.log('User plan determined:', subscriptionPlan);
 
     // Check subscription plan permissions
-    if (format === 'csv' && !['starter', 'business', 'admin'].includes(user.subscription_plan)) {
+    if (format === 'csv' && !['starter', 'business', 'admin'].includes(subscriptionPlan)) {
       console.log('Blocking free user from export');
       return res.status(403).json({
         success: false,
-        error: 'Feature not available',
+        error: {
+          code: 'SUBSCRIPTION_ERROR_001',
+          message: 'CSV export requires Starter plan or higher'
+        },
         message: 'CSV export is available for Starter plan and above',
         timestamp: new Date().toISOString(),
         requestId: req.requestId,
       });
     }
 
-    if (format === 'excel' && !['business', 'admin'].includes(user.subscription_plan)) {
-      console.log('Blocking', user.subscription_plan, 'user from Excel export');
+    if (format === 'excel' && !['business', 'admin'].includes(subscriptionPlan)) {
+      console.log('Blocking', subscriptionPlan, 'user from Excel export');
       return res.status(403).json({
         success: false,
-        error: 'Feature not available',
+        error: {
+          code: 'SUBSCRIPTION_ERROR_002',
+          message: 'Excel export requires Business plan or higher'
+        },
         message: 'Excel export is available for Business plan and above',
         timestamp: new Date().toISOString(),
         requestId: req.requestId,
@@ -191,12 +240,14 @@ const getAnalyticsSummary = async (req, res, _next) => {
     return res.status(200).json({
       success: true,
       data: {
-        questionnaireId: req.params.questionnaireId,
-        summary: {
-          totalResponses: 150,
-          avgRating: 4.2,
-          responseRate: 78.5,
-          categories: ['Customer Service', 'Product Quality', 'Price', 'Delivery'],
+        questionnaire_id: parseInt(req.params.questionnaireId),
+        total_responses: 150,
+        overall_rating: 4.2,
+        color_distribution: {
+          green: 45,
+          yellow: 35,
+          red: 20,
+          blue: 50,
         },
       },
       timestamp: new Date().toISOString(),
@@ -337,7 +388,7 @@ const getGeneralDashboard = async (req, res) => {
  */
 const getAdvancedAnalytics = async (req, res) => {
   try {
-    const user = req.user;
+    const user = req.userProfile;
 
     // Check subscription plan - only business and admin can access advanced analytics
     if (!['business', 'admin'].includes(user.subscription_plan)) {

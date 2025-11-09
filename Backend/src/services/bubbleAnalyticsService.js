@@ -62,7 +62,9 @@ const getBubbleAnalytics = async (questionnaireId, options = {}) => {
     });
 
     if (!questionnaire) {
-      throw new Error(`Questionnaire ${questionnaireId} not found`);
+      const error = new Error(`Questionnaire ${questionnaireId} not found`);
+      error.statusCode = 404;
+      throw error;
     }
 
     // Get current period data

@@ -3,6 +3,7 @@
 const { User } = require('../models');
 const tokenUtils = require('../utils/tokenUtils');
 const emailService = require('./emailService');
+const subscriptionService = require('./subscriptionService');
 const logger = require('../utils/logger');
 const bcrypt = require('bcrypt');
 // const { Op } = require('sequelize'); // eslint-disable-line no-unused-vars
@@ -45,6 +46,18 @@ class AuthService {
       // Generate email verification token
       const verificationToken = user.generateEmailVerificationToken();
       await user.save();
+
+      // Initialize subscription usage records
+      try {
+        await subscriptionService.initializeUsage(user.id, user.subscription_plan);
+      } catch (usageError) {
+        logger.error('Failed to initialize usage records during registration', {
+          userId: user.id,
+          plan: user.subscription_plan,
+          error: usageError.message,
+        });
+        // Don't fail registration if usage initialization fails, but log it
+      }
 
       // Send verification email
       try {
@@ -99,7 +112,14 @@ class AuthService {
       // Find user by email
       let user;
       if (process.env.NODE_ENV === 'test') {
+        console.log('🔍 TEST ENV: Finding user by email:', email.toLowerCase());
         user = await User.findOne({ where: { email: email.toLowerCase() } });
+        console.log('🔍 TEST ENV: User found:', !!user);
+        if (user) {
+          console.log('🔍 TEST ENV: User ID:', user.id);
+          console.log('🔍 TEST ENV: Has password_hash:', !!user.password_hash);
+          console.log('🔍 TEST ENV: Is active:', user.is_active);
+        }
       } else {
         user = await User.unscoped().findByEmail(email.toLowerCase());
       }
@@ -118,8 +138,11 @@ class AuthService {
       }
 
       // Validate password
+      console.log('🔑 Validating password for user:', user.id);
       const isValidPassword = await user.validatePassword(password);
+      console.log('🔑 Password validation result:', isValidPassword);
       if (!isValidPassword) {
+        console.log('❌ Password validation failed');
         await user.incrementLoginAttempts(ip);
         const error = new Error('Invalid email or password');
         error.code = 'INVALID_CREDENTIALS';
@@ -329,24 +352,36 @@ class AuthService {
    */
   async refreshToken(refreshToken) {
     try {
+      console.log('🔄 Refresh token service called with:', refreshToken);
       // Verify refresh token
       const decoded = await tokenUtils.verifyRefreshToken(refreshToken);
+      console.log('🔄 Refresh token verified:', decoded);
 
       if (decoded.type !== 'refresh') {
         throw new Error('Invalid token type');
       }
 
       // Find user
+      console.log('🔄 REFRESH: Looking for user with ID:', decoded.sub);
       const user = await User.unscoped().findByPk(decoded.sub);
+      console.log('🔄 REFRESH: User found:', !!user);
+      if (user) {
+        console.log('🔄 REFRESH: User details:', { id: user.id, email: user.email, is_active: user.is_active });
+      }
       if (!user || !user.is_active) {
+        console.log('🔄 REFRESH: User not found or inactive, throwing error');
         throw new Error('User not found');
       }
 
       // Blacklist the old refresh token
+      console.log('🔄 REFRESH: Blacklisting old refresh token...');
       await tokenUtils.blacklistToken(refreshToken, 'token_refresh', user.id);
+      console.log('🔄 REFRESH: Old refresh token blacklisted successfully');
 
       // Generate new token pair
+      console.log('🔄 REFRESH: Generating new token pair...');
       const tokens = tokenUtils.generateTokenPair(user);
+      console.log('🔄 REFRESH: New token pair generated:', tokens);
 
       logger.info('Token refreshed successfully', {
         userId: user.id,
@@ -354,12 +389,15 @@ class AuthService {
         oldTokenJti: decoded.jti,
       });
 
+      console.log('🔄 REFRESH: Returning success response');
       return {
         success: true,
         message: 'Token refreshed successfully',
         data: tokens,
       };
     } catch (error) {
+      console.log('🔄 REFRESH: ERROR in refresh token service:', error.message);
+      console.log('🔄 REFRESH: ERROR stack:', error.stack);
       logger.error('Token refresh failed', {
         error: error.message,
       });

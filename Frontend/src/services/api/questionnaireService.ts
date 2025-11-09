@@ -1,7 +1,7 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import type { DemoPlan } from '../types';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3010';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001';
 
 export interface Questionnaire {
   id: number;
@@ -171,7 +171,7 @@ class QuestionnaireService {
 
   async updateQuestionnaire(id: number, data: UpdateQuestionnaireData): Promise<QuestionnaireResponse> {
     try {
-      const response: AxiosResponse<QuestionnaireResponse> = await this.axiosInstance.put(`/api/v1/questionnaires/${id}`, data);
+      const response: AxiosResponse<QuestionnaireResponse> = await this.axiosInstance.put(`/questionnaires/${id}`, data);
       return response.data;
     } catch (error: any) {
       console.error('Update questionnaire error:', error);
@@ -243,7 +243,7 @@ class QuestionnaireService {
     }
 
     try {
-      const response: AxiosResponse<QuestionnaireResponse> = await this.axiosInstance.get(`/api/v1/questionnaires/${id}`);
+      const response: AxiosResponse<QuestionnaireResponse> = await this.axiosInstance.get(`/questionnaires/${id}`);
       return response.data;
     } catch (error: any) {
       console.error('Get questionnaire error:', error);

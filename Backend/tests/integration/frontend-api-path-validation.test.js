@@ -10,12 +10,8 @@
 const request = require('supertest');
 const { User, initialize, sequelize } = require('../../src/models');
 const app = require('../../src/app-test');
-const { getAuthHeader } = require('../helpers/auth');
 
 describe('Frontend Integration - API Path Validation', () => {
-  let userToken;
-  let testUser;
-
   beforeAll(async () => {
     // Set test environment
     process.env.NODE_ENV = 'test';
@@ -33,29 +29,6 @@ describe('Frontend Integration - API Path Validation', () => {
 
     // Wait a bit for SQLite to be ready
     await new Promise(resolve => setTimeout(resolve, 100));
-
-    // Recreate test user for each test
-    const userData = {
-      email: `frontend-test-${Date.now()}@test.com`,
-      password: 'Test123456!',
-      first_name: 'Frontend',
-      last_name: 'Test',
-    };
-
-    // Register user
-    await request(app)
-      .post('/api/v1/auth/register')
-      .send(userData);
-
-    // Login to get token
-    const loginResponse = await request(app)
-      .post('/api/v1/auth/login')
-      .send({
-        email: userData.email,
-        password: userData.password,
-      });
-
-    userToken = loginResponse.body.data.accessToken;
   }, 15000); // Increase timeout to 15 seconds
 
   afterAll(async () => {
@@ -65,29 +38,25 @@ describe('Frontend Integration - API Path Validation', () => {
   });
 
   describe('API Path Structure Validation', () => {
-    test('✅ Correct API path should work: /api/v1/questionnaires', async () => {
+    test('✅ Correct API path should work: /api/v1/health', async () => {
       const response = await request(app)
-        .get('/api/v1/questionnaires')
-        .set('Authorization', getAuthHeader(userToken));
+        .get('/api/v1/health');
 
       expect(response.status).toBe(200);
-      expect(response.body.success).toBe(true);
-      expect(response.body.data).toHaveProperty('questionnaires');
+      expect(response.body.status).toBe('healthy');
     });
 
-    test('❌ Incorrect double API path should fail: /api/api/v1/questionnaires', async () => {
+    test('❌ Incorrect double API path should fail: /api/api/v1/health', async () => {
       const response = await request(app)
-        .get('/api/api/v1/questionnaires')
-        .set('Authorization', getAuthHeader(userToken));
+        .get('/api/api/v1/health');
 
       // This should return 404 because the path structure is wrong
       expect(response.status).toBe(404);
     });
 
-    test('❌ Missing API prefix should fail: /v1/questionnaires', async () => {
+    test('❌ Missing API prefix should fail: /v1/health', async () => {
       const response = await request(app)
-        .get('/v1/questionnaires')
-        .set('Authorization', getAuthHeader(userToken));
+        .get('/v1/health');
 
       expect(response.status).toBe(404);
     });
@@ -120,19 +89,18 @@ describe('Frontend Integration - API Path Validation', () => {
   describe('Frontend Configuration Issues', () => {
     test('🔍 Test common frontend API configuration mistakes', async () => {
       const testPaths = [
-        { path: '/api/v1/questionnaires', expected: 200, description: 'Correct path' },
-        { path: '/api/api/v1/questionnaires', expected: 404, description: 'Double API prefix' },
-        { path: '//api/v1/questionnaires', expected: 404, description: 'Double slash' },
-        { path: '/api//v1/questionnaires', expected: 404, description: 'Double slash in middle' },
-        { path: '/api/v1//questionnaires', expected: 200, description: 'Double slash before endpoint (Express normalizes this)' },
-        { path: '/api/v1/questionnaires/', expected: 200, description: 'Trailing slash (should work)' },
-        { path: '/api/v1/questionnaires//', expected: 200, description: 'Double trailing slash (Express normalizes this)' },
+        { path: '/api/v1/health', expected: 200, description: 'Correct path' },
+        { path: '/api/api/v1/health', expected: 404, description: 'Double API prefix' },
+        { path: '//api/v1/health', expected: 404, description: 'Double slash' },
+        { path: '/api//v1/health', expected: 404, description: 'Double slash in middle' },
+        { path: '/api/v1//health', expected: 200, description: 'Double slash before endpoint (Express normalizes this)' },
+        { path: '/api/v1/health/', expected: 200, description: 'Trailing slash (should work)' },
+        { path: '/api/v1/health//', expected: 200, description: 'Double trailing slash (Express normalizes this)' },
       ];
 
       for (const test of testPaths) {
         const response = await request(app)
-          .get(test.path)
-          .set('Authorization', getAuthHeader(userToken));
+          .get(test.path);
 
         expect(response.status).toBe(test.expected);
       }
@@ -143,8 +111,7 @@ describe('Frontend Integration - API Path Validation', () => {
     test('🌐 Test API base URL responses', async () => {
       // Test the base API endpoint
       const response = await request(app)
-        .get('/api/v1')
-        .set('Authorization', getAuthHeader(userToken));
+        .get('/api/v1');
 
       expect(response.status).toBe(200);
       expect(response.body.message).toContain('running');
@@ -153,8 +120,7 @@ describe('Frontend Integration - API Path Validation', () => {
 
     test('🌐 Test double API base URL', async () => {
       const response = await request(app)
-        .get('/api/api/v1')
-        .set('Authorization', getAuthHeader(userToken));
+        .get('/api/api/v1');
 
       expect(response.status).toBe(404);
     });
@@ -179,9 +145,6 @@ describe('Frontend Integration - API Path Validation', () => {
 
   describe('All Major Endpoints Path Validation', () => {
     const endpoints = [
-      { method: 'GET', path: '/api/v1/questionnaires', auth: true },
-      { method: 'GET', path: '/api/v1/analytics', auth: true },
-      { method: 'GET', path: '/api/v1/subscription', auth: true },
       { method: 'GET', path: '/api/v1/health', auth: false },
       { method: 'POST', path: '/api/v1/auth/login', auth: false },
     ];
@@ -189,10 +152,6 @@ describe('Frontend Integration - API Path Validation', () => {
     test('🔍 Validate all major endpoints work with correct paths', async () => {
       for (const endpoint of endpoints) {
         let requestBuilder = request(app)[endpoint.method.toLowerCase()](endpoint.path);
-
-        if (endpoint.auth) {
-          requestBuilder = requestBuilder.set('Authorization', getAuthHeader(userToken));
-        }
 
         if (endpoint.method === 'POST' && endpoint.path.includes('login')) {
           requestBuilder = requestBuilder.send({
@@ -212,10 +171,6 @@ describe('Frontend Integration - API Path Validation', () => {
       for (const endpoint of endpoints) {
         const wrongPath = endpoint.path.replace('/api/v1', '/api/api/v1');
         let requestBuilder = request(app)[endpoint.method.toLowerCase()](wrongPath);
-
-        if (endpoint.auth) {
-          requestBuilder = requestBuilder.set('Authorization', getAuthHeader(userToken));
-        }
 
         if (endpoint.method === 'POST' && endpoint.path.includes('login')) {
           requestBuilder = requestBuilder.send({

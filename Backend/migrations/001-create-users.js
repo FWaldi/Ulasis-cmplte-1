@@ -31,10 +31,10 @@ module.exports = {
         comment: 'User last name',
       },
       subscription_plan: {
-        type: Sequelize.ENUM('free', 'starter', 'business'),
+        type: Sequelize.ENUM('free', 'starter', 'business', 'admin'),
         allowNull: false,
         defaultValue: 'free',
-        comment: 'Current subscription plan of the user',
+        comment: 'Current subscription plan of user',
       },
       subscription_status: {
         type: Sequelize.ENUM('active', 'inactive', 'suspended', 'cancelled'),

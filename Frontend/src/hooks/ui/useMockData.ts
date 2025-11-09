@@ -1,136 +1,390 @@
 import type { DemoPlan, Review, TrendData, Questionnaire, QRCode, BubbleAnalytics, AnalyticsSummaryData, TimeComparisonData } from '../../types';
 import { ReviewStatus, QuestionType, Sentiment } from '../../types';
 
-const allReviews: Review[] = [
-    { id: 1, rating: 5, comment: 'Kopinya enak banget, tempatnya juga nyaman buat kerja. Pasti balik lagi!', timestamp: new Date('2023-10-28T10:00:00Z'), source: 'QR Scan', tags: ['Kopi', 'Suasana'], status: ReviewStatus.Resolved, sentiment: Sentiment.Positive, topics: ['Kualitas Produk', 'Suasana'], questionnaireId: 1, questionnaireName: 'Feedback Umum Pelanggan' },
-    { id: 2, rating: 3, comment: 'Pelayanannya agak lama ya, padahal lagi ga rame. Makanan sih oke.', timestamp: new Date('2023-10-28T09:30:00Z'), source: 'QR Scan', tags: ['Pelayanan'], status: ReviewStatus.InProgress, sentiment: Sentiment.Neutral, topics: ['Pelayanan'], questionnaireId: 1, questionnaireName: 'Feedback Umum Pelanggan' },
-    { id: 3, rating: 2, comment: 'AC-nya panas banget, jadi kurang nyaman. Tolong diperhatikan ya.', timestamp: new Date('2023-10-27T15:00:00Z'), source: 'QR Scan', tags: ['Fasilitas', 'AC'], status: ReviewStatus.New, sentiment: Sentiment.Negative, topics: ['Fasilitas'], questionnaireId: 1, questionnaireName: 'Feedback Umum Pelanggan' },
-    { id: 4, rating: 4, comment: 'Harga agak pricey tapi sebanding sama kualitasnya. Croissant-nya the best!', timestamp: new Date('2023-10-27T12:00:00Z'), source: 'Google Maps', tags: ['Harga', 'Makanan'], status: ReviewStatus.Resolved, sentiment: Sentiment.Positive, topics: ['Harga', 'Kualitas Produk'] },
-    { id: 5, rating: 5, comment: 'Staff ramah dan sangat membantu. Proses redeem voucher gampang.', timestamp: new Date('2023-10-26T18:00:00Z'), source: 'QR Scan', tags: ['Pelayanan', 'Staff'], status: ReviewStatus.Resolved, sentiment: Sentiment.Positive, topics: ['Pelayanan'], questionnaireId: 1, questionnaireName: 'Feedback Umum Pelanggan' },
-    { id: 6, rating: 1, comment: 'Parkirnya susah banget disini, muter-muter setengah jam sendiri.', timestamp: new Date('2023-10-26T14:00:00Z'), source: 'Google Maps', tags: ['Fasilitas', 'Parkir'], status: ReviewStatus.New, sentiment: Sentiment.Negative, topics: ['Fasilitas'] },
-    { id: 7, rating: 4, comment: 'Wifi kencang, cocok buat WFC. Banyak colokan juga.', timestamp: new Date('2023-10-25T11:00:00Z'), source: 'QR Scan', tags: ['Fasilitas', 'Wifi'], status: ReviewStatus.Resolved, sentiment: Sentiment.Positive, topics: ['Fasilitas'], questionnaireId: 1, questionnaireName: 'Feedback Umum Pelanggan' },
-    { id: 8, rating: 2, comment: 'Musik terlalu kencang, sulit untuk mengobrol atau bekerja.', timestamp: new Date('2023-10-28T11:00:00Z'), source: 'QR Scan', tags: ['Suasana'], status: ReviewStatus.New, sentiment: Sentiment.Negative, topics: ['Suasana'], questionnaireId: 1, questionnaireName: 'Feedback Umum Pelanggan' },
-    { id: 9, rating: 3, comment: 'Kebersihan toiletnya kurang terjaga, semoga bisa ditingkatkan.', timestamp: new Date('2023-10-28T12:30:00Z'), source: 'QR Scan', tags: ['Fasilitas', 'Kebersihan'], status: ReviewStatus.InProgress, sentiment: Sentiment.Negative, topics: ['Kebersihan'], questionnaireId: 2, questionnaireName: 'Kuesioner Kebersihan Outlet' },
-    { id: 10, rating: 4, comment: 'Pilihan menunya cukup beragam, tapi akan lebih baik jika ada opsi vegetarian.', timestamp: new Date('2023-10-27T18:00:00Z'), source: 'QR Scan', tags: ['Menu'], status: ReviewStatus.Resolved, sentiment: Sentiment.Neutral, topics: ['Kualitas Produk'], questionnaireId: 3, questionnaireName: 'Survey Minuman Favorit' },
-    { id: 11, rating: 5, comment: 'Atmosfernya dapet banget buat nongkrong sore-sore. Recommended!', timestamp: new Date('2023-10-28T16:00:00Z'), source: 'QR Scan', tags: ['Suasana'], status: ReviewStatus.New, sentiment: Sentiment.Positive, topics: ['Suasana'], questionnaireId: 1, questionnaireName: 'Feedback Umum Pelanggan' },
-    { id: 12, rating: 2, comment: 'Mejanya agak kotor pas saya datang, banyak remahan.', timestamp: new Date('2023-10-28T14:30:00Z'), source: 'QR Scan', tags: ['Kebersihan'], status: ReviewStatus.New, sentiment: Sentiment.Negative, topics: ['Kebersihan'], questionnaireId: 2, questionnaireName: 'Kuesioner Kebersihan Outlet' },
-    { id: 13, rating: 4, comment: 'Proses pesannya cepat via aplikasi. Keren!', timestamp: new Date('2023-10-27T19:00:00Z'), source: 'QR Scan', tags: ['Pelayanan'], status: ReviewStatus.Resolved, sentiment: Sentiment.Positive, topics: ['Pelayanan'], questionnaireId: 1, questionnaireName: 'Feedback Umum Pelanggan' },
-    { id: 14, rating: 3, comment: 'Biasa aja sih, tidak ada yang spesial. Harganya lumayan.', timestamp: new Date('2023-10-26T20:00:00Z'), source: 'Google Maps', tags: ['Harga'], status: ReviewStatus.Resolved, sentiment: Sentiment.Neutral, topics: ['Harga', 'Kualitas Produk'] },
-    { id: 15, rating: 5, comment: 'Baristanya jago, latte art nya bagus dan rasanya konsisten.', timestamp: new Date('2023-10-25T13:00:00Z'), source: 'QR Scan', tags: ['Kopi', 'Staff'], status: ReviewStatus.Resolved, sentiment: Sentiment.Positive, topics: ['Kualitas Produk', 'Pelayanan'], questionnaireId: 1, questionnaireName: 'Feedback Umum Pelanggan' },
-    { id: 16, rating: 2, comment: 'Pesan antar online lama banget sampainya, kopinya jadi dingin.', timestamp: new Date('2023-10-24T09:00:00Z'), source: 'Gojek', tags: ['Pelayanan', 'Online'], status: ReviewStatus.New, sentiment: Sentiment.Negative, topics: ['Pelayanan'] },
-    { id: 17, rating: 4, comment: 'Suka banget sama packaging takeaway-nya, aman dan estetik.', timestamp: new Date('2023-10-23T15:30:00Z'), source: 'QR Scan', tags: ['Fasilitas'], status: ReviewStatus.Resolved, sentiment: Sentiment.Positive, topics: ['Fasilitas'], questionnaireId: 1, questionnaireName: 'Feedback Umum Pelanggan' },
-    { id: 18, rating: 1, comment: 'Tolong dong, masa sendoknya bekas dipakai masih ada noda.', timestamp: new Date('2023-10-28T18:00:00Z'), source: 'QR Scan', tags: ['Kebersihan'], status: ReviewStatus.New, sentiment: Sentiment.Negative, topics: ['Kebersihan'], questionnaireId: 2, questionnaireName: 'Kuesioner Kebersihan Outlet' },
-    { id: 19, rating: 5, comment: 'Tempatnya kids-friendly, ada area bermain kecil. Anak saya suka.', timestamp: new Date('2023-10-27T11:00:00Z'), source: 'Google Maps', tags: ['Fasilitas', 'Suasana'], status: ReviewStatus.Resolved, sentiment: Sentiment.Positive, topics: ['Fasilitas', 'Suasana'] },
-    { id: 20, rating: 3, comment: 'AC nya terlalu dingin, jadi ga betah lama-lama.', timestamp: new Date('2023-10-28T19:00:00Z'), source: 'QR Scan', tags: ['Fasilitas', 'AC'], status: ReviewStatus.InProgress, sentiment: Sentiment.Neutral, topics: ['Fasilitas'], questionnaireId: 1, questionnaireName: 'Feedback Umum Pelanggan' },
-    { id: 21, rating: 4, comment: 'Pilihan biji kopinya banyak dan dijelaskan dengan baik oleh barista.', timestamp: new Date('2023-10-26T10:00:00Z'), source: 'QR Scan', tags: ['Kopi', 'Pelayanan'], status: ReviewStatus.Resolved, sentiment: Sentiment.Positive, topics: ['Kualitas Produk', 'Pelayanan'], questionnaireId: 3, questionnaireName: 'Survey Minuman Favorit' },
-    { id: 22, rating: 2, comment: 'Antriannya panjang banget, kasirnya cuma satu yang buka.', timestamp: new Date('2023-10-25T12:30:00Z'), source: 'QR Scan', tags: ['Pelayanan'], status: ReviewStatus.New, sentiment: Sentiment.Negative, topics: ['Pelayanan'], questionnaireId: 1, questionnaireName: 'Feedback Umum Pelanggan' },
-    { id: 23, rating: 5, comment: 'Sering ada promo menarik di aplikasi, jadi sering beli deh.', timestamp: new Date('2023-10-24T17:00:00Z'), source: 'Gojek', tags: ['Harga'], status: ReviewStatus.Resolved, sentiment: Sentiment.Positive, topics: ['Harga'] },
-    { id: 24, rating: 4, comment: 'Toiletnya wangi dan bersih. Penting banget ini!', timestamp: new Date('2023-10-23T18:30:00Z'), source: 'QR Scan', tags: ['Fasilitas', 'Kebersihan'], status: ReviewStatus.Resolved, sentiment: Sentiment.Positive, topics: ['Kebersihan'], questionnaireId: 2, questionnaireName: 'Kuesioner Kebersihan Outlet' },
-     { id: 25, rating: 1, comment: 'Rasa makanannya hambar, tidak sesuai ekspektasi dan harganya.', timestamp: new Date('2023-10-28T20:00:00Z'), source: 'QR Scan', tags: ['Makanan', 'Harga'], status: ReviewStatus.New, sentiment: Sentiment.Negative, topics: ['Kualitas Produk', 'Harga'], questionnaireId: 1, questionnaireName: 'Feedback Umum Pelanggan' },
-     { id: 26, rating: 4, comment: 'Pengiriman cukup cepat, tapi packaging bisa lebih baik.', timestamp: new Date('2023-10-27T14:00:00Z'), source: 'Gojek', tags: ['Delivery', 'Packaging'], status: ReviewStatus.Resolved, sentiment: Sentiment.Positive, topics: ['Pelayanan'], questionnaireId: 4, questionnaireName: 'Feedback Layanan Delivery' },
-     { id: 27, rating: 3, comment: 'Driver ramah dan tepat waktu, tapi paket agak penyok.', timestamp: new Date('2023-10-26T16:00:00Z'), source: 'Gojek', tags: ['Driver', 'Packaging'], status: ReviewStatus.InProgress, sentiment: Sentiment.Neutral, topics: ['Pelayanan', 'Fasilitas'], questionnaireId: 4, questionnaireName: 'Feedback Layanan Delivery' },
-     { id: 28, rating: 5, comment: 'Event sangat inspiring, materi bagus dan networking-nya worth it.', timestamp: new Date('2023-10-25T18:00:00Z'), source: 'QR Scan', tags: ['Event', 'Materi'], status: ReviewStatus.Resolved, sentiment: Sentiment.Positive, topics: ['Kualitas Produk'], questionnaireId: 6, questionnaireName: 'Evaluasi Event' },
-     { id: 29, rating: 2, comment: 'Lingkungan kerja baik, tapi beban kerja terlalu berat.', timestamp: new Date('2023-10-24T10:00:00Z'), source: 'QR Scan', tags: ['Workload', 'Environment'], status: ReviewStatus.New, sentiment: Sentiment.Negative, topics: ['Pelayanan'], questionnaireId: 5, questionnaireName: 'Survey Kepuasan Karyawan' },
-     { id: 30, rating: 4, comment: 'Dukungan dari atasan cukup baik, tapi training bisa lebih banyak.', timestamp: new Date('2023-10-23T12:00:00Z'), source: 'QR Scan', tags: ['Support', 'Training'], status: ReviewStatus.Resolved, sentiment: Sentiment.Positive, topics: ['Pelayanan'], questionnaireId: 5, questionnaireName: 'Survey Kepuasan Karyawan' },
+// Generate realistic reviews over a month period based on backend database structure
+const generateRealisticReviews = (): Review[] => {
+    const reviews: Review[] = [];
+    const now = new Date();
+    const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+    
+    // Realistic comment templates based on different questionnaire types
+    const commentTemplates = {
+        'Customer Satisfaction Survey': [
+            { rating: 5, comment: "Excellent service! The staff was very attentive and the coffee quality was outstanding.", topics: ["Service Quality", "Product Quality"] },
+            { rating: 4, comment: "Great atmosphere for working, WiFi is stable and power outlets are available.", topics: ["Ambiance", "Facilities"] },
+            { rating: 3, comment: "Good coffee but prices are a bit high for the portion size.", topics: ["Pricing", "Value for Money"] },
+            { rating: 2, comment: "Wait time was too long during peak hours, need more staff.", topics: ["Service Speed", "Staffing"] },
+            { rating: 1, comment: "Table was dirty when I arrived, had to clean it myself.", topics: ["Cleanliness", "Service Quality"] },
+            { rating: 4, comment: "Love the new seasonal menu! The pumpkin spice latte is perfect.", topics: ["Product Quality", "Menu Variety"] },
+            { rating: 3, comment: "Music is too loud for a coffee shop, makes it hard to work.", topics: ["Ambiance", "Noise Level"] },
+            { rating: 5, comment: "Barista remembered my name and usual order - personal touch appreciated!", topics: ["Service Quality", "Customer Experience"] }
+        ],
+        'Employee Engagement Survey': [
+            { rating: 4, comment: "Good work environment, supportive team members and management.", topics: ["Work Environment", "Team Support"] },
+            { rating: 3, comment: "Salary could be more competitive with industry standards.", topics: ["Compensation", "Benefits"] },
+            { rating: 5, comment: "Great training programs and opportunities for professional growth.", topics: ["Training", "Career Development"] },
+            { rating: 2, comment: "Work-life balance is challenging during peak seasons.", topics: ["Work-Life Balance", "Workload"] },
+            { rating: 4, comment: "Management is approachable and open to feedback.", topics: ["Management", "Communication"] },
+            { rating: 3, comment: "Equipment needs updating, some machines are outdated.", topics: ["Equipment", "Resources"] }
+        ],
+        'Product Feedback Form': [
+            { rating: 5, comment: "New cold brew is amazing! Smooth and refreshing.", topics: ["Product Quality", "Innovation"] },
+            { rating: 4, comment: "Pastries are fresh and delicious, great variety.", topics: ["Product Quality", "Variety"] },
+            { rating: 3, comment: "Portion sizes could be more generous for the price.", topics: ["Portion Size", "Value"] },
+            { rating: 2, comment: "Some items were sold out early in the day.", topics: ["Availability", "Inventory"] },
+            { rating: 5, comment: "Plant-based milk options are excellent quality!", topics: ["Product Quality", "Dietary Options"] }
+        ]
+    };
+
+    // Generate reviews spread over 30 days with realistic patterns
+    for (let day = 0; day < 30; day++) {
+        const currentDate = new Date(thirtyDaysAgo.getTime() + day * 24 * 60 * 60 * 1000);
+        
+        // Weekend patterns (more customers)
+        const isWeekend = currentDate.getDay() === 0 || currentDate.getDay() === 6;
+        const dailyReviews = isWeekend ? Math.floor(Math.random() * 8) + 5 : Math.floor(Math.random() * 6) + 2;
+        
+        // Peak hours: 8-10 AM, 12-2 PM, 4-6 PM
+        const peakHours = [8, 9, 12, 13, 16, 17, 18];
+        
+        for (let i = 0; i < dailyReviews; i++) {
+            const hour = peakHours[Math.floor(Math.random() * peakHours.length)];
+            const minute = Math.floor(Math.random() * 60);
+            currentDate.setHours(hour, minute, 0, 0);
+            
+            // Select questionnaire type
+            const questionnaireTypes = Object.keys(commentTemplates);
+            const questionnaireType = questionnaireTypes[Math.floor(Math.random() * questionnaireTypes.length)];
+            const templates = commentTemplates[questionnaireType as keyof typeof commentTemplates];
+            const template = templates[Math.floor(Math.random() * templates.length)];
+            
+            // Determine source based on questionnaire type
+            const source = questionnaireType === 'Employee Engagement Survey' 
+                ? 'Internal System' 
+                : ['QR Scan', 'Google Maps', 'Gojek', 'Website'][Math.floor(Math.random() * 4)];
+            
+            // Determine status based on rating and age
+            let status: ReviewStatus;
+            const daysOld = Math.floor((now.getTime() - currentDate.getTime()) / (24 * 60 * 60 * 1000));
+            if (template.rating >= 4) {
+                status = daysOld > 2 ? ReviewStatus.Resolved : ReviewStatus.New;
+            } else if (template.rating === 3) {
+                status = daysOld > 1 ? ReviewStatus.InProgress : ReviewStatus.New;
+            } else {
+                status = daysOld > 3 ? ReviewStatus.InProgress : ReviewStatus.New;
+            }
+            
+            const sentiment = template.rating >= 4 ? Sentiment.Positive : 
+                           template.rating === 3 ? Sentiment.Neutral : Sentiment.Negative;
+            
+            reviews.push({
+                id: reviews.length + 1,
+                rating: template.rating,
+                comment: template.comment,
+                timestamp: new Date(currentDate),
+                source,
+                tags: [template.topics[0]],
+                status,
+                sentiment,
+                topics: template.topics,
+                questionnaireId: questionnaireType === 'Customer Satisfaction Survey' ? 1 :
+                               questionnaireType === 'Employee Engagement Survey' ? 2 : 3,
+                questionnaireName: questionnaireType
+            });
+        }
+    }
+    
+    return reviews.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
+};
+
+const allReviews = generateRealisticReviews();
+
+
+// Realistic questionnaires based on backend database structure
+const allQuestionnaires: Questionnaire[] = [
+    {
+        id: 1,
+        name: 'Customer Satisfaction Survey 1',
+        description: 'Comprehensive feedback form for customer experience evaluation covering service quality, product satisfaction, and overall ambiance.',
+        questions: [
+            { id: 'q1', text: 'How would you rate the overall service quality?', type: 'rating_5' },
+            { id: 'q2', text: 'How satisfied are you with our product quality?', type: 'rating_5' },
+            { id: 'q3', text: 'Was the waiting time acceptable?', type: 'rating_5' },
+            { id: 'q4', text: 'How would you rate the cleanliness of our establishment?', type: 'rating_5' },
+            { id: 'q5', text: 'Would you recommend us to friends and family?', type: 'yes_no' },
+            { id: 'q6', text: 'What specific aspects did you like most?', type: 'multiple_choice', options: ['Service Quality', 'Product Taste', 'Ambiance', 'Price', 'Location'] },
+            { id: 'q7', text: 'Any suggestions for improvement?', type: 'long_text' }
+        ],
+        responseCount: 156,
+        lastModified: new Date('2024-10-15'),
+        category: 'Customer Experience',
+        isActive: true
+    },
+    {
+        id: 2,
+        name: 'Employee Engagement Survey 2',
+        description: 'Internal survey to measure employee satisfaction, work environment, and professional development opportunities.',
+        questions: [
+            { id: 'q8', text: 'How satisfied are you with your work environment?', type: 'rating_5' },
+            { id: 'q9', text: 'Do you feel adequately supported by management?', type: 'rating_5' },
+            { id: 'q10', text: 'How would you rate the work-life balance?', type: 'rating_5' },
+            { id: 'q11', text: 'Are you satisfied with the compensation package?', type: 'rating_5' },
+            { id: 'q12', text: 'Do you see opportunities for career growth?', type: 'yes_no' },
+            { id: 'q13', text: 'What improvements would you suggest?', type: 'long_text' }
+        ],
+        responseCount: 42,
+        lastModified: new Date('2024-10-10'),
+        category: 'Internal HR',
+        isActive: true
+    },
+    {
+        id: 3,
+        name: 'Product Feedback Form 3',
+        description: 'Detailed feedback form focusing on product quality, menu variety, and customer preferences.',
+        questions: [
+            { id: 'q14', text: 'How would you rate our coffee quality?', type: 'rating_10' },
+            { id: 'q15', text: 'How satisfied are you with our food offerings?', type: 'rating_5' },
+            { id: 'q16', text: 'Is our menu variety sufficient?', type: 'rating_5' },
+            { id: 'q17', text: 'Are our prices reasonable for the quality offered?', type: 'rating_5' },
+            { id: 'q18', text: 'Which products would you like to see more of?', type: 'multiple_choice', options: ['Coffee Varieties', 'Pastries', 'Sandwiches', 'Healthy Options', 'Seasonal Items'] },
+            { id: 'q19', text: 'Any specific product requests?', type: 'short_text' }
+        ],
+        responseCount: 89,
+        lastModified: new Date('2024-10-12'),
+        category: 'Product Development',
+        isActive: true
+    },
+    {
+        id: 4,
+        name: 'Customer Satisfaction Survey 4',
+        description: 'Extended customer satisfaction survey with additional focus on digital experience and loyalty.',
+        questions: [
+            { id: 'q20', text: 'How was your overall experience today?', type: 'rating_5' },
+            { id: 'q21', text: 'How would you rate our mobile app experience?', type: 'rating_5' },
+            { id: 'q22', text: 'Was the ordering process smooth?', type: 'rating_5' },
+            { id: 'q23', text: 'How likely are you to visit again?', type: 'rating_10' },
+            { id: 'q24', text: 'Do you use our loyalty program?', type: 'yes_no' },
+            { id: 'q25', text: 'Additional feedback?', type: 'long_text' }
+        ],
+        responseCount: 67,
+        lastModified: new Date('2024-10-08'),
+        category: 'Customer Experience',
+        isActive: true
+    },
+    {
+        id: 5,
+        name: 'Employee Engagement Survey 5',
+        description: 'Follow-up engagement survey focusing on team dynamics and communication.',
+        questions: [
+            { id: 'q26', text: 'How effective is team communication?', type: 'rating_5' },
+            { id: 'q27', text: 'Do you feel valued as an employee?', type: 'rating_5' },
+            { id: 'q28', text: 'How would you rate training opportunities?', type: 'rating_5' },
+            { id: 'q29', text: 'Is feedback from management constructive?', type: 'yes_no' },
+            { id: 'q30', text: 'Suggestions for team improvement?', type: 'long_text' }
+        ],
+        responseCount: 38,
+        lastModified: new Date('2024-10-05'),
+        category: 'Internal HR',
+        isActive: true
+    }
 ];
 
-
-const allQuestionnaires: Questionnaire[] = [
-     { id: 1, name: 'Feedback Umum Pelanggan', description: 'Kuesioner untuk mengumpulkan feedback umum setelah kunjungan.', questions: [{id: 'q1', text:'Seberapa puas Anda dengan pelayanan kami?', type: 'rating_5'}, {id:'q2', text:'Apa yang bisa kami tingkatkan?', type: 'long_text'}], responseCount: 342, lastModified: new Date('2023-10-20') },
-     { id: 2, name: 'Kuesioner Kebersihan Outlet', description: 'Feedback khusus mengenai kebersihan di lokasi kami.', questions: [{id: 'q3', text:'Bagaimana penilaian Anda tentang kebersihan area makan?', type: 'rating_5'}, {id: 'q4', text: 'Apakah toilet bersih dan terawat?', type: 'yes_no'}], responseCount: 157, lastModified: new Date('2023-09-15') },
-     {
-         id: 3,
-         name: 'Survey Minuman Favorit',
-         description: 'Bantu kami mengetahui minuman apa yang paling Anda sukai.',
-         questions: [
-             {id: 'q5', text:'Minuman apa yang paling sering Anda pesan?', type: 'multiple_choice', options: ['Kopi Hitam', 'Cappuccino', 'Latte', 'Non-Kopi']},
-             {id: 'q6', text:'Dari mana Anda mengetahui promo kami?', type: 'dropdown', options: ['Instagram', 'Teman', 'Iklan di Toko', 'Lainnya']},
-             {id: 'q7', text:'Beri kami rating untuk varian musiman terbaru.', type: 'rating_10'},
-             {id: 'q8', text:'Saran untuk minuman berikutnya?', type: 'short_text'}
-         ],
-         responseCount: 88,
-         lastModified: new Date('2023-10-25')
-     },
-     { id: 4, name: 'Feedback Layanan Delivery', description: 'Kuesioner untuk menilai pengalaman delivery order.', questions: [{id: 'q9', text:'Seberapa cepat waktu pengiriman?', type: 'rating_5'}, {id:'q10', text:'Kondisi paket saat diterima?', type: 'yes_no'}, {id:'q11', text:'Feedback untuk driver?', type: 'long_text'}], responseCount: 203, lastModified: new Date('2023-10-18') },
-     { id: 5, name: 'Survey Kepuasan Karyawan', description: 'Internal survey untuk mengukur kepuasan karyawan.', questions: [{id: 'q12', text:'Seberapa puas Anda dengan lingkungan kerja?', type: 'rating_5'}, {id:'q13', text:'Apakah Anda mendapat dukungan yang cukup?', type: 'yes_no'}, {id:'q14', text:'Saran untuk improvement?', type: 'long_text'}], responseCount: 45, lastModified: new Date('2023-10-10') },
-     { id: 6, name: 'Evaluasi Event', description: 'Feedback peserta setelah mengikuti event kami.', questions: [{id: 'q15', text:'Seberapa menarik event ini?', type: 'rating_10'}, {id:'q16', text:'Apakah Anda akan merekomendasikan?', type: 'yes_no'}, {id:'q17', text:'Kritik dan saran?', type: 'long_text'}], responseCount: 127, lastModified: new Date('2023-09-28') },
- ];
-
+// Realistic QR codes based on actual questionnaire usage patterns
 const allQrCodes: QRCode[] = [
-     { id: 1, name: 'QR Meja - Umum', linkedForm: 'Feedback Umum Pelanggan', questionnaireId: 1, scans: 120, color: '#007A7A' },
-     { id: 2, name: 'QR Pintu Keluar', linkedForm: 'Feedback Umum Pelanggan', questionnaireId: 1, scans: 250, color: '#4A4A4A' },
-     { id: 3, name: 'QR Toilet', linkedForm: 'Kuesioner Kebersihan Outlet', questionnaireId: 2, scans: 95, color: '#FFC107' },
-     { id: 4, name: 'QR Promo Minuman', linkedForm: 'Survey Minuman Favorit', questionnaireId: 3, scans: 55, color: '#D32F2F', logoUrl: 'https://cdn.iconscout.com/icon/free/png-256/free-coffee-bean-1544323-1308892.png' },
-     { id: 5, name: 'QR Delivery Feedback', linkedForm: 'Feedback Layanan Delivery', questionnaireId: 4, scans: 78, color: '#1976D2' },
-     { id: 6, name: 'QR Karyawan Survey', linkedForm: 'Survey Kepuasan Karyawan', questionnaireId: 5, scans: 23, color: '#388E3C' },
-     { id: 7, name: 'QR Event Check-in', linkedForm: 'Evaluasi Event', questionnaireId: 6, scans: 156, color: '#F57C00' },
-     { id: 8, name: 'QR Meja VIP', linkedForm: 'Feedback Umum Pelanggan', questionnaireId: 1, scans: 67, color: '#7B1FA2' },
- ];
+    {
+        id: 1,
+        name: 'Table QR - Main Dining',
+        linkedForm: 'Customer Satisfaction Survey 1',
+        questionnaireId: 1,
+        scans: 342,
+        color: '#007A7A',
+        location: 'Main Dining Area',
+        lastScanned: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
+        isActive: true
+    },
+    {
+        id: 2,
+        name: 'Exit Door QR',
+        linkedForm: 'Customer Satisfaction Survey 1',
+        questionnaireId: 1,
+        scans: 287,
+        color: '#4A4A4A',
+        location: 'Main Exit',
+        lastScanned: new Date(Date.now() - 30 * 60 * 1000), // 30 minutes ago
+        isActive: true
+    },
+    {
+        id: 3,
+        name: 'Counter QR',
+        linkedForm: 'Customer Satisfaction Survey 4',
+        questionnaireId: 4,
+        scans: 198,
+        color: '#1976D2',
+        location: 'Service Counter',
+        lastScanned: new Date(Date.now() - 15 * 60 * 1000), // 15 minutes ago
+        isActive: true
+    },
+    {
+        id: 4,
+        name: 'Staff Room QR',
+        linkedForm: 'Employee Engagement Survey 2',
+        questionnaireId: 2,
+        scans: 45,
+        color: '#388E3C',
+        location: 'Staff Break Room',
+        lastScanned: new Date(Date.now() - 4 * 60 * 60 * 1000), // 4 hours ago
+        isActive: true
+    },
+    {
+        id: 5,
+        name: 'Product Display QR',
+        linkedForm: 'Product Feedback Form 3',
+        questionnaireId: 3,
+        scans: 156,
+        color: '#D32F2F',
+        location: 'Product Display Area',
+        lastScanned: new Date(Date.now() - 1 * 60 * 60 * 1000), // 1 hour ago
+        isActive: true,
+        logoUrl: 'https://cdn.iconscout.com/icon/free/png-256/free-coffee-bean-1544323-1308892.png'
+    },
+    {
+        id: 6,
+        name: 'Delivery Package QR',
+        linkedForm: 'Customer Satisfaction Survey 4',
+        questionnaireId: 4,
+        scans: 89,
+        color: '#FF9800',
+        location: 'Delivery Packages',
+        lastScanned: new Date(Date.now() - 45 * 60 * 1000), // 45 minutes ago
+        isActive: true
+    },
+    {
+        id: 7,
+        name: 'Office QR - Management',
+        linkedForm: 'Employee Engagement Survey 5',
+        questionnaireId: 5,
+        scans: 28,
+        color: '#795548',
+        location: 'Management Office',
+        lastScanned: new Date(Date.now() - 6 * 60 * 60 * 1000), // 6 hours ago
+        isActive: true
+    },
+    {
+        id: 8,
+        name: 'VIP Area QR',
+        linkedForm: 'Customer Satisfaction Survey 1',
+        questionnaireId: 1,
+        scans: 78,
+        color: '#7B1FA2',
+        location: 'VIP Section',
+        lastScanned: new Date(Date.now() - 3 * 60 * 60 * 1000), // 3 hours ago
+        isActive: true
+    },
+    {
+        id: 9,
+        name: 'Outdoor Seating QR',
+        linkedForm: 'Customer Satisfaction Survey 4',
+        questionnaireId: 4,
+        scans: 134,
+        color: '#4CAF50',
+        location: 'Outdoor Patio',
+        lastScanned: new Date(Date.now() - 90 * 60 * 1000), // 90 minutes ago
+        isActive: true
+    },
+    {
+        id: 10,
+        name: 'Kitchen QR',
+        linkedForm: 'Product Feedback Form 3',
+        questionnaireId: 3,
+        scans: 67,
+        color: '#607D8B',
+        location: 'Kitchen Area',
+        lastScanned: new Date(Date.now() - 5 * 60 * 60 * 1000), // 5 hours ago
+        isActive: true
+    }
+];
 
 
 type TimePeriod = 'day' | 'week' | 'month' | 'year';
 
 export const getMockData = (demoPlan: DemoPlan, timePeriod: TimePeriod = 'week') => {
-    // Get questionnaires based on plan - return mock data for demo
+    // Get questionnaires based on subscription plan - realistic limits
     const getQuestionnaires = () => {
-        // Start with 0 questionnaires for free/starter, 1 for business (for analytics demo)
-        return demoPlan === 'business' ? allQuestionnaires.slice(0, 1) : [];
+        switch (demoPlan) {
+            case 'free':
+                // Free plan: 1 questionnaire max
+                return allQuestionnaires.slice(0, 1);
+            case 'starter':
+                // Starter plan: up to 3 questionnaires
+                return allQuestionnaires.slice(0, 3);
+            case 'business':
+                // Business plan: up to 5 questionnaires
+                return allQuestionnaires.slice(0, 5);
+            case 'admin':
+            default:
+                // Admin: all questionnaires
+                return allQuestionnaires;
+        }
     };
 
-    // Generate data based on time period
+    // Generate realistic data based on subscription plan and time period
     const getPeriodData = () => {
+        const baseMultiplier = demoPlan === 'free' ? 0.3 : 
+                               demoPlan === 'starter' ? 0.6 : 
+                               demoPlan === 'business' ? 1.0 : 1.2;
+        
         switch (timePeriod) {
             case 'day':
                 return {
-                    totalResponses: 45,
-                    avgRating: 4.3,
-                    responseRate: 92,
-                    positiveSentiment: 78,
+                    totalResponses: Math.round(45 * baseMultiplier),
+                    avgRating: 4.2 + (Math.random() * 0.4),
+                    responseRate: Math.round(88 + (Math.random() * 8)),
+                    positiveSentiment: Math.round(72 + (Math.random() * 12)),
                     trends: {
-                        totalResponses: { value: 45, change: 8.2 },
-                        avgRating: { value: 4.3, change: 2.1 },
-                        responseRate: { value: 92, change: 1.5 },
-                        positiveSentiment: { value: 78, change: 5.3 },
+                        totalResponses: { value: Math.round(45 * baseMultiplier), change: 5.2 + (Math.random() * 6) },
+                        avgRating: { value: 4.2 + (Math.random() * 0.4), change: 1.1 + (Math.random() * 2) },
+                        responseRate: { value: Math.round(88 + (Math.random() * 8)), change: -1.2 + (Math.random() * 3) },
+                        positiveSentiment: { value: Math.round(72 + (Math.random() * 12)), change: 2.8 + (Math.random() * 4) },
                     }
                 };
             case 'month':
                 return {
-                    totalResponses: 1245,
-                    avgRating: 4.4,
-                    responseRate: 85,
-                    positiveSentiment: 62,
+                    totalResponses: Math.round(1245 * baseMultiplier),
+                    avgRating: 4.3 + (Math.random() * 0.3),
+                    responseRate: Math.round(82 + (Math.random() * 6)),
+                    positiveSentiment: Math.round(68 + (Math.random() * 8)),
                     trends: {
-                        totalResponses: { value: 1245, change: -3.1 },
-                        avgRating: { value: 4.4, change: -0.8 },
-                        responseRate: { value: 85, change: -2.2 },
-                        positiveSentiment: { value: 62, change: -1.7 },
+                        totalResponses: { value: Math.round(1245 * baseMultiplier), change: -2.1 + (Math.random() * 4) },
+                        avgRating: { value: 4.3 + (Math.random() * 0.3), change: -0.5 + (Math.random() * 1.5) },
+                        responseRate: { value: Math.round(82 + (Math.random() * 6)), change: -1.8 + (Math.random() * 2) },
+                        positiveSentiment: { value: Math.round(68 + (Math.random() * 8)), change: -0.7 + (Math.random() * 3) },
                     }
                 };
             case 'year':
                 return {
-                    totalResponses: 15420,
-                    avgRating: 4.6,
-                    responseRate: 79,
-                    positiveSentiment: 71,
+                    totalResponses: Math.round(15420 * baseMultiplier),
+                    avgRating: 4.5 + (Math.random() * 0.2),
+                    responseRate: Math.round(76 + (Math.random() * 8)),
+                    positiveSentiment: Math.round(70 + (Math.random() * 6)),
                     trends: {
-                        totalResponses: { value: 15420, change: 12.8 },
-                        avgRating: { value: 4.6, change: 0.4 },
-                        responseRate: { value: 79, change: -5.1 },
-                        positiveSentiment: { value: 71, change: 8.9 },
+                        totalResponses: { value: Math.round(15420 * baseMultiplier), change: 8.5 + (Math.random() * 6) },
+                        avgRating: { value: 4.5 + (Math.random() * 0.2), change: 0.2 + (Math.random() * 0.6) },
+                        responseRate: { value: Math.round(76 + (Math.random() * 8)), change: -3.2 + (Math.random() * 2) },
+                        positiveSentiment: { value: Math.round(70 + (Math.random() * 6)), change: 5.1 + (Math.random() * 4) },
                     }
                 };
             case 'week':
             default:
                 return {
-                    totalResponses: 1287,
-                    avgRating: 4.5,
-                    responseRate: 88,
-                    positiveSentiment: 65,
+                    totalResponses: Math.round(287 * baseMultiplier),
+                    avgRating: 4.4 + (Math.random() * 0.3),
+                    responseRate: Math.round(85 + (Math.random() * 7)),
+                    positiveSentiment: Math.round(71 + (Math.random() * 9)),
                     trends: {
-                        totalResponses: { value: 1287, change: 2.5 },
-                        avgRating: { value: 4.5, change: 1.2 },
-                        responseRate: { value: 88, change: -0.5 },
-                        positiveSentiment: { value: 65, change: 3.1 },
+                        totalResponses: { value: Math.round(287 * baseMultiplier), change: 1.8 + (Math.random() * 4) },
+                        avgRating: { value: 4.4 + (Math.random() * 0.3), change: 0.8 + (Math.random() * 1.5) },
+                        responseRate: { value: Math.round(85 + (Math.random() * 7)), change: -0.3 + (Math.random() * 2) },
+                        positiveSentiment: { value: Math.round(71 + (Math.random() * 9)), change: 2.1 + (Math.random() * 3) },
                     }
                 };
         }
@@ -231,62 +485,158 @@ export const getMockData = (demoPlan: DemoPlan, timePeriod: TimePeriod = 'week')
 };
 
 
+// Enhanced realistic comment templates based on actual business scenarios
 const mockComments: { rating: number, comment: string, topics: string[] }[] = [
-    { rating: 5, comment: "Luar biasa! Pelayanan cepat, tempat bersih, kopi mantap.", topics: ["Pelayanan", "Kebersihan", "Kualitas Produk"] },
-    { rating: 4, comment: "Sudah bagus, tapi wifinya kadang lemot.", topics: ["Fasilitas"] },
-    { rating: 3, comment: "Rasanya standar, harganya agak mahal untuk kualitas segitu.", topics: ["Harga", "Kualitas Produk"] },
-    { rating: 2, comment: "Tolong perhatikan kebersihan toilet. Agak kotor tadi.", topics: ["Kebersihan"] },
-    { rating: 1, comment: "Sangat kecewa. Pesanan saya salah dan menunggunya lama sekali.", topics: ["Pelayanan"] },
-    { rating: 5, comment: "Staffnya ramah dan informatif. Pilihan menunya juga oke.", topics: ["Pelayanan", "Kualitas Produk"] },
-    { rating: 4, comment: "Suasananya nyaman untuk kerja, tapi musiknya agak terlalu kencang.", topics: ["Suasana"] },
-    { rating: 2, comment: "Parkirnya susah dan mahal.", topics: ["Fasilitas"] },
+    { rating: 5, comment: "Outstanding service! The barista remembered my order and the atmosphere is perfect for remote work.", topics: ["Service Quality", "Customer Experience", "Ambiance"] },
+    { rating: 4, comment: "Great coffee and friendly staff. WiFi could be more stable during peak hours.", topics: ["Product Quality", "Service Quality", "Facilities"] },
+    { rating: 3, comment: "Decent coffee but prices are on the higher side. Portion sizes could be more generous.", topics: ["Pricing", "Value for Money", "Portion Size"] },
+    { rating: 2, comment: "Waited 25 minutes for a simple order. Staff seemed overwhelmed during lunch rush.", topics: ["Service Speed", "Staffing", "Wait Time"] },
+    { rating: 1, comment: "Found hair in my food and the manager was unapologetic. Will not return.", topics: ["Cleanliness", "Food Safety", "Management"] },
+    { rating: 5, comment: "Love the seasonal pumpkin spice collection! The loyalty app rewards are motivating.", topics: ["Product Innovation", "Digital Experience", "Loyalty Program"] },
+    { rating: 4, comment: "Excellent work environment with supportive colleagues. Management could improve communication.", topics: ["Work Environment", "Team Support", "Management Communication"] },
+    { rating: 2, comment: "Outdated equipment makes work inefficient. Training programs need updating.", topics: ["Equipment", "Training", "Work Efficiency"] },
+    { rating: 5, comment: "The new cold brew is refreshing and perfectly balanced. Great addition to the menu!", topics: ["Product Quality", "Menu Innovation", "Beverage Quality"] },
+    { rating: 3, comment: "Mobile app is user-friendly but delivery times are inconsistent. Packaging needs improvement.", topics: ["Digital Experience", "Delivery Service", "Packaging"] },
+    { rating: 4, comment: "Great variety of dietary options. The vegan pastries are surprisingly delicious!", topics: ["Menu Variety", "Dietary Options", "Product Quality"] },
+    { rating: 2, comment: "Parking is always a challenge and the outdoor seating area needs maintenance.", topics: ["Parking", "Facilities", "Maintenance"] },
+    { rating: 5, comment: "Outstanding training program and clear career progression path. Feel valued as an employee.", topics: ["Training", "Career Development", "Employee Recognition"] },
+    { rating: 3, comment: "Work-life balance is difficult during peak seasons. Compensation could be more competitive.", topics: ["Work-Life Balance", "Compensation", "Workload"] },
+    { rating: 4, comment: "The loyalty program benefits are excellent. Customer service resolves issues quickly.", topics: ["Loyalty Program", "Customer Service", "Issue Resolution"] }
 ];
 
-export const generateMockReview = (): Review => {
+export const generateMockReview = (questionnaireId?: number): Review => {
     const randomData = mockComments[Math.floor(Math.random() * mockComments.length)];
     const rating = randomData.rating;
     const sentiment = rating >= 4 ? Sentiment.Positive : rating === 3 ? Sentiment.Neutral : Sentiment.Negative;
-    const source = ['QR Scan', 'Google Maps', 'Gojek'][Math.floor(Math.random() * 3)];
+    
+    // More realistic source distribution
+    const sources = ['QR Scan', 'Google Maps', 'Gojek', 'Website', 'Mobile App', 'Email Survey'];
+    const source = sources[Math.floor(Math.random() * sources.length)];
 
-    let questionnaireData: { id?: number, name?: string } = {};
-    if (source === 'QR Scan') {
-        const randomQuestionnaire = allQuestionnaires[Math.floor(Math.random() * allQuestionnaires.length)];
-        questionnaireData = { id: randomQuestionnaire.id, name: randomQuestionnaire.name };
+    // Select questionnaire based on source or provided ID
+    let selectedQuestionnaire: Questionnaire;
+    if (questionnaireId) {
+        selectedQuestionnaire = allQuestionnaires.find(q => q.id === questionnaireId) || allQuestionnaires[0];
+    } else {
+        // Higher probability for customer satisfaction surveys
+        const weights = [0.4, 0.2, 0.25, 0.1, 0.05]; // weights for each questionnaire
+        const random = Math.random();
+        let cumulative = 0;
+        for (let i = 0; i < weights.length; i++) {
+            cumulative += weights[i];
+            if (random < cumulative) {
+                selectedQuestionnaire = allQuestionnaires[i];
+                break;
+            }
+        }
+        selectedQuestionnaire = allQuestionnaires[0]; // fallback
     }
+
+    // Realistic status based on rating and random factors
+    let status: ReviewStatus;
+    const randomFactor = Math.random();
+    if (rating >= 4) {
+        status = randomFactor > 0.3 ? ReviewStatus.Resolved : ReviewStatus.New;
+    } else if (rating === 3) {
+        status = randomFactor > 0.5 ? ReviewStatus.InProgress : ReviewStatus.New;
+    } else {
+        status = randomFactor > 0.2 ? ReviewStatus.InProgress : ReviewStatus.New;
+    }
+
+    // Generate realistic timestamp (more recent reviews are more likely)
+    const hoursAgo = Math.floor(Math.pow(Math.random(), 2) * 168); // 0-168 hours ago, weighted towards recent
+    const timestamp = new Date(Date.now() - hoursAgo * 60 * 60 * 1000);
 
     return {
         id: Date.now() + Math.random(),
         rating: rating,
         comment: randomData.comment,
-        timestamp: new Date(),
+        timestamp: timestamp,
         source: source,
         tags: [randomData.topics[0]],
-        status: ReviewStatus.New,
+        status: status,
         sentiment: sentiment,
         topics: randomData.topics,
-        questionnaireId: questionnaireData.id,
-        questionnaireName: questionnaireData.name,
+        questionnaireId: selectedQuestionnaire.id,
+        questionnaireName: selectedQuestionnaire.name,
     };
 };
 
-// Mock analytics data generators
+// Enhanced realistic analytics data generators based on questionnaire types
 export const generateMockBubbleAnalytics = (questionnaireId: number): BubbleAnalytics => {
-    const categories = [
-        { name: 'Service Quality', rating: 4.2, response_count: 25, response_rate: 85, color: 'green' as const, trend: 'improving' as const },
-        { name: 'Cleanliness', rating: 4.5, response_count: 22, response_rate: 88, color: 'green' as const, trend: 'stable' as const },
-        { name: 'Speed', rating: 3.8, response_count: 18, response_rate: 72, color: 'yellow' as const, trend: 'improving' as const },
-        { name: 'Value', rating: 4.0, response_count: 20, response_rate: 80, color: 'green' as const, trend: 'stable' as const },
-        { name: 'Price', rating: 2.3, response_count: 15, response_rate: 60, color: 'red' as const, trend: 'declining' as const },
-        { name: 'Atmosphere', rating: 3.2, response_count: 12, response_rate: 48, color: 'yellow' as const, trend: 'stable' as const },
-    ];
+    const questionnaire = allQuestionnaires.find(q => q.id === questionnaireId);
+    
+    // Define categories based on questionnaire type
+    const categoryTemplates = {
+        'Customer Satisfaction Survey 1': [
+            { name: 'Service Quality', baseRating: 4.3, baseResponses: 45 },
+            { name: 'Product Quality', baseRating: 4.5, baseResponses: 52 },
+            { name: 'Ambiance', baseRating: 4.1, baseResponses: 38 },
+            { name: 'Cleanliness', baseRating: 4.6, baseResponses: 41 },
+            { name: 'Value for Money', baseRating: 3.8, baseResponses: 35 },
+            { name: 'Wait Time', baseRating: 3.9, baseResponses: 29 }
+        ],
+        'Employee Engagement Survey 2': [
+            { name: 'Work Environment', baseRating: 4.2, baseResponses: 12 },
+            { name: 'Management Support', baseRating: 3.9, baseResponses: 11 },
+            { name: 'Work-Life Balance', baseRating: 3.5, baseResponses: 10 },
+            { name: 'Career Growth', baseRating: 4.1, baseResponses: 9 },
+            { name: 'Compensation', baseRating: 3.4, baseResponses: 8 },
+            { name: 'Team Collaboration', baseRating: 4.4, baseResponses: 11 }
+        ],
+        'Product Feedback Form 3': [
+            { name: 'Coffee Quality', baseRating: 4.6, baseResponses: 28 },
+            { name: 'Food Quality', baseRating: 4.2, baseResponses: 24 },
+            { name: 'Menu Variety', baseRating: 4.0, baseResponses: 19 },
+            { name: 'Price Fairness', baseRating: 3.7, baseResponses: 22 },
+            { name: 'Portion Size', baseRating: 3.9, baseResponses: 18 },
+            { name: 'Dietary Options', baseRating: 4.3, baseResponses: 15 }
+        ]
+    };
+
+    const template = categoryTemplates[questionnaire?.name as keyof typeof categoryTemplates] || categoryTemplates['Customer Satisfaction Survey 1'];
+    
+    const categories = template.map(template => {
+        // Add realistic variation
+        const rating = Math.max(1, Math.min(5, template.baseRating + (Math.random() - 0.5) * 0.8));
+        const responseCount = Math.max(5, Math.round(template.baseResponses * (0.8 + Math.random() * 0.4)));
+        const responseRate = Math.round(70 + Math.random() * 25);
+        
+        // Determine color and trend based on rating
+        let color: 'red' | 'yellow' | 'green';
+        let trend: 'improving' | 'stable' | 'declining';
+        
+        if (rating >= 4.2) {
+            color = 'green';
+            trend = Math.random() > 0.3 ? 'improving' : 'stable';
+        } else if (rating >= 3.5) {
+            color = 'yellow';
+            trend = Math.random() > 0.5 ? 'stable' : (Math.random() > 0.5 ? 'improving' : 'declining');
+        } else {
+            color = 'red';
+            trend = Math.random() > 0.4 ? 'improving' : 'declining';
+        }
+        
+        return {
+            name: template.name,
+            rating: Math.round(rating * 10) / 10,
+            response_count: responseCount,
+            response_rate: responseRate,
+            color,
+            trend
+        };
+    });
+
+    const now = new Date();
+    const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
 
     return {
         questionnaire_id: questionnaireId,
         categories,
         period_comparison: {
-            current_period: new Date().toISOString().split('T')[0],
-            previous_period: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-            overall_trend: 'improving'
+            current_period: now.toISOString().split('T')[0],
+            previous_period: weekAgo.toISOString().split('T')[0],
+            overall_trend: categories.filter(c => c.trend === 'improving').length > categories.filter(c => c.trend === 'declining').length ? 'improving' : 'stable'
         },
         total_responses: categories.reduce((sum, cat) => sum + cat.response_count, 0),
         response_rate: Math.round(categories.reduce((sum, cat) => sum + cat.response_rate, 0) / categories.length),
@@ -295,14 +645,8 @@ export const generateMockBubbleAnalytics = (questionnaireId: number): BubbleAnal
 };
 
 export const generateMockAnalyticsSummary = (questionnaireId: number): AnalyticsSummaryData => {
-    const categories = [
-        { name: 'Service Quality', rating: 4.2, response_count: 25, response_rate: 85, color: 'green' as const, trend: 'improving' as const },
-        { name: 'Cleanliness', rating: 4.5, response_count: 22, response_rate: 88, color: 'green' as const, trend: 'stable' as const },
-        { name: 'Speed', rating: 3.8, response_count: 18, response_rate: 72, color: 'yellow' as const, trend: 'improving' as const },
-        { name: 'Value', rating: 4.0, response_count: 20, response_rate: 80, color: 'green' as const, trend: 'stable' as const },
-        { name: 'Price', rating: 2.3, response_count: 15, response_rate: 60, color: 'red' as const, trend: 'declining' as const },
-        { name: 'Atmosphere', rating: 3.2, response_count: 12, response_rate: 48, color: 'yellow' as const, trend: 'stable' as const },
-    ];
+    const bubbleAnalytics = generateMockBubbleAnalytics(questionnaireId);
+    const categories = bubbleAnalytics.categories;
 
     const colorDistribution = categories.reduce((acc, cat) => {
         acc[cat.color]++;
@@ -310,6 +654,12 @@ export const generateMockAnalyticsSummary = (questionnaireId: number): Analytics
     }, { red: 0, yellow: 0, green: 0 });
 
     const overallRating = categories.reduce((sum, cat) => sum + cat.rating, 0) / categories.length;
+    
+    // Determine overall trend based on category trends
+    const improvingCount = categories.filter(c => c.trend === 'improving').length;
+    const decliningCount = categories.filter(c => c.trend === 'declining').length;
+    const overallTrend = improvingCount > decliningCount ? 'improving' : 
+                        decliningCount > improvingCount ? 'declining' : 'stable';
 
     return {
         questionnaire_id: questionnaireId,
@@ -318,51 +668,94 @@ export const generateMockAnalyticsSummary = (questionnaireId: number): Analytics
         total_responses: categories.reduce((sum, cat) => sum + cat.response_count, 0),
         response_rate: Math.round(categories.reduce((sum, cat) => sum + cat.response_rate, 0) / categories.length),
         color_distribution: colorDistribution,
-        overall_trend: 'improving',
+        overall_trend: overallTrend as 'improving' | 'stable' | 'declining',
         generated_at: new Date().toISOString()
     };
 };
 
 export const generateMockTimeComparison = (questionnaireId: number, comparisonType: 'week_over_week' | 'custom' = 'week_over_week'): TimeComparisonData => {
-    const currentCategories = [
-        { name: 'Service Quality', rating: 4.2, response_count: 25, response_rate: 85, color: 'green' as const, trend: 'improving' as const },
-        { name: 'Cleanliness', rating: 4.5, response_count: 22, response_rate: 88, color: 'green' as const, trend: 'stable' as const },
-        { name: 'Speed', rating: 3.8, response_count: 18, response_rate: 72, color: 'yellow' as const, trend: 'improving' as const },
-        { name: 'Value', rating: 4.0, response_count: 20, response_rate: 80, color: 'green' as const, trend: 'stable' as const },
-        { name: 'Price', rating: 2.3, response_count: 15, response_rate: 60, color: 'red' as const, trend: 'declining' as const },
-        { name: 'Atmosphere', rating: 3.2, response_count: 12, response_rate: 48, color: 'yellow' as const, trend: 'stable' as const },
-    ];
+    const bubbleAnalytics = generateMockBubbleAnalytics(questionnaireId);
+    const currentCategories = bubbleAnalytics.categories;
 
-    const previousCategories = currentCategories.map(cat => ({
-        ...cat,
-        rating: Math.max(1, cat.rating - Math.random() * 0.5), // Slightly lower ratings for previous period
-        response_count: Math.max(1, cat.response_count - Math.floor(Math.random() * 5)),
-        response_rate: Math.max(10, cat.response_rate - Math.floor(Math.random() * 10))
-    }));
+    // Generate realistic previous period data with some variation
+    const previousCategories = currentCategories.map(cat => {
+        const ratingChange = (Math.random() - 0.3) * 0.4; // Slight bias towards improvement
+        const responseChange = (Math.random() - 0.2) * 0.3; // Slight bias towards growth
+        const rateChange = (Math.random() - 0.4) * 10; // Slight bias towards improvement
+        
+        const prevRating = Math.max(1, Math.min(5, cat.rating - ratingChange));
+        const prevResponses = Math.max(1, Math.round(cat.response_count * (1 - responseChange)));
+        const prevRate = Math.max(10, Math.min(100, cat.response_rate - rateChange));
+        
+        // Determine previous trend
+        let prevTrend: 'improving' | 'stable' | 'declining';
+        if (prevRating >= 4.2) {
+            prevTrend = Math.random() > 0.4 ? 'improving' : 'stable';
+        } else if (prevRating >= 3.5) {
+            prevTrend = 'stable';
+        } else {
+            prevTrend = Math.random() > 0.6 ? 'improving' : 'declining';
+        }
+        
+        return {
+            ...cat,
+            rating: Math.round(prevRating * 10) / 10,
+            response_count: prevResponses,
+            response_rate: Math.round(prevRate),
+            trend: prevTrend
+        };
+    });
 
     const now = new Date();
     const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+
+    // Calculate realistic trend analysis
+    const categoryTrends = currentCategories.map((current, index) => {
+        const previous = previousCategories[index];
+        const ratingChange = ((current.rating - previous.rating) / previous.rating) * 100;
+        const responseChange = ((current.response_count - previous.response_count) / previous.response_count) * 100;
+        
+        // Use the larger of rating or response change for overall trend
+        const changePercentage = Math.max(Math.abs(ratingChange), Math.abs(responseChange));
+        
+        let trend: 'improving' | 'stable' | 'declining';
+        if (current.rating > previous.rating && current.response_count > previous.response_count) {
+            trend = 'improving';
+        } else if (current.rating < previous.rating && current.response_count < previous.response_count) {
+            trend = 'declining';
+        } else {
+            trend = 'stable';
+        }
+        
+        return {
+            category: current.name,
+            trend,
+            change_percentage: Math.round(changePercentage * 10) / 10
+        };
+    });
+
+    // Determine overall trend
+    const improvingCount = categoryTrends.filter(t => t.trend === 'improving').length;
+    const decliningCount = categoryTrends.filter(t => t.trend === 'declining').length;
+    const overallTrend = improvingCount > decliningCount ? 'improving' : 
+                        decliningCount > improvingCount ? 'declining' : 'stable';
 
     return {
         questionnaire_id: questionnaireId,
         comparison_type: comparisonType,
         current_period: {
-            start_date: now.toISOString().split('T')[0],
+            start_date: weekAgo.toISOString().split('T')[0],
             end_date: now.toISOString().split('T')[0],
             categories: currentCategories
         },
         previous_period: {
-            start_date: weekAgo.toISOString().split('T')[0],
+            start_date: new Date(weekAgo.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
             end_date: weekAgo.toISOString().split('T')[0],
             categories: previousCategories
         },
         trend_analysis: {
-            overall_trend: 'improving',
-            category_trends: currentCategories.map(cat => ({
-                category: cat.name,
-                trend: cat.trend,
-                change_percentage: Math.random() * 20 - 5 // Random change between -5% and 15%
-            }))
+            overall_trend: overallTrend,
+            category_trends: categoryTrends
         }
     };
 };

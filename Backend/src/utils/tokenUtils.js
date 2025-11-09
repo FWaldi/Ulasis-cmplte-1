@@ -89,9 +89,12 @@ class TokenUtils {
    * @returns {Object} Object containing access and refresh tokens
    */
   generateTokenPair(user) {
+    const accessToken = this.generateAccessToken(user);
+    const refreshToken = this.generateRefreshToken(user);
+    console.log('DEBUG: Generated token pair:', { accessToken, refreshToken });
     return {
-      accessToken: this.generateAccessToken(user),
-      refreshToken: this.generateRefreshToken(user),
+      accessToken,
+      refreshToken,
       expiresIn: this.getExpirationTime(this.accessTokenExpiry),
       tokenType: 'Bearer',
     };

@@ -199,8 +199,13 @@ class SubscriptionService {
    */
   async incrementUsage(userId, actionType, count = 1) {
     try {
+      logger.info('incrementUsage called', { userId, actionType, count });
+      
       const userPlan = await this.getUserPlan(userId);
       const limit = this.getPlanLimits(userPlan)[actionType];
+      
+      logger.info('User plan and limit', { userId, userPlan, actionType, limit });
+      console.log('DEBUG: User plan and limit:', { userId, userPlan, actionType, limit });
 
       const [usageRecord] = await SubscriptionUsage.findOrCreate({
         where: { user_id: userId, usage_type: actionType },
@@ -215,7 +220,7 @@ class SubscriptionService {
       usageRecord.current_count += count;
       await usageRecord.save();
 
-      logger.info('Usage incremented', {
+      logger.info('Usage incremented successfully', {
         userId,
         actionType,
         count,
@@ -226,6 +231,40 @@ class SubscriptionService {
         userId,
         actionType,
         count,
+        error: error.message,
+        stack: error.stack,
+      });
+      throw error;
+    }
+  }
+
+  /**
+   * Initialize usage records for a new user
+   * @param {number} userId - User ID
+   * @param {string} plan - Subscription plan
+   */
+  async initializeUsage(userId, plan = 'free') {
+    try {
+      const limits = this.getPlanLimits(plan);
+      
+      for (const [usageType, limit] of Object.entries(limits)) {
+        await SubscriptionUsage.upsert({
+          user_id: userId,
+          usage_type: usageType,
+          current_count: 0,
+          limit_count: limit,
+        });
+      }
+
+      logger.info('Usage records initialized for user', {
+        userId,
+        plan,
+        limits,
+      });
+    } catch (error) {
+      logger.error('Initialize usage failed', {
+        userId,
+        plan,
         error: error.message,
       });
       throw error;
@@ -492,13 +531,15 @@ class SubscriptionService {
     return {
       success: true,
       data: {
-        plans: Object.keys(this.PLAN_LIMITS).map(plan => ({
-          name: plan,
-          limits: this.PLAN_LIMITS[plan],
-          features: this.getPlanFeatures(plan),
-          price: this.getPlanPrice(plan),
-          currency: 'IDR',
-        })),
+        plans: Object.keys(this.PLAN_LIMITS)
+          .filter(plan => plan !== 'admin') // Exclude admin plan from public listing
+          .map(plan => ({
+            name: plan,
+            limits: this.PLAN_LIMITS[plan],
+            features: this.getPlanFeatures(plan),
+            price: this.getPlanPrice(plan),
+            currency: 'IDR',
+          })),
       },
     };
   }

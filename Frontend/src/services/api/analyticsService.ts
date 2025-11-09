@@ -1,5 +1,5 @@
 // API Configuration
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3010';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001';
 
 export interface BubbleAnalytics {
   categories: Array<{
@@ -47,7 +47,7 @@ class AnalyticsService {
     try {
       console.log('Fetching analytics for questionnaire:', questionnaireId);
       console.log('Auth headers:', this.getAuthHeaders());
-      const response = await fetch(`${API_BASE_URL}/api/v1/analytics/bubble/${questionnaireId}`, {
+      const response = await fetch(`${API_BASE_URL}/analytics/bubble/${questionnaireId}`, {
         method: 'GET',
         headers: this.getAuthHeaders(),
       });
@@ -75,7 +75,7 @@ class AnalyticsService {
       if (params?.period) queryParams.append('period', params.period);
       if (params?.compare_with) queryParams.append('compare_with', params.compare_with);
 
-      const url = `${API_BASE_URL}/api/v1/analytics/comparison/${questionnaireId}${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
+      const url = `${API_BASE_URL}/analytics/comparison/${questionnaireId}${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
 
       const response = await fetch(url, {
         method: 'GET',

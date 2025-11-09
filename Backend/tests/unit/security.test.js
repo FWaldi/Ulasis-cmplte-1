@@ -217,7 +217,7 @@ describe('Security Middleware', () => {
     test('should include CORS headers', async () => {
       const response = await request(app)
         .options('/api/v1/health/')
-        .expect(200);
+        .expect(204); // OPTIONS requests return 204 No Content
 
       expect(response.headers).toHaveProperty('access-control-allow-origin');
       expect(response.headers).toHaveProperty('access-control-allow-methods');

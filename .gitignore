@@ -1,3 +1,15 @@
+# Keep only Frontend and Backend folders in GitHub
+# Exclude everything else
+*
+
+# Whitelist Frontend and Backend
+!Frontend/
+!Backend/
+!.github/
+!.gitignore
+!README.md
+!AGENTS.md
+
 # Dependencies
 node_modules/
 npm-debug.log*
@@ -102,3 +114,25 @@ dist
 *.njsproj
 *.sln
 *.sw?
+
+# Exclude old docs and backup folders
+old_docs/
+old_docs-2/
+backups/
+
+# Exclude test results and reports
+test-results/
+playwright-report/
+*.sqlite
+
+# Exclude debug files
+debug-*.js
+debug-*.json
+
+# Exclude database files
+database*.sqlite
+*.db
+
+# Exclude temporary scripts
+check-*.js
+test-*.js

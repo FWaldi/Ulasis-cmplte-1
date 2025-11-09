@@ -1,6 +1,7 @@
 'use strict';
 
 process.env.NODE_ENV = 'test';
+process.env.INTEGRATION_TEST = 'true';
 
 const request = require('supertest');
 const app = require('../../src/app-test');
@@ -38,32 +39,36 @@ jest.mock('../../src/services/cacheService', () => ({
 // Mock analytics services to prevent timeouts during comprehensive testing
 jest.mock('../../src/services/bubbleAnalyticsService', () => ({
   getBubbleAnalytics: jest.fn().mockImplementation(async (questionnaireId, options) => {
+    // Return 404 for non-existent questionnaire
+    if (questionnaireId === 99999) {
+      const error = new Error('Questionnaire not found');
+      error.statusCode = 404;
+      throw error;
+    }
+    
     return {
-      success: true,
-      data: {
-        questionnaire_id: questionnaireId,
-        categories: [
-          {
-            name: 'Service Quality',
-            rating: 4.2,
-            response_count: 10,
-            color: 'green',
-            trend: 'improving',
-          },
-          {
-            name: 'Product Quality',
-            rating: 3.8,
-            response_count: 10,
-            color: 'yellow',
-            trend: 'stable',
-          },
-        ],
-        total_responses: 10,
-        average_rating: 4.0,
-        date_range: {
-          from: options.dateFrom || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
-          to: options.dateTo || new Date().toISOString(),
+      questionnaire_id: questionnaireId,
+      categories: [
+        {
+          name: 'Service Quality',
+          rating: 4.2,
+          response_count: 10,
+          color: 'green',
+          trend: 'improving',
         },
+        {
+          name: 'Product Quality',
+          rating: 3.8,
+          response_count: 10,
+          color: 'yellow',
+          trend: 'stable',
+        },
+      ],
+      total_responses: 10,
+      average_rating: 4.0,
+      date_range: {
+        from: options.dateFrom || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+        to: options.dateTo || new Date().toISOString(),
       },
     };
   }),
@@ -71,28 +76,25 @@ jest.mock('../../src/services/bubbleAnalyticsService', () => ({
 
 jest.mock('../../src/services/timeComparisonService', () => ({
   getTimeComparison: jest.fn().mockResolvedValue({
-    success: true,
-    data: {
-      questionnaire_id: 1,
-      comparison_type: 'week',
-      current_period: {
-        start_date: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
-        end_date: new Date().toISOString(),
-        total_responses: 25,
-        average_rating: 4.1,
-      },
-      previous_period: {
-        start_date: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString(),
-        end_date: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
-        total_responses: 20,
-        average_rating: 3.9,
-      },
-      comparison_metrics: {
-        response_count_change: 25,
-        overall_rating_change: 0.2,
-        category_comparisons: [],
-        overall_trend: 'improving',
-      },
+    questionnaire_id: 1,
+    comparison_type: 'week',
+    current_period: {
+      start_date: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+      end_date: new Date().toISOString(),
+      total_responses: 25,
+      average_rating: 4.1,
+    },
+    previous_period: {
+      start_date: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString(),
+      end_date: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+      total_responses: 20,
+      average_rating: 3.9,
+    },
+    comparison_metrics: {
+      response_count_change: 25,
+      overall_rating_change: 0.2,
+      category_comparisons: [],
+      overall_trend: 'improving',
     },
   }),
 }));
@@ -270,7 +272,9 @@ describe('Comprehensive Backend Feature Tests - Fixed', () => {
           password: USER_DATA.business.password,
         });
 
+      console.log('Login response body:', JSON.stringify(loginResponse.body, null, 2));
       const refreshToken = loginResponse.body.data.refreshToken;
+      console.log('Refresh token extracted:', refreshToken);
 
       const response = await request(app)
         .post('/api/v1/auth/refresh')

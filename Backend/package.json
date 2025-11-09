@@ -113,6 +113,9 @@
     "testMatch": [
       "**/tests/**/*.test.js"
     ],
+    "setupFiles": [
+      "<rootDir>/tests/setup-mocks.js"
+    ],
     "setupFilesAfterEnv": [
       "<rootDir>/tests/setup.js"
     ],

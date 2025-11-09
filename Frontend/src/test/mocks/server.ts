@@ -14,9 +14,9 @@ const createMockJWT = (payload: any) => {
   return `${header}.${body}.mock-signature`;
 };
 
-// Mock data storage
-let mockUsers = [createMockUser({ id: '1', email: 'admin@example.com', role: 'admin' })];
-let mockQuestionnaires = [
+// Initial mock data
+const initialMockUsers = [createMockUser({ id: '1', email: 'admin@example.com', role: 'admin' })];
+const initialMockQuestionnaires = [
   createMockQuestionnaire({ 
     id: '1', 
     title: 'Customer Satisfaction Survey',
@@ -28,13 +28,25 @@ let mockQuestionnaires = [
     description: 'Collect feedback about our products'
   })
 ];
-let mockResponses = [
+const initialMockResponses = [
   createMockResponse({ 
     id: '1', 
     questionnaireId: '1',
     answers: { q1: 5, q2: 'Very satisfied' }
   })
 ];
+
+// Mock data storage (mutable for tests)
+let mockUsers = [...initialMockUsers];
+let mockQuestionnaires = [...initialMockQuestionnaires];
+let mockResponses = [...initialMockResponses];
+
+// Function to reset mock data to initial state
+export const resetMockData = () => {
+  mockUsers = [...initialMockUsers];
+  mockQuestionnaires = [...initialMockQuestionnaires];
+  mockResponses = [...initialMockResponses];
+};
 let mockAnalytics = {
   totalResponses: 150,
   averageRating: 4.5,
@@ -48,7 +60,7 @@ let mockAnalytics = {
 
 export const handlers = [
   // Auth endpoints (full URLs)
-  http.post('http://localhost:3010/api/v1/auth/register', ({ request, params, cookies }) => {
+  http.post('http://localhost:3001/api/v1/auth/register', ({ request, params, cookies }) => {
     const mockUser = createMockUser();
     const mockToken = createMockJWT({ userId: mockUser.id, email: mockUser.email });
     return new Response(
@@ -64,7 +76,7 @@ export const handlers = [
     );
   }),
 
-  http.post('http://localhost:3010/api/v1/auth/login', ({ request, params, cookies }) => {
+  http.post('http://localhost:3001/api/v1/auth/login', ({ request, params, cookies }) => {
     const mockToken = createMockJWT({ userId: mockUsers[0].id, email: mockUsers[0].email });
     return new Response(
       JSON.stringify({
@@ -95,31 +107,8 @@ export const handlers = [
     );
   }),
 
-  http.post('http://localhost:3010/api/v1/auth/logout', ({ request, params, cookies }) => {
-    return new Response(
-      JSON.stringify({ success: true, message: 'Logout successful' }),
-      {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' }
-      }
-    );
-  }),
-
-  http.get('http://localhost:3010/api/v1/auth/profile', ({ request, params, cookies }) => {
-    return new Response(
-      JSON.stringify({
-        success: true,
-        data: { user: mockUsers[0] }
-      }),
-      {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' }
-      }
-    );
-  }),
-
-  // Questionnaire endpoints
-  http.get('http://localhost:3010/api/v1/questionnaires', ({ request, params, cookies }) => {
+  // Relative URL handlers for questionnaire service (axios)
+  http.get('/questionnaires', ({ request, params, cookies }) => {
     const authHeader = request.headers.get('authorization');
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return new Response(
@@ -134,7 +123,10 @@ export const handlers = [
     return new Response(
       JSON.stringify({
         success: true,
-        data: { questionnaires: mockQuestionnaires }
+        data: { 
+          questionnaires: mockQuestionnaires,
+          usage: { used: mockQuestionnaires.length, limit: 10, plan: 'free' }
+        }
       }),
       {
         status: 200,
@@ -143,7 +135,7 @@ export const handlers = [
     );
   }),
 
-  http.post('http://localhost:3010/api/v1/questionnaires', async ({ request, params, cookies }) => {
+  http.post('/questionnaires', async ({ request, params, cookies }) => {
     const body = await request.json() as any;
     const newQuestionnaire = createMockQuestionnaire({ 
       id: String(mockQuestionnaires.length + 1),
@@ -167,7 +159,7 @@ export const handlers = [
     );
   }),
 
-  http.get('http://localhost:3010/api/v1/questionnaires/:id', ({ params }) => {
+  http.get('/questionnaires/:id', ({ params }) => {
     const { id } = params;
     const questionnaire = mockQuestionnaires.find(q => q.id === id);
     
@@ -190,7 +182,7 @@ export const handlers = [
     );
   }),
 
-  http.put('http://localhost:3010/api/v1/questionnaires/:id', async ({ params, request }) => {
+  http.put('/questionnaires/:id', async ({ params, request }) => {
     const { id } = params;
     const body = await request.json() as any;
     const questionnaire = mockQuestionnaires.find(q => q.id === id);
@@ -225,7 +217,295 @@ export const handlers = [
     );
   }),
 
-  http.delete('http://localhost:3010/api/v1/questionnaires/:id', ({ params }) => {
+  http.delete('/questionnaires/:id', ({ params }) => {
+    const { id } = params;
+    const index = mockQuestionnaires.findIndex(q => q.id === id);
+    
+    if (index === -1) {
+      return new Response(
+        JSON.stringify({ success: false, message: 'Questionnaire not found' }),
+        {
+          status: 404,
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
+    }
+
+    mockQuestionnaires.splice(index, 1);
+    return new Response(
+      JSON.stringify({ success: true, message: 'Questionnaire deleted successfully' }),
+      {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      }
+    );
+  }),
+
+  // Relative URL handlers for response service
+  http.get('/responses', ({ request, params, cookies }) => {
+    return new Response(
+      JSON.stringify({
+        success: true,
+        data: { responses: mockResponses }
+      }),
+      {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      }
+    );
+  }),
+
+  http.post('/responses', ({ request, params, cookies }) => {
+    return new Response(
+      JSON.stringify({
+        success: true,
+        message: 'Response submitted successfully',
+        data: { response: createMockResponse({ id: String(mockResponses.length + 1) }) }
+      }),
+      {
+        status: 201,
+        headers: { 'Content-Type': 'application/json' }
+      }
+    );
+  }),
+
+  http.post('/responses/anonymous', async ({ request, params, cookies }) => {
+    const body = await request.json() as any;
+    return new Response(
+      JSON.stringify({
+        success: true,
+        message: 'Anonymous response submitted successfully',
+        data: { response: createMockResponse({ 
+          id: String(mockResponses.length + 1),
+          questionnaireId: body.questionnaireId || '1',
+          answers: body.answers || {}
+        }) }
+      }),
+      {
+        status: 201,
+        headers: { 'Content-Type': 'application/json' }
+      }
+    );
+  }),
+
+  http.post('/responses/manual', async ({ request, params, cookies }) => {
+    const body = await request.json() as any;
+    return new Response(
+      JSON.stringify({
+        success: true,
+        message: 'Manual response submitted successfully',
+        data: { 
+          responseId: Date.now(),
+          submittedAt: new Date().toISOString()
+        }
+      }),
+      {
+        status: 201,
+        headers: { 'Content-Type': 'application/json' }
+      }
+    );
+  }),
+
+  http.get('/responses/questionnaire/:questionnaireId', ({ params, request }) => {
+    const { questionnaireId } = params;
+    const url = new URL(request.url);
+    const page = parseInt(url.searchParams.get('page') || '1');
+    const limit = parseInt(url.searchParams.get('limit') || '50');
+    
+    const responses = mockResponses.filter(r => r.questionnaireId === questionnaireId);
+    
+    return new Response(
+      JSON.stringify({
+        success: true,
+        data: {
+          responses,
+          total: responses.length,
+          page,
+          limit,
+          hasNext: false,
+          hasPrev: false
+        }
+      }),
+      {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      }
+    );
+  }),
+
+  http.get('/responses/csv/:questionnaireId', ({ params }) => {
+    const csvContent = 'ID,Questionnaire,Response Date,Source,Respondent Name,Email,Phone,Responses\n1,Test Survey,2024-01-01,web,John Doe,john@example.com,555-1234,"Sample responses"';
+    return new Response(csvContent, {
+      status: 200,
+      headers: { 
+        'Content-Type': 'text/csv',
+        'Content-Disposition': 'attachment; filename="responses.csv"'
+      }
+    });
+  }),
+
+  http.delete('/responses/:responseId', ({ params }) => {
+    return new Response(
+      JSON.stringify({
+        success: true,
+        message: 'Response deleted successfully'
+      }),
+      {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      }
+    );
+  }),
+
+  http.post('http://localhost:3001/api/v1/auth/refresh', ({ request, params, cookies }) => {
+    const mockToken = createMockJWT({ userId: mockUsers[0].id, email: mockUsers[0].email });
+    return new Response(
+      JSON.stringify({
+        success: true,
+        message: 'Token refreshed successfully',
+        data: { user: mockUsers[0], accessToken: mockToken, refreshToken: mockToken }
+      }),
+      {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      }
+    );
+  }),
+
+  http.post('http://localhost:3001/api/v1/auth/logout', ({ request, params, cookies }) => {
+    return new Response(
+      JSON.stringify({ success: true, message: 'Logout successful' }),
+      {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      }
+    );
+  }),
+
+  http.get('http://localhost:3001/api/v1/auth/profile', ({ request, params, cookies }) => {
+    return new Response(
+      JSON.stringify({
+        success: true,
+        data: { user: mockUsers[0] }
+      }),
+      {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      }
+    );
+  }),
+
+  // Questionnaire endpoints
+  http.get('http://localhost:3001/api/v1/questionnaires', ({ request, params, cookies }) => {
+    const authHeader = request.headers.get('authorization');
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return new Response(
+        JSON.stringify({ success: false, message: 'Unauthorized' }),
+        {
+          status: 401,
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
+    }
+
+    return new Response(
+      JSON.stringify({
+        success: true,
+        data: { 
+          questionnaires: mockQuestionnaires,
+          usage: { used: mockQuestionnaires.length, limit: 10, plan: 'free' }
+        }
+      }),
+      {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      }
+    );
+  }),
+
+  http.post('http://localhost:3001/api/v1/questionnaires', async ({ request, params, cookies }) => {
+    const body = await request.json() as any;
+    const newQuestionnaire = createMockQuestionnaire({ 
+      id: String(mockQuestionnaires.length + 1),
+      title: body.title || 'Test Survey',
+      description: body.description || 'Test Description'
+    });
+    
+    // Add to mock data for delete test
+    mockQuestionnaires.push(newQuestionnaire);
+    
+    return new Response(
+      JSON.stringify({
+        success: true,
+        message: 'Questionnaire created successfully',
+        data: { questionnaire: newQuestionnaire }
+      }),
+      {
+        status: 201,
+        headers: { 'Content-Type': 'application/json' }
+      }
+    );
+  }),
+
+  http.get('http://localhost:3001/api/v1/questionnaires/:id', ({ params }) => {
+    const { id } = params;
+    const questionnaire = mockQuestionnaires.find(q => q.id === id);
+    
+    if (!questionnaire) {
+      return new Response(
+        JSON.stringify({ success: false, message: 'Questionnaire not found' }),
+        {
+          status: 404,
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
+    }
+
+    return new Response(
+      JSON.stringify({ success: true, data: { questionnaire } }),
+      {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      }
+    );
+  }),
+
+  http.put('http://localhost:3001/api/v1/questionnaires/:id', async ({ params, request }) => {
+    const { id } = params;
+    const body = await request.json() as any;
+    const questionnaire = mockQuestionnaires.find(q => q.id === id);
+    
+    if (!questionnaire) {
+      return new Response(
+        JSON.stringify({ success: false, message: 'Questionnaire not found' }),
+        {
+          status: 404,
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
+    }
+
+    // Update the questionnaire with the new data
+    const updatedQuestionnaire = {
+      ...questionnaire,
+      title: body.title || questionnaire.title,
+      description: body.description || questionnaire.description
+    };
+
+    return new Response(
+      JSON.stringify({
+        success: true,
+        message: 'Questionnaire updated successfully',
+        data: { questionnaire: updatedQuestionnaire }
+      }),
+      {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      }
+    );
+  }),
+
+  http.delete('http://localhost:3001/api/v1/questionnaires/:id', ({ params }) => {
     const { id } = params;
     const index = mockQuestionnaires.findIndex(q => q.id === id);
     
@@ -250,7 +530,7 @@ export const handlers = [
   }),
 
   // Response endpoints
-  http.get('http://localhost:3010/api/v1/responses', ({ request, params, cookies }) => {
+  http.get('http://localhost:3001/api/v1/responses', ({ request, params, cookies }) => {
     return new Response(
       JSON.stringify({
         success: true,
@@ -263,7 +543,7 @@ export const handlers = [
     );
   }),
 
-  http.post('http://localhost:3010/api/v1/responses', ({ request, params, cookies }) => {
+  http.post('http://localhost:3001/api/v1/responses', ({ request, params, cookies }) => {
     return new Response(
       JSON.stringify({
         success: true,
@@ -277,7 +557,7 @@ export const handlers = [
     );
   }),
 
-  http.post('http://localhost:3010/api/v1/responses/anonymous', async ({ request, params, cookies }) => {
+  http.post('http://localhost:3001/api/v1/responses/anonymous', async ({ request, params, cookies }) => {
     const body = await request.json() as any;
     return new Response(
       JSON.stringify({
@@ -296,14 +576,67 @@ export const handlers = [
     );
   }),
 
-  http.get('http://localhost:3010/api/v1/responses/questionnaire/:questionnaireId', ({ params }) => {
+  http.post('http://localhost:3001/api/v1/responses/manual', async ({ request, params, cookies }) => {
+    const body = await request.json() as any;
+    return new Response(
+      JSON.stringify({
+        success: true,
+        message: 'Manual response submitted successfully',
+        data: { 
+          responseId: Date.now(),
+          submittedAt: new Date().toISOString()
+        }
+      }),
+      {
+        status: 201,
+        headers: { 'Content-Type': 'application/json' }
+      }
+    );
+  }),
+
+  http.get('http://localhost:3001/api/v1/responses/questionnaire/:questionnaireId', ({ params, request }) => {
     const { questionnaireId } = params;
+    const url = new URL(request.url);
+    const page = parseInt(url.searchParams.get('page') || '1');
+    const limit = parseInt(url.searchParams.get('limit') || '50');
+    
     const responses = mockResponses.filter(r => r.questionnaireId === questionnaireId);
     
     return new Response(
       JSON.stringify({
         success: true,
-        data: { responses }
+        data: {
+          responses,
+          total: responses.length,
+          page,
+          limit,
+          hasNext: false,
+          hasPrev: false
+        }
+      }),
+      {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      }
+    );
+  }),
+
+  http.get('http://localhost:3001/api/v1/responses/csv/:questionnaireId', ({ params }) => {
+    const csvContent = 'ID,Questionnaire,Response Date,Source,Respondent Name,Email,Phone,Responses\n1,Test Survey,2024-01-01,web,John Doe,john@example.com,555-1234,"Sample responses"';
+    return new Response(csvContent, {
+      status: 200,
+      headers: { 
+        'Content-Type': 'text/csv',
+        'Content-Disposition': 'attachment; filename="responses.csv"'
+      }
+    });
+  }),
+
+  http.delete('http://localhost:3001/api/v1/responses/:responseId', ({ params }) => {
+    return new Response(
+      JSON.stringify({
+        success: true,
+        message: 'Response deleted successfully'
       }),
       {
         status: 200,
@@ -313,7 +646,7 @@ export const handlers = [
   }),
 
   // Analytics endpoints
-  http.get('http://localhost:3010/api/v1/analytics/overview', ({ request, params, cookies }) => {
+  http.get('http://localhost:3001/api/v1/analytics/overview', ({ request, params, cookies }) => {
     return new Response(
       JSON.stringify({
         success: true,
@@ -326,7 +659,7 @@ export const handlers = [
     );
   }),
 
-  http.get('http://localhost:3010/api/v1/analytics/questionnaire/:id', ({ params }) => {
+  http.get('http://localhost:3001/api/v1/analytics/questionnaire/:id', ({ params }) => {
     return new Response(
       JSON.stringify({
         success: true,
@@ -342,7 +675,7 @@ export const handlers = [
     );
   }),
 
-  http.get('http://localhost:3010/api/v1/analytics/report/:id', ({ params, request }) => {
+  http.get('http://localhost:3001/api/v1/analytics/report/:id', ({ params, request }) => {
     const url = new URL(request.url);
     const format = url.searchParams.get('format') || 'csv';
     
@@ -363,8 +696,95 @@ export const handlers = [
     });
   }),
 
+  // Bubble analytics endpoint
+  http.get('http://localhost:3001/api/v1/analytics/bubble/:id', ({ params }) => {
+    return new Response(
+      JSON.stringify({
+        success: true,
+        message: 'Analytics retrieved',
+        data: {
+          categories: [
+            {
+              name: 'Customer Service',
+              rating: 4.5,
+              response_count: 120,
+              response_rate: 82,
+              color: 'green',
+              trend: 'up'
+            },
+            {
+              name: 'Product Quality',
+              rating: 3.8,
+              response_count: 80,
+              response_rate: 65,
+              color: 'yellow',
+              trend: 'stable'
+            }
+          ],
+          total_responses: 200,
+          response_rate: 82,
+          period_comparison: {
+            current_period: {
+              start_date: '2024-01-01',
+              end_date: '2024-01-07',
+              total_responses: 200
+            },
+            previous_period: {
+              start_date: '2023-12-25',
+              end_date: '2023-12-31',
+              total_responses: 180
+            },
+            change_percentage: 11.1
+          },
+          generated_at: '2024-01-08T10:00:00Z'
+        }
+      }),
+      {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      }
+    );
+  }),
+
+  // Time comparison analytics endpoint
+  http.get('http://localhost:3001/api/v1/analytics/comparison/:id', ({ params, request }) => {
+    const url = new URL(request.url);
+    const period = url.searchParams.get('period') || 'week';
+    const compareWith = url.searchParams.get('compare_with') || 'previous_period';
+    
+    return new Response(
+      JSON.stringify({
+        success: true,
+        message: 'Time comparison data retrieved',
+        data: {
+          questionnaireId: params.id,
+          period,
+          compare_with: compareWith,
+          current_period: {
+            start_date: '2024-01-01',
+            end_date: '2024-01-07',
+            total_responses: 200,
+            average_rating: 4.2
+          },
+          previous_period: {
+            start_date: '2023-12-25',
+            end_date: '2023-12-31',
+            total_responses: 180,
+            average_rating: 4.0
+          },
+          change_percentage: 11.1,
+          rating_change: 0.2
+        }
+      }),
+      {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      }
+    );
+  }),
+
   // Subscription endpoints
-  http.get('http://localhost:3010/api/v1/subscription/status', ({ request, params, cookies }) => {
+  http.get('http://localhost:3001/api/v1/subscription/status', ({ request, params, cookies }) => {
     return new Response(
       JSON.stringify({
         success: true,
@@ -382,7 +802,7 @@ export const handlers = [
     );
   }),
 
-  http.put('http://localhost:3010/api/v1/subscription', ({ request, params, cookies }) => {
+  http.put('http://localhost:3001/api/v1/subscription', ({ request, params, cookies }) => {
     return new Response(
       JSON.stringify({
         success: true,
@@ -401,7 +821,7 @@ export const handlers = [
   }),
 
   // Notification endpoints
-  http.get('http://localhost:3010/api/v1/notifications', ({ request, params, cookies }) => {
+  http.get('http://localhost:3001/api/v1/notifications', ({ request, params, cookies }) => {
     return new Response(
       JSON.stringify({
         success: true,
@@ -424,7 +844,7 @@ export const handlers = [
     );
   }),
 
-  http.put('http://localhost:3010/api/v1/notifications/:id/read', ({ params }) => {
+  http.put('http://localhost:3001/api/v1/notifications/:id/read', ({ params }) => {
     return new Response(
       JSON.stringify({
         success: true,
@@ -438,7 +858,7 @@ export const handlers = [
   }),
 
   // QR Code endpoints
-  http.get('http://localhost:3010/api/v1/qr-codes', ({ request, params, cookies }) => {
+  http.get('http://localhost:3001/api/v1/qr-codes', ({ request, params, cookies }) => {
     return new Response(
       JSON.stringify({
         success: true,
@@ -461,7 +881,7 @@ export const handlers = [
     );
   }),
 
-  http.post('http://localhost:3010/api/v1/qr-codes', async ({ request, params, cookies }) => {
+  http.post('http://localhost:3001/api/v1/qr-codes', async ({ request, params, cookies }) => {
     const body = await request.json() as any;
     return new Response(
       JSON.stringify({
@@ -478,7 +898,7 @@ export const handlers = [
   }),
 
   // Admin endpoints
-  http.get('http://localhost:3010/api/v1/admin/stats', ({ request, params, cookies }) => {
+  http.get('http://localhost:3001/api/v1/admin/stats', ({ request, params, cookies }) => {
     return new Response(
       JSON.stringify({
         success: true,
@@ -496,7 +916,7 @@ export const handlers = [
     );
   }),
 
-  http.get('http://localhost:3010/api/v1/admin/users', ({ request, params, cookies }) => {
+  http.get('http://localhost:3001/api/v1/admin/users', ({ request, params, cookies }) => {
     return new Response(
       JSON.stringify({
         success: true,
@@ -520,7 +940,7 @@ export const handlers = [
   }),
 
   // Health check endpoint
-  http.get('http://localhost:3010/api/v1/health', ({ request, params, cookies }) => {
+  http.get('http://localhost:3001/api/v1/health', ({ request, params, cookies }) => {
     return new Response(
       JSON.stringify({ 
         success: true, 
@@ -534,8 +954,94 @@ export const handlers = [
     );
   }),
 
+  // Relative URL handlers for analytics service
+  http.get('/analytics/bubble/:id', ({ params }) => {
+    return new Response(
+      JSON.stringify({
+        success: true,
+        message: 'Analytics retrieved',
+        data: {
+          categories: [
+            {
+              name: 'Customer Service',
+              rating: 4.5,
+              response_count: 120,
+              response_rate: 82,
+              color: 'green',
+              trend: 'up'
+            },
+            {
+              name: 'Product Quality',
+              rating: 3.8,
+              response_count: 80,
+              response_rate: 65,
+              color: 'yellow',
+              trend: 'stable'
+            }
+          ],
+          total_responses: 200,
+          response_rate: 82,
+          period_comparison: {
+            current_period: {
+              start_date: '2024-01-01',
+              end_date: '2024-01-07',
+              total_responses: 200
+            },
+            previous_period: {
+              start_date: '2023-12-25',
+              end_date: '2023-12-31',
+              total_responses: 180
+            },
+            change_percentage: 11.1
+          },
+          generated_at: '2024-01-08T10:00:00Z'
+        }
+      }),
+      {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      }
+    );
+  }),
+
+  http.get('/analytics/comparison/:id', ({ params, request }) => {
+    const url = new URL(request.url);
+    const period = url.searchParams.get('period') || 'week';
+    const compareWith = url.searchParams.get('compare_with') || 'previous_period';
+    
+    return new Response(
+      JSON.stringify({
+        success: true,
+        message: 'Time comparison data retrieved',
+        data: {
+          questionnaireId: params.id,
+          period,
+          compare_with: compareWith,
+          current_period: {
+            start_date: '2024-01-01',
+            end_date: '2024-01-07',
+            total_responses: 200,
+            average_rating: 4.2
+          },
+          previous_period: {
+            start_date: '2023-12-25',
+            end_date: '2023-12-31',
+            total_responses: 180,
+            average_rating: 4.0
+          },
+          change_percentage: 11.1,
+          rating_change: 0.2
+        }
+      }),
+      {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      }
+    );
+  }),
+
   // Error handlers for testing
-  http.get('http://localhost:3010/api/v1/test/error', ({ request, params, cookies }) => {
+  http.get('http://localhost:3001/api/v1/test/error', ({ request, params, cookies }) => {
     return new Response(
       JSON.stringify({ success: false, message: 'Internal server error' }),
       {
@@ -555,7 +1061,7 @@ export const handlers = [
     );
   }),
 
-  http.get('http://localhost:3010/api/v1/test/unauthorized', ({ request, params, cookies }) => {
+  http.get('http://localhost:3001/api/v1/test/unauthorized', ({ request, params, cookies }) => {
     return new Response(
       JSON.stringify({ success: false, message: 'Unauthorized' }),
       {

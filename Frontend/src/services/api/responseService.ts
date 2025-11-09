@@ -1,5 +1,5 @@
 // API Configuration
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3010';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001';
 
 export interface AnonymousResponseData {
   questionnaireId: number;
@@ -118,7 +118,7 @@ class ResponseService {
     }
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/v1/responses/anonymous`, {
+      const response = await fetch(`${API_BASE_URL}/responses/anonymous`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -161,7 +161,7 @@ class ResponseService {
     }
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/v1/responses/manual`, {
+      const response = await fetch(`${API_BASE_URL}/responses/manual`, {
         method: 'POST',
         headers: this.getAuthHeaders(),
         body: JSON.stringify({
@@ -211,7 +211,7 @@ class ResponseService {
         limit: limit.toString(),
       });
 
-      const response = await fetch(`${API_BASE_URL}/api/v1/responses/questionnaire/${questionnaireId}?${queryParams}`, {
+      const response = await fetch(`${API_BASE_URL}/responses/questionnaire/${questionnaireId}?${queryParams}`, {
         method: 'GET',
         headers: this.getAuthHeaders(),
       });
@@ -237,7 +237,7 @@ class ResponseService {
     }
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/v1/responses/csv/${questionnaireId}`, {
+      const response = await fetch(`${API_BASE_URL}/responses/csv/${questionnaireId}`, {
         method: 'GET',
         headers: this.getAuthHeaders(),
       });
@@ -262,7 +262,7 @@ class ResponseService {
     }
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/v1/responses/${responseId}`, {
+      const response = await fetch(`${API_BASE_URL}/responses/${responseId}`, {
         method: 'DELETE',
         headers: this.getAuthHeaders(),
       });

@@ -1,5 +1,5 @@
 // API Configuration
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3010';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001';
 
 export interface LoginRequest {
   email: string;
@@ -68,7 +68,7 @@ class AuthService {
 
   async login(credentials: LoginRequest): Promise<AuthResponse> {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/v1/auth/login`, {
+      const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -97,7 +97,7 @@ class AuthService {
 
   async register(userData: RegisterRequest): Promise<ApiResponse> {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/v1/auth/register`, {
+      const response = await fetch(`${API_BASE_URL}/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -117,7 +117,7 @@ class AuthService {
 
   async verifyEmail(token: string): Promise<ApiResponse> {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/v1/auth/verify/${token}`, {
+      const response = await fetch(`${API_BASE_URL}/auth/verify/${token}`, {
         method: 'GET',
       });
 
@@ -133,7 +133,7 @@ class AuthService {
 
   async requestPasswordReset(email: string): Promise<ApiResponse> {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/v1/auth/forgot-password`, {
+      const response = await fetch(`${API_BASE_URL}/auth/forgot-password`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -153,7 +153,7 @@ class AuthService {
 
   async resetPassword(token: string, password: string): Promise<ApiResponse> {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/v1/auth/reset-password`, {
+      const response = await fetch(`${API_BASE_URL}/auth/reset-password`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -173,7 +173,7 @@ class AuthService {
 
   async getProfile(): Promise<UserResponse> {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/v1/auth/profile`, {
+      const response = await fetch(`${API_BASE_URL}/auth/profile`, {
         method: 'GET',
         headers: this.getAuthHeaders(),
       });
@@ -194,7 +194,7 @@ class AuthService {
     preferences: any;
   }>): Promise<ApiResponse> {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/v1/auth/profile`, {
+      const response = await fetch(`${API_BASE_URL}/auth/profile`, {
         method: 'PUT',
         headers: this.getAuthHeaders(),
         body: JSON.stringify(userData),
@@ -212,7 +212,7 @@ class AuthService {
 
   async changePassword(currentPassword: string, newPassword: string): Promise<ApiResponse> {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/v1/auth/change-password`, {
+      const response = await fetch(`${API_BASE_URL}/auth/change-password`, {
         method: 'POST',
         headers: this.getAuthHeaders(),
         body: JSON.stringify({
@@ -241,7 +241,7 @@ class AuthService {
         };
       }
 
-      const response = await fetch(`${API_BASE_URL}/api/v1/auth/refresh`, {
+      const response = await fetch(`${API_BASE_URL}/auth/refresh`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -272,7 +272,7 @@ class AuthService {
       const refreshToken = localStorage.getItem('refreshToken');
       
       if (refreshToken) {
-        const response = await fetch(`${API_BASE_URL}/api/v1/auth/logout`, {
+        const response = await fetch(`${API_BASE_URL}/auth/logout`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

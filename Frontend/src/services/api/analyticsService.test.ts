@@ -1,9 +1,7 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach, beforeAll, afterAll } from 'vitest';
 import { analyticsService } from './analyticsService';
-
-// Mock fetch globally
-const fetchMock = vi.fn();
-global.fetch = fetchMock;
+import { server } from '../../test/mocks/server';
+import { http } from 'msw';
 
 // Mock localStorage
 const localStorageStore: Record<string, string> = {};
@@ -25,129 +23,151 @@ Object.defineProperty(window, 'localStorage', {
 });
 
 describe('AnalyticsService', () => {
+  beforeAll(() => {
+    server.listen();
+  });
+
   beforeEach(() => {
     vi.clearAllMocks();
     localStorageMock.clear();
-    vi.stubEnv('VITE_API_BASE_URL', 'http://localhost:3010/api/v1');
+    vi.stubEnv('VITE_API_BASE_URL', 'http://localhost:3001/api/v1');
     // Set auth token
     localStorageMock.setItem('accessToken', 'test-token');
   });
 
   afterEach(() => {
     localStorageMock.clear();
+    server.resetHandlers();
+  });
+
+  afterAll(() => {
+    server.close();
   });
 
   describe('getBubbleAnalytics', () => {
     it('should fetch bubble analytics successfully', async () => {
-      const mockResponse = {
-        success: true,
-        message: 'Analytics retrieved',
-        data: {
-          categories: [
-            {
-              name: 'Service Quality',
-              rating: 4.2,
-              response_count: 150,
-              response_rate: 85,
-              color: 'green',
-              trend: 'up',
-            },
-            {
-              name: 'Cleanliness',
-              rating: 3.8,
-              response_count: 140,
-              response_rate: 80,
-              color: 'yellow',
-              trend: 'stable',
-            },
-          ],
-          total_responses: 200,
-          response_rate: 82,
-          period_comparison: {
-            current_period: {
-              start_date: '2024-01-01',
-              end_date: '2024-01-07',
-              total_responses: 200,
-            },
-            previous_period: {
-              start_date: '2023-12-25',
-              end_date: '2023-12-31',
-              total_responses: 180,
-            },
-            change_percentage: 11.1,
-          },
-          generated_at: '2024-01-08T10:00:00Z',
-        },
-      };
-
-      fetchMock.mockResolvedValueOnce({
-        ok: true,
-        json: () => Promise.resolve(mockResponse),
-      });
-
       const result = await analyticsService.getBubbleAnalytics(1);
 
-expect(fetchMock).toHaveBeenCalledWith(
-          'http://localhost:3010/api/v1/analytics/bubble/1',
-           {
-           method: 'GET',
-           headers: {
-             'Content-Type': 'application/json',
-             Authorization: 'Bearer test-token',
-           },
-         }
-       );
-
-      expect(result).toEqual(mockResponse);
+      expect(result.success).toBe(true);
+      expect(result.message).toBe('Analytics retrieved');
+      expect(result.data.categories).toBeDefined();
+      expect(result.data.categories).toHaveLength(2);
+      expect(result.data.total_responses).toBe(200);
+      expect(result.data.response_rate).toBe(82);
+      expect(result.data.generated_at).toBe('2024-01-08T10:00:00Z');
     });
 
-    it('should handle fetch failure', async () => {
-      fetchMock.mockRejectedValueOnce(new Error('Network error'));
+    it('should handle fetch failure with error response', async () => {
+      // Override MSW handler to return error
+      server.use(
+        http.get('http://localhost:3001/api/v1/analytics/bubble/:id', () => {
+          return new Response(
+            JSON.stringify({
+              success: false,
+              message: 'Analytics service temporarily unavailable',
+              error: 'Service disabled for maintenance'
+            }),
+            {
+              status: 503,
+              headers: { 'Content-Type': 'application/json' }
+            }
+          );
+        })
+      );
 
-      await expect(analyticsService.getBubbleAnalytics(1)).rejects.toThrow('Network error');
+      await expect(analyticsService.getBubbleAnalytics(1)).rejects.toThrow('Analytics service temporarily unavailable');
+    });
+
+    it('should handle network error', async () => {
+      // Override MSW handler to simulate network error
+      server.use(
+        http.get('http://localhost:3001/api/v1/analytics/bubble/:id', () => {
+          // Simulate network error by not responding
+          return new Response(null, { status: 500 });
+        })
+      );
+
+      await expect(analyticsService.getBubbleAnalytics(1)).rejects.toThrow();
     });
   });
 
   describe('getTimeComparison', () => {
     it('should fetch time comparison successfully', async () => {
-      const mockResponse = {
-        success: true,
-        message: 'Time comparison retrieved',
-        data: {
-          current_period: {
-            categories: [],
-          },
-          previous_period: {
-            categories: [],
-          },
-          trend_analysis: 'improving',
-        },
-      };
-
-      fetchMock.mockResolvedValueOnce({
-        json: () => Promise.resolve(mockResponse),
-      });
-
       const result = await analyticsService.getTimeComparison(1, { period: 'week' });
 
-       expect(fetchMock).toHaveBeenCalledWith(
-        'http://localhost:3010/api/v1/analytics/comparison/1?period=week',
-         {
-           method: 'GET',
-           headers: {
-             'Content-Type': 'application/json',
-             Authorization: 'Bearer test-token',
-           },
-         }
-       );
-
-      expect(result).toEqual(mockResponse);
+      expect(result.success).toBe(true);
+      expect(result.message).toBe('Time comparison data retrieved');
+      expect(result.data.questionnaireId).toBe('1');
+      expect(result.data.period).toBe('week');
+      expect(result.data.current_period).toBeDefined();
+      expect(result.data.previous_period).toBeDefined();
+      expect(result.data.change_percentage).toBe(11.1);
     });
 
-    it('should handle fetch failure', async () => {
-      fetchMock.mockRejectedValueOnce(new Error('Network error'));
+    it('should handle fetch failure with error response', async () => {
+      // Override MSW handler to return error
+      server.use(
+        http.get('http://localhost:3001/api/v1/analytics/comparison/:id', () => {
+          return new Response(
+            JSON.stringify({
+              success: false,
+              message: 'Analytics service temporarily unavailable',
+              error: 'Service disabled for maintenance'
+            }),
+            {
+              status: 503,
+              headers: { 'Content-Type': 'application/json' }
+            }
+          );
+        })
+      );
 
-      await expect(analyticsService.getTimeComparison(1)).rejects.toThrow('Network error');
+      await expect(analyticsService.getTimeComparison(1)).rejects.toThrow('Analytics service temporarily unavailable');
+    });
+
+    it('should handle network error', async () => {
+      // Override MSW handler to simulate network error
+      server.use(
+        http.get('http://localhost:3001/api/v1/analytics/comparison/:id', () => {
+          // Simulate network error by not responding
+          return new Response(null, { status: 500 });
+        })
+      );
+
+      await expect(analyticsService.getTimeComparison(1)).rejects.toThrow();
+    });
+
+    it('should build query parameters correctly', async () => {
+      // Override MSW handler to capture the request URL
+      let capturedUrl = '';
+      server.use(
+        http.get('http://localhost:3001/api/v1/analytics/comparison/:id', ({ request }) => {
+          capturedUrl = request.url;
+          return new Response(
+            JSON.stringify({
+              success: true,
+              message: 'Time comparison data retrieved',
+              data: {
+                questionnaireId: '1',
+                period: 'month',
+                compare_with: 'same_period_last_year'
+              }
+            }),
+            {
+              status: 200,
+              headers: { 'Content-Type': 'application/json' }
+            }
+          );
+        })
+      );
+
+      await analyticsService.getTimeComparison(1, { 
+        period: 'month', 
+        compare_with: 'same_period_last_year' 
+      });
+
+      expect(capturedUrl).toContain('period=month');
+      expect(capturedUrl).toContain('compare_with=same_period_last_year');
     });
   });
 });

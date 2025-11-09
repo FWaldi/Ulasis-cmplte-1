@@ -465,9 +465,26 @@ describe('Monitoring System', () => {
     });
 
     test('should handle database failures gracefully', async () => {
-      // Mock database authentication failure
-      const { sequelize } = require('../../src/config/database');
-      sequelize.authenticate.mockRejectedValue(new Error('Database connection failed'));
+      // Mock database-test config for this specific test
+      jest.doMock('../../src/config/database-test', () => ({
+        sequelize: {
+          authenticate: jest.fn().mockRejectedValue(new Error('Database connection failed')),
+          close: jest.fn().mockResolvedValue(true),
+          transaction: jest.fn().mockResolvedValue({
+            commit: jest.fn().mockResolvedValue(),
+            rollback: jest.fn().mockResolvedValue(),
+          }),
+        },
+        authenticate: jest.fn().mockRejectedValue(new Error('Database connection failed')),
+        getConnectionPoolInfo: jest.fn().mockReturnValue({
+          total: 10,
+          idle: 8,
+          active: 2,
+        }),
+      }));
+
+      // Re-require monitoring middleware to pick up the mock
+      const { enhancedHealthCheck } = require('../../src/middleware/monitoring');
 
       await enhancedHealthCheck(mockReq, mockRes);
 
@@ -477,6 +494,9 @@ describe('Monitoring System', () => {
           status: 'unhealthy',
         }),
       );
+
+      // Restore original mock
+      jest.dontMock('../../src/config/database-test');
     });
   });
 

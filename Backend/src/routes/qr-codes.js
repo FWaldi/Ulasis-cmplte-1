@@ -7,9 +7,13 @@ const AuthMiddleware = require('../middleware/auth');
 
 // Apply authentication middleware to all routes except scan endpoint
 router.use((req, res, next) => {
+  console.log('DEBUG QR ROUTE: Request path =', req.path);
+  console.log('DEBUG QR ROUTE: Request headers =', req.headers);
   if (req.path.endsWith('/scan')) {
+    console.log('DEBUG QR ROUTE: Skipping auth for scan endpoint');
     return next(); // Skip authentication for scan endpoint
   }
+  console.log('DEBUG QR ROUTE: Calling AuthMiddleware.authenticate');
   return AuthMiddleware.authenticate(req, res, next);
 });
 

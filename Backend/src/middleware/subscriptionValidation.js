@@ -23,10 +23,18 @@ class SubscriptionValidation {
         });
       }
 
-      // TEMPORARY: Skip validation for business, admin, and starter plan users for demo purposes
+      // Check user plan for proper validation
       const user = await require('../models').User.findByPk(userId);
-      if (user && (user.subscription_plan === 'business' || user.subscription_plan === 'admin' || user.subscription_plan === 'starter')) {
-        console.log(`Skipping validation for ${user.subscription_plan} plan user`);
+      if (!user) {
+        return res.status(401).json({
+          success: false,
+          error: { code: 'AUTH_ERROR', message: 'User not found' },
+        });
+      }
+
+      // Bypass subscription validation for admin users
+      if (user.role === 'admin') {
+        logger.info('Admin user bypassing subscription validation', { userId });
         return next();
       }
 
@@ -55,6 +63,7 @@ class SubscriptionValidation {
       }
 
       // Increment usage after successful validation (always track usage)
+      logger.info('Incrementing questionnaire usage', { userId });
       await subscriptionService.incrementUsage(userId, 'questionnaires', 1);
       next();
     } catch (error) {
@@ -84,6 +93,13 @@ class SubscriptionValidation {
           success: false,
           error: { code: 'AUTH_ERROR', message: 'User not authenticated' },
         });
+      }
+
+      // Bypass subscription validation for admin users
+      const user = await require('../models').User.findByPk(userId);
+      if (user && user.role === 'admin') {
+        logger.info('Admin user bypassing subscription validation', { userId });
+        return next();
       }
 
       const validation = await subscriptionService.checkLimit(userId, 'responses', 1);
@@ -140,6 +156,13 @@ class SubscriptionValidation {
           success: false,
           error: { code: 'AUTH_ERROR', message: 'User not authenticated' },
         });
+      }
+
+      // Bypass subscription validation for admin users
+      const user = await require('../models').User.findByPk(userId);
+      if (user && user.role === 'admin') {
+        logger.info('Admin user bypassing subscription validation', { userId });
+        return next();
       }
 
       const format = req.query.format || 'csv';
@@ -225,6 +248,13 @@ class SubscriptionValidation {
           });
         }
 
+        // Bypass subscription validation for admin users
+        const user = await require('../models').User.findByPk(userId);
+        if (user && user.role === 'admin') {
+          logger.info('Admin user bypassing feature access validation', { userId, requiredFeature });
+          return next();
+        }
+
         const subscription = await subscriptionService.getCurrentSubscription(userId);
         const userFeatures = subscription.data.features;
 
@@ -280,6 +310,13 @@ class SubscriptionValidation {
           success: false,
           error: { code: 'AUTH_ERROR', message: 'User not authenticated' },
         });
+      }
+
+      // Bypass subscription validation for admin users
+      const user = await require('../models').User.findByPk(userId);
+      if (user && user.role === 'admin') {
+        logger.info('Admin user bypassing active subscription check', { userId });
+        return next();
       }
 
       const subscription = await subscriptionService.getCurrentSubscription(userId);

@@ -59,34 +59,46 @@ jobs:
     - name: Build application
       run: npm run build
 
-  # E2E tests are commented out due to server startup complexity
-  # Uncomment and configure when server startup issues are resolved
-  # e2e-tests:
-  #   runs-on: ubuntu-latest
-  #   needs: [backend-tests, frontend-tests]
+  e2e-tests:
+    runs-on: ubuntu-latest
+    needs: [backend-tests, frontend-tests]
 
-  #   steps:
-  #   - uses: actions/checkout@v4
+    steps:
+    - uses: actions/checkout@v4
 
-  #   - name: Setup Node.js
-  #     uses: actions/setup-node@v4
-  #     with:
-  #       node-version: '18'
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
 
-  #   - name: Install backend dependencies
-  #     working-directory: ./Backend
-  #     run: npm ci
+    - name: Install backend dependencies
+      working-directory: ./Backend
+      run: npm ci
 
-  #   - name: Install frontend dependencies
-  #     working-directory: ./Frontend
-  #     run: npm ci
+    - name: Install frontend dependencies
+      working-directory: ./Frontend
+      run: npm ci
 
-  #   - name: Install Playwright
-  #     working-directory: ./Frontend
-  #     run: npx playwright install --with-deps
+    - name: Install Playwright
+      working-directory: ./Frontend
+      run: npx playwright install --with-deps
 
-  #   - name: Run E2E tests
-  #     working-directory: ./Frontend
-  #     run: npm run test:e2e
-  #     env:
-  #       CI: true
+    - name: Start backend server
+      working-directory: ./Backend
+      run: |
+        npm start &
+        sleep 30  # Wait for server to start
+
+    - name: Run E2E tests
+      working-directory: ./Frontend
+      run: npm run test:e2e
+      env:
+        CI: true
+
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: playwright-report
+        path: Frontend/playwright-report/
+        retention-days: 30

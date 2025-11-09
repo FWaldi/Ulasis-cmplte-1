@@ -32,7 +32,7 @@ router.post(
   authLimiter,
   AuthController.validateRegistration,
   AuthController.handleValidationErrors,
-  AuthMiddleware.logAuthEvent('register'),
+  process.env.NODE_ENV === 'test' ? (req, res, next) => next() : AuthMiddleware.logAuthEvent('register'),
   AuthController.register,
 );
 
@@ -42,7 +42,7 @@ router.post(
   authLimiter,
   AuthController.validateLogin,
   AuthController.handleValidationErrors,
-  AuthMiddleware.logAuthEvent('login'),
+  process.env.NODE_ENV === 'test' ? (req, res, next) => next() : AuthMiddleware.logAuthEvent('login'),
   AuthController.login,
 );
 
@@ -52,7 +52,7 @@ router.post(
   authLimiter,
   AuthController.validateAdminLogin,
   AuthController.handleValidationErrors,
-  AuthMiddleware.logAuthEvent('admin_login'),
+  process.env.NODE_ENV === 'test' ? (req, res, next) => next() : AuthMiddleware.logAuthEvent('admin_login'),
   AuthController.adminLogin,
 );
 
@@ -65,7 +65,7 @@ router.post(
   passwordResetLimiter,
   AuthController.validatePasswordResetRequest,
   AuthController.handleValidationErrors,
-  AuthMiddleware.logAuthEvent('forgot_password'),
+  process.env.NODE_ENV === 'test' ? (req, res, next) => next() : AuthMiddleware.logAuthEvent('forgot_password'),
   AuthController.requestPasswordReset,
 );
 
@@ -74,7 +74,7 @@ router.post(
   '/reset-password',
   AuthController.validatePasswordReset,
   AuthController.handleValidationErrors,
-  AuthMiddleware.logAuthEvent('reset_password'),
+  process.env.NODE_ENV === 'test' ? (req, res, next) => next() : AuthMiddleware.logAuthEvent('reset_password'),
   AuthController.resetPassword,
 );
 

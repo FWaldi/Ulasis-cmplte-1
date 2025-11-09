@@ -122,6 +122,7 @@ const createRateLimiter = (windowMs, max, message) => {
     },
     standardHeaders: true,
     legacyHeaders: false,
+    skip: () => process.env.NODE_ENV === 'test', // Skip rate limiting in tests
     handler: (req, res) => {
       logger.warn('Rate limit exceeded', {
         ip: req.ip,

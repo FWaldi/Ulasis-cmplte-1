@@ -215,22 +215,22 @@ module.exports = (sequelize) => {
    */
   QRCode.prototype.toSummaryJSON = function () {
     return {
-      id: this.id,
-      questionnaireId: this.questionnaireId,
-      qrCodeData: this.qrCodeData,
-      qrCodeImage: this.qrCodeImage,
-      locationTag: this.locationTag,
-      logoUrl: this.logoUrl,
-      customColors: this.customColors,
+      qr_code_id: this.id,
+      questionnaire_id: this.questionnaireId,
+      qr_code_url: this.qrCodeImage,
+      qr_code_data: this.qrCodeData,
+      location_tag: this.locationTag,
+      logo_url: this.logoUrl,
+      custom_colors: this.customColors,
       size: this.size,
-      errorCorrectionLevel: this.errorCorrectionLevel,
-      scanCount: this.scanCount,
-      uniqueScans: this.uniqueScans,
-      lastScanAt: this.lastScanAt,
-      isActive: this.isActive,
-      expiresAt: this.expiresAt,
-      createdAt: this.createdAt,
-      updatedAt: this.updatedAt,
+      error_correction_level: this.errorCorrectionLevel,
+      scan_count: this.scanCount,
+      unique_scans: this.uniqueScans,
+      last_scan_at: this.lastScanAt,
+      is_active: this.isActive,
+      expires_at: this.expiresAt,
+      created_at: this.createdAt,
+      updated_at: this.updatedAt,
     };
   };
 

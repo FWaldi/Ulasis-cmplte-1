@@ -13,10 +13,13 @@ const qrcode = require('qrcode');
  */
 class EnterpriseAdminAuthMiddleware {
   constructor() {
-    this.sessionStore = new Map(); // In-memory session store (replace with Redis in production)
-    this.failedAttempts = new Map(); // Track failed login attempts
-    this.lockoutDuration = 15 * 60 * 1000; // 15 minutes
-    this.maxFailedAttempts = 5;
+    // Initialize static properties if not already initialized
+    if (!EnterpriseAdminAuthMiddleware.sessionStore) {
+      EnterpriseAdminAuthMiddleware.sessionStore = new Map(); // In-memory session store (replace with Redis in production)
+      EnterpriseAdminAuthMiddleware.failedAttempts = new Map(); // Track failed login attempts
+      EnterpriseAdminAuthMiddleware.lockoutDuration = 15 * 60 * 1000; // 15 minutes
+      EnterpriseAdminAuthMiddleware.maxFailedAttempts = 5;
+    }
   }
 
   /**
@@ -494,10 +497,31 @@ class EnterpriseAdminAuthMiddleware {
   }
 
   /**
-   * Destroy session
+   * Destroy a specific session
    */
   static destroySession(sessionId) {
     return EnterpriseAdminAuthMiddleware.sessionStore.delete(sessionId);
+  }
+
+  /**
+   * Invalidate all sessions for a specific user
+   */
+  static invalidateAllUserSessions(adminUserId) {
+    const sessionsToDestroy = [];
+    
+    // Find all sessions for this user
+    for (const [sessionId, session] of EnterpriseAdminAuthMiddleware.sessionStore.entries()) {
+      if (session.adminUserId === adminUserId) {
+        sessionsToDestroy.push(sessionId);
+      }
+    }
+    
+    // Destroy all found sessions
+    sessionsToDestroy.forEach(sessionId => {
+      EnterpriseAdminAuthMiddleware.sessionStore.delete(sessionId);
+    });
+    
+    return sessionsToDestroy.length;
   }
 
   /**
