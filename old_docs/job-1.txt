@@ -1,3 +1,0 @@
-the last dev has devcelop some but did not record it so i want you to analyze the project for what did the last dev did and prepare it for what the next dev will do 
-
-i need you to analyze strorie d:\App_Project\Website\BMad-Methods\project-5\docs\stories\1.7.email-and-notification-system.md and recheck is the storie ar being implemented corectly at the project d:\App_Project\Website\BMad-Methods\project-5\Ulasis

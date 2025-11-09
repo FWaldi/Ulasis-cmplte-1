@@ -1,7 +1,0 @@
-Test Suites: 12 failed, 24 passed, 36 total
-Tests:       65 failed, 372 passed, 437 total
-Snapshots:   0 total
-Time:        85.86 s
-Ran all test suites.
-Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?
-PS D:\App_Project\Website\BMad-Methods\project-5\Ulasis\Backend> 
