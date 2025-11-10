@@ -10,7 +10,7 @@ const ReportList: React.FC<{
     onViewReport: (questionnaire: Questionnaire) => void;
 }> = ({ questionnaires, isDemoMode, demoPlan, onViewReport }) => {
     
-    const isFeatureDisabled = isDemoMode && (demoPlan === 'free' || demoPlan === 'starter');
+    const isFeatureDisabled = isDemoMode && (demoPlan === 'gratis' || demoPlan === 'starter');
 
     return (
         <div className="space-y-6">

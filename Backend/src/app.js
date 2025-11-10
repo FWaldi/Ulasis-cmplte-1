@@ -268,12 +268,12 @@ const startServer = async () => {
     const PORT = process.env.PORT || 3000;
 
     // Start server
-    const server = app.listen(PORT, 'localhost', () => {
+    const server = app.listen(PORT, () => {
       logger.info(`🚀 Ulasis Backend Server running on port ${PORT}`);
       logger.info(`📊 Health check available at: http://localhost:${PORT}/api/v1/health`);
       logger.info(`🔐 Auth endpoints available at: http://localhost:${PORT}/api/v1/auth`);
       logger.info(`🌍 Environment: ${process.env.NODE_ENV}`);
-      logger.info('🌐 Server bound to localhost');
+      logger.info('🌐 Server bound to all interfaces');
     });
 
     // Handle server errors

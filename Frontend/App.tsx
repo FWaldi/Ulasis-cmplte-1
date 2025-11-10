@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import type { Page, Theme, DemoPlan, Review, Questionnaire, QRCode, TrendData } from './types';
 import { Sentiment, ReviewStatus } from './types';
 import { getMockData, generateMockReview } from './hooks/useMockData';
+import { LocalizationProvider } from './locales';
 import Header from './components/Header';
 import Dashboard from './components/Dashboard';
 import Inbox from './components/Inbox';
@@ -26,6 +27,9 @@ import PricingPage from './components/landing/PricingPage';
 import ContactPage from './components/landing/ContactPage';
 import ActiveForms from './components/ActiveForms';
 import Panduan from './components/Panduan';
+import TestAnalytics from './components/TestAnalytics';
+import DebugAnalyticsPage from './DebugAnalyticsPage';
+import DirectAnalyticsTest from './DirectAnalyticsTest';
 import './components/QuestionnaireForm'; // Ensure new component is included in dependency graph
 import PublicQuestionnaireView from './components/PublicQuestionnaireView';
 
@@ -35,7 +39,7 @@ const App: React.FC = () => {
   const [activePage, setActivePage] = useState<Page>('landing');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isDemoMode, setIsDemoMode] = useState(false);
-  const [demoPlan, setDemoPlan] = useState<DemoPlan>('business');
+  const [demoPlan, setDemoPlan] = useState<DemoPlan>('bisnis');
   const [userEmail, setUserEmail] = useState('');
 
   // Centralized state management for application data
@@ -132,17 +136,20 @@ const App: React.FC = () => {
     setReviews(prev => prev.map(r => r.id === reviewId ? { ...r, status } : r));
   };
 
-  const handleGenerateMockReviews = () => {
-      const newReviews = Array.from({ length: 10 }, () => generateMockReview());
-      setReviews(prev => [...newReviews, ...prev]);
+  const handleDeleteReview = (reviewId: number) => {
+    setReviews(prev => prev.filter(r => r.id !== reviewId));
+    
+    // If in demo mode and all reviews are deleted, refresh with mock data
+    if (isDemoMode) {
+      setTimeout(() => {
+        if (reviews.length <= 1) { // Will be 0 after deletion
+          refreshDemoData();
+        }
+      }, 100);
+    }
   };
-  
-  const handleGenerateDashboardData = () => {
-    // This function now only needs to add reviews.
-    // KPIs and Trend data will update automatically via useMemo.
-    const newReviews = Array.from({ length: 5 }, () => generateMockReview());
-    setReviews(prev => [...newReviews, ...prev]);
-  };
+
+
   
   const handleAddOrUpdateQuestionnaire = (questionnaire: Omit<Questionnaire, 'id' | 'responseCount' | 'lastModified'> & { id?: number }) => {
     if (questionnaire.id) { // Update existing
@@ -172,6 +179,15 @@ const App: React.FC = () => {
       setQuestionnaires(prev => prev.filter(q => q.id !== id));
       // Optional: also remove associated QR codes or re-assign them
       setQrCodes(prev => prev.filter(qr => qr.questionnaireId !== id));
+      
+      // If in demo mode and all data is deleted, refresh with mock data
+      if (isDemoMode) {
+        setTimeout(() => {
+          if (questionnaires.length <= 1) { // Will be 0 after deletion
+            refreshDemoData();
+          }
+        }, 100);
+      }
   };
   
    const handleAddOrUpdateQRCode = (qrCode: Omit<QRCode, 'id' | 'scans'> & { id?: number }) => {
@@ -189,6 +205,15 @@ const App: React.FC = () => {
 
   const handleDeleteQRCode = (id: number) => {
       setQrCodes(prev => prev.filter(q => q.id !== id));
+      
+      // If in demo mode and all data is deleted, refresh with mock data
+      if (isDemoMode) {
+        setTimeout(() => {
+          if (qrCodes.length <= 1) { // Will be 0 after deletion
+            refreshDemoData();
+          }
+        }, 100);
+      }
   };
 
   const handlePreviewQuestionnaire = (questionnaireId: number) => {
@@ -218,9 +243,9 @@ const App: React.FC = () => {
   const renderContent = () => {
     switch (activePage) {
       case 'dashboard':
-        return <Dashboard kpiData={kpiData} trendData={trendData} onGenerateData={handleGenerateDashboardData} setActivePage={setActivePage} />;
+        return <Dashboard kpiData={kpiData} trendData={trendData} reviews={reviews} setActivePage={setActivePage} />;
       case 'inbox':
-        return <Inbox reviews={reviews} questionnaires={questionnaires} onUpdateStatus={handleUpdateReviewStatus} onGenerateMockReviews={handleGenerateMockReviews} />;
+        return <Inbox reviews={reviews} questionnaires={questionnaires} onUpdateStatus={handleUpdateReviewStatus} onDelete={handleDeleteReview} />;
       case 'active-forms':
         return <ActiveForms questionnaires={questionnaires} onAddReview={handleAddReview} />;
       case 'qr-codes':
@@ -228,15 +253,25 @@ const App: React.FC = () => {
       case 'questionnaires':
         return <QuestionnairesPage questionnaires={questionnaires} reviews={reviews} onSave={handleAddOrUpdateQuestionnaire} onDelete={handleDeleteQuestionnaire} isDemoMode={isDemoMode} demoPlan={demoPlan} />;
       case 'analytics':
+        console.log('🔍 App.tsx Debug - Passing to Analytics:', {
+          reviewsCount: reviews.length,
+          isDemoMode,
+          demoPlan,
+          firstReview: reviews[0]
+        });
         return <Analytics reviews={reviews} isDemoMode={isDemoMode} demoPlan={demoPlan} />;
       case 'reports':
         return <Reports questionnaires={questionnaires} reviews={reviews} isDemoMode={isDemoMode} demoPlan={demoPlan} />;
       case 'panduan':
         return <Panduan />;
-      case 'settings':
-        return <Settings demoPlan={demoPlan} setDemoPlan={setDemoPlan} />;
+      case 'test-analytics':
+        return <TestAnalytics />;
+      case 'debug-analytics':
+        return <DebugAnalyticsPage />;
+      case 'direct-analytics':
+        return <DirectAnalyticsTest />;
       default:
-        return <Dashboard kpiData={kpiData} trendData={trendData} onGenerateData={handleGenerateDashboardData} setActivePage={setActivePage} />;
+        return <Dashboard kpiData={kpiData} trendData={trendData} reviews={reviews} onGenerateData={handleGenerateDashboardData} setActivePage={setActivePage} />;
     }
   };
 
@@ -260,6 +295,21 @@ const App: React.FC = () => {
     setQrCodes([]);
   };
 
+  const refreshDemoData = () => {
+    if (isDemoMode) {
+      const { initialReviews, initialQuestionnaires, initialQrCodes } = getMockData(demoPlan);
+      setReviews(initialReviews);
+      setQuestionnaires(initialQuestionnaires);
+      setQrCodes(initialQrCodes);
+    }
+  };
+
+  const handleGenerateDashboardData = () => {
+    // Generate some sample data for demonstration
+    const newReview = generateMockReview();
+    handleAddReview(newReview);
+  };
+
   const handleLogin = () => {
     resetAllData();
     setIsLoggedIn(true);
@@ -275,8 +325,18 @@ const App: React.FC = () => {
 
   const handleEnterDemo = () => {
     // Load mock data only for demo mode
-    const currentDemoPlan = 'business'; // Can be linked to state if needed
+    const currentDemoPlan = 'bisnis'; // Match the types.ts DemoPlan type
     const { initialReviews, initialQuestionnaires, initialQrCodes } = getMockData(currentDemoPlan);
+    
+    console.log('🔍 Demo Mode Debug - Loading data:', {
+      demoPlan: currentDemoPlan,
+      reviewsCount: initialReviews.length,
+      questionnairesCount: initialQuestionnaires.length,
+      qrCodesCount: initialQrCodes.length,
+      firstReview: initialReviews[0],
+      lastReview: initialReviews[initialReviews.length - 1]
+    });
+    
     setReviews(initialReviews);
     setQuestionnaires(initialQuestionnaires);
     setQrCodes(initialQrCodes);
@@ -325,24 +385,26 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className={`min-h-screen flex flex-col bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-200 transition-colors duration-300`}>
-        <Header 
-            theme={theme} 
-            toggleTheme={toggleTheme} 
-            onLogout={handleLogout} 
-            setActivePage={setActivePage}
-            activePage={activePage}
-            isDemoMode={isDemoMode} 
-            demoPlan={demoPlan}
-            setDemoPlan={setDemoPlan}
-            onExitDemo={handleExitDemo}
-        />
-        <div className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <main className="py-4 sm:py-6 lg:py-8">
-            {renderContent()}
-            </main>
-        </div>
-    </div>
+    <LocalizationProvider>
+      <div className={`min-h-screen flex flex-col bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-200 transition-colors duration-300`}>
+          <Header 
+              theme={theme} 
+              toggleTheme={toggleTheme} 
+              onLogout={handleLogout} 
+              setActivePage={setActivePage}
+              activePage={activePage}
+              isDemoMode={isDemoMode} 
+              demoPlan={demoPlan}
+              setDemoPlan={setDemoPlan}
+              onExitDemo={handleExitDemo}
+          />
+          <div className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <main className="py-4 sm:py-6 lg:py-8">
+              {renderContent()}
+              </main>
+          </div>
+      </div>
+    </LocalizationProvider>
   );
 }
 

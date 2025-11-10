@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import type { QRCode, Questionnaire, DemoPlan } from '../types';
 import { PlusIcon, PencilIcon, TrashIcon, QRIcon, LockIcon, UploadIcon, CloseIcon, EyeIcon } from './common/Icons';
 import Modal from './common/Modal';
+import QRCodePreview from './QRCodePreview';
 
 const QRCodeForm: React.FC<{
     qrCode?: QRCode;
@@ -18,8 +19,8 @@ const QRCodeForm: React.FC<{
     const fileInputRef = useRef<HTMLInputElement>(null);
 
 
-    const isColorDisabled = isDemoMode && demoPlan === 'free';
-    const isLogoDisabled = isDemoMode && demoPlan !== 'business';
+    const isColorDisabled = isDemoMode && demoPlan === 'gratis';
+    const isLogoDisabled = isDemoMode && demoPlan !== 'bisnis';
 
     const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
@@ -155,34 +156,47 @@ const QRCodeCard: React.FC<{
     onEdit: (qrCode: QRCode) => void;
     onDelete: (id: number) => void;
     onPreview: (questionnaireId: number) => void;
-}> = ({ qrCode, onEdit, onDelete, onPreview }) => (
-     <div className="bg-white dark:bg-slate-800 p-5 rounded-xl shadow-md dark:shadow-slate-700/50 flex flex-col">
-        <div className="flex items-start justify-between">
-            <div className="flex items-center mr-2">
-                <div className="w-3 h-8 rounded-sm mr-3" style={{ backgroundColor: qrCode.color || '#007A7A' }}></div>
-                <h3 className="font-bold text-slate-800 dark:text-slate-100 flex-1">{qrCode.name}</h3>
+    onQRPreview: (qrCode: QRCode, questionnaire: Questionnaire) => void;
+    questionnaires: Questionnaire[];
+}> = ({ qrCode, onEdit, onDelete, onPreview, onQRPreview, questionnaires }) => {
+    const linkedQuestionnaire = questionnaires.find(q => q.id === qrCode.questionnaireId);
+    
+    return (
+        <div className="bg-white dark:bg-slate-800 p-5 rounded-xl shadow-md dark:shadow-slate-700/50 flex flex-col">
+            <div className="flex items-start justify-between">
+                <div className="flex items-center mr-2">
+                    <div className="w-3 h-8 rounded-sm mr-3" style={{ backgroundColor: qrCode.color || '#007A7A' }}></div>
+                    <h3 className="font-bold text-slate-800 dark:text-slate-100 flex-1">{qrCode.name}</h3>
+                </div>
+                <div className="flex space-x-1 flex-shrink-0">
+                    <button 
+                        onClick={() => linkedQuestionnaire && onQRPreview(qrCode, linkedQuestionnaire)} 
+                        className="p-1.5 rounded-full text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700" 
+                        title="Preview QR Code"
+                    >
+                        <QRIcon className="w-4 h-4"/>
+                    </button>
+                    <button onClick={() => onPreview(qrCode.questionnaireId)} className="p-1.5 rounded-full text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700" title="Pratinjau Formulir">
+                        <EyeIcon className="w-4 h-4"/>
+                    </button>
+                     <button onClick={() => onEdit(qrCode)} className="p-1.5 rounded-full text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700" title="Edit">
+                        <PencilIcon className="w-4 h-4"/>
+                    </button>
+                    <button onClick={() => onDelete(qrCode.id)} className="p-1.5 rounded-full text-red-500 hover:bg-red-100 dark:hover:bg-red-900/30" title="Hapus">
+                        <TrashIcon className="w-4 h-4"/>
+                    </button>
+                </div>
             </div>
-            <div className="flex space-x-1 flex-shrink-0">
-                <button onClick={() => onPreview(qrCode.questionnaireId)} className="p-1.5 rounded-full text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700" title="Pratinjau Formulir">
-                    <EyeIcon className="w-4 h-4"/>
-                </button>
-                 <button onClick={() => onEdit(qrCode)} className="p-1.5 rounded-full text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700" title="Edit">
-                    <PencilIcon className="w-4 h-4"/>
-                </button>
-                <button onClick={() => onDelete(qrCode.id)} className="p-1.5 rounded-full text-red-500 hover:bg-red-100 dark:hover:bg-red-900/30" title="Hapus">
-                    <TrashIcon className="w-4 h-4"/>
-                </button>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 ml-5">
+                Tertaut ke: <span className="font-semibold">{qrCode.linkedForm}</span>
+            </p>
+            <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700 text-sm flex-1 flex justify-between items-center">
+                <p className="text-slate-600 dark:text-slate-400">Total Pindai:</p>
+                <p className="font-bold text-2xl text-slate-800 dark:text-slate-100">{qrCode.scans}</p>
             </div>
         </div>
-        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 ml-5">
-            Tertaut ke: <span className="font-semibold">{qrCode.linkedForm}</span>
-        </p>
-        <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700 text-sm flex-1 flex justify-between items-center">
-            <p className="text-slate-600 dark:text-slate-400">Total Pindai:</p>
-            <p className="font-bold text-2xl text-slate-800 dark:text-slate-100">{qrCode.scans}</p>
-        </div>
-    </div>
-);
+    );
+};
 
 
 const QRCodes: React.FC<{
@@ -196,6 +210,7 @@ const QRCodes: React.FC<{
 }> = ({ qrCodes, questionnaires, isDemoMode, demoPlan, onSave, onDelete, onPreview }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingQRCode, setEditingQRCode] = useState<QRCode | undefined>(undefined);
+    const [previewQRCode, setPreviewQRCode] = useState<{ qrCode: QRCode; questionnaire: Questionnaire } | undefined>(undefined);
 
     const handleEdit = (qrCode: QRCode) => {
         setEditingQRCode(qrCode);
@@ -212,6 +227,14 @@ const QRCodes: React.FC<{
             onDelete(id);
         }
     };
+
+    const handleQRPreview = (qrCode: QRCode, questionnaire: Questionnaire) => {
+        setPreviewQRCode({ qrCode, questionnaire });
+    };
+
+    const handleCloseQRPreview = () => {
+        setPreviewQRCode(undefined);
+    };
     
     return (
         <div className="space-y-6">
@@ -223,9 +246,19 @@ const QRCodes: React.FC<{
                 </button>
             </div>
 
-             {qrCodes.length > 0 ? (
+              {qrCodes.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
-                    {qrCodes.map(qr => <QRCodeCard key={qr.id} qrCode={qr} onEdit={handleEdit} onDelete={handleDelete} onPreview={onPreview}/>)}
+                    {qrCodes.map(qr => (
+                        <QRCodeCard 
+                            key={qr.id} 
+                            qrCode={qr} 
+                            onEdit={handleEdit} 
+                            onDelete={handleDelete} 
+                            onPreview={onPreview}
+                            onQRPreview={handleQRPreview}
+                            questionnaires={questionnaires}
+                        />
+                    ))}
                 </div>
              ) : (
                 <div className="text-center py-12 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
@@ -247,6 +280,16 @@ const QRCodes: React.FC<{
                         onClose={() => setIsModalOpen(false)}
                     />
                 </Modal>
+            )}
+
+            {previewQRCode && (
+                <QRCodePreview
+                    qrCode={previewQRCode.qrCode}
+                    questionnaire={previewQRCode.questionnaire}
+                    isDemoMode={isDemoMode}
+                    demoPlan={demoPlan}
+                    onClose={handleCloseQRPreview}
+                />
             )}
         </div>
     );

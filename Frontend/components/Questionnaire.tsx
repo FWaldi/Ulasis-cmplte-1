@@ -48,7 +48,7 @@ const QuestionnaireList: React.FC<{
     onViewResults: (q: Questionnaire) => void;
     onDelete: (id: number, name: string) => void;
 }> = ({ questionnaires, isDemoMode, demoPlan, onEdit, onViewResults, onDelete }) => {
-    const isAddDisabled = isDemoMode && demoPlan === 'free' && questionnaires.length >= 1;
+    const isAddDisabled = isDemoMode && demoPlan === 'gratis' && questionnaires.length >= 1;
     return (
         <div className="space-y-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">

@@ -37,9 +37,9 @@ const Settings: React.FC<{ demoPlan: DemoPlan; setDemoPlan: (plan: DemoPlan) => 
     });
     
     const planDetails = {
-        free: { name: 'Gratis', price: 'Rp 0', features: ['1 Kuesioner', '50 Ulasan/bln'] },
+        gratis: { name: 'Gratis', price: 'Rp 0', features: ['1 Kuesioner', '50 Ulasan/bln'] },
         starter: { name: 'Starter', price: 'Rp 49rb/bln', features: ['5 Kuesioner', 'Ulasan tak terbatas'] },
-        business: { name: 'Business', price: 'Rp 199rb/bln', features: ['Kuesioner tak terbatas', 'Laporan CSV'] },
+        bisnis: { name: 'Business', price: 'Rp 199rb/bln', features: ['Kuesioner tak terbatas', 'Laporan CSV'] },
     };
 
     const handleUpgradeClick = (plan: DemoPlan) => {
@@ -58,11 +58,11 @@ const Settings: React.FC<{ demoPlan: DemoPlan; setDemoPlan: (plan: DemoPlan) => 
                         <div className="space-y-4">
                             <div>
                                 <label className="text-sm font-medium text-slate-600 dark:text-slate-400">Nama Lengkap</label>
-                                <p className="font-semibold text-slate-800 dark:text-slate-200 mt-1">{demoPlan === 'free' ? 'Pengguna Gratis' : 'Fitri Waldi'}</p>
+                                <p className="font-semibold text-slate-800 dark:text-slate-200 mt-1">{demoPlan === 'gratis' ? 'Pengguna Gratis' : 'Fitri Waldi'}</p>
                             </div>
                              <div>
                                 <label className="text-sm font-medium text-slate-600 dark:text-slate-400">Email</label>
-                                <p className="font-semibold text-slate-800 dark:text-slate-200 mt-1">{demoPlan === 'free' ? 'pengguna@email.com' : 'fitri.w@example.com'}</p>
+                                <p className="font-semibold text-slate-800 dark:text-slate-200 mt-1">{demoPlan === 'gratis' ? 'pengguna@email.com' : 'fitri.w@example.com'}</p>
                             </div>
                         </div>
                     </SectionCard>

@@ -33,11 +33,11 @@ const DemoPlanSelector: React.FC<{
     demoPlan: DemoPlan;
     setDemoPlan: (plan: DemoPlan) => void;
 }> = ({ demoPlan, setDemoPlan }) => {
-    const plans: DemoPlan[] = ['free', 'starter', 'business'];
+    const plans: DemoPlan[] = ['gratis', 'starter', 'bisnis'];
     const planDetails = {
-        free: { label: 'Gratis' },
+        gratis: { label: 'Gratis' },
         starter: { label: 'Starter' },
-        business: { label: 'Business' }
+        bisnis: { label: 'Business' }
     };
 
     return (

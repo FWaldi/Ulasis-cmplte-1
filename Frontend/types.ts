@@ -22,18 +22,18 @@ export type Page =
   | 'public-form-preview';
   
 export type Theme = 'light' | 'dark';
-export type DemoPlan = 'free' | 'starter' | 'business';
+export type DemoPlan = 'gratis' | 'starter' | 'bisnis';
 
 export enum ReviewStatus {
-    New = 'New',
-    InProgress = 'In Progress',
-    Resolved = 'Resolved',
+    New = 'Baru',
+    InProgress = 'Dalam Proses',
+    Resolved = 'Selesai',
 }
 
 export enum Sentiment {
-    Positive = 'Positive',
-    Neutral = 'Neutral',
-    Negative = 'Negative',
+    Positive = 'Positif',
+    Neutral = 'Netral',
+    Negative = 'Negatif',
 }
 
 export interface Review {

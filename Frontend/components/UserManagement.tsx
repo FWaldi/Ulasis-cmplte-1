@@ -211,12 +211,12 @@ const UserManagement: React.FC = () => {
       {isActive ? (
         <>
           <CheckCircle className="w-3 h-3 mr-1" />
-          Active
+          Aktif
         </>
       ) : (
         <>
           <XCircle className="w-3 h-3 mr-1" />
-          Inactive
+          Tidak Aktif
         </>
       )}
     </span>
@@ -230,10 +230,17 @@ const UserManagement: React.FC = () => {
       enterprise: 'bg-yellow-100 text-yellow-800',
     };
 
+    const planNames = {
+      free: 'Gratis',
+      basic: 'Dasar',
+      premium: 'Premium',
+      enterprise: 'Enterprise',
+    };
+
     return (
       <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${colors[plan as keyof typeof colors] || colors.free}`}>
         <CreditCard className="w-3 h-3 mr-1" />
-        {plan.charAt(0).toUpperCase() + plan.slice(1)}
+        {planNames[plan as keyof typeof planNames] || plan.charAt(0).toUpperCase() + plan.slice(1)}
       </span>
     );
   };
@@ -243,8 +250,8 @@ const UserManagement: React.FC = () => {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">User Management</h1>
-          <p className="text-gray-600">Manage and monitor all system users</p>
+          <h1 className="text-2xl font-bold text-gray-900">Manajemen Pengguna</h1>
+          <p className="text-gray-600">Kelola dan pantau semua pengguna sistem</p>
         </div>
         
         <div className="flex space-x-3">
@@ -253,11 +260,11 @@ const UserManagement: React.FC = () => {
             className="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center"
           >
             <Download className="w-4 h-4 mr-2" />
-            Export
+            Ekspor
           </button>
           <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center">
             <UserPlus className="w-4 h-4 mr-2" />
-            Add User
+            Tambah Pengguna
           </button>
         </div>
       </div>
@@ -286,7 +293,7 @@ const UserManagement: React.FC = () => {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <input
                 type="text"
-                placeholder="Search users by name or email..."
+                placeholder="Cari pengguna berdasarkan nama atau email..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -300,7 +307,7 @@ const UserManagement: React.FC = () => {
             className="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center"
           >
             <Filter className="w-4 h-4 mr-2" />
-            Filters
+            Filter
             {showFilters && <span className="ml-2 text-blue-600">▲</span>}
           </button>
 
@@ -324,50 +331,50 @@ const UserManagement: React.FC = () => {
                 onChange={(e) => setFilters(prev => ({ ...prev, status: e.target.value }))}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="">All Status</option>
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
+                <option value="">Semua Status</option>
+                <option value="active">Aktif</option>
+                <option value="inactive">Tidak Aktif</option>
               </select>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Subscription Plan</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Paket Berlangganan</label>
               <select
                 value={filters.subscriptionPlan}
                 onChange={(e) => setFilters(prev => ({ ...prev, subscriptionPlan: e.target.value }))}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="">All Plans</option>
-                <option value="free">Free</option>
-                <option value="basic">Basic</option>
+                <option value="">Semua Paket</option>
+                <option value="free">Gratis</option>
+                <option value="basic">Dasar</option>
                 <option value="premium">Premium</option>
                 <option value="enterprise">Enterprise</option>
               </select>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Sort By</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Urutkan Berdasarkan</label>
               <select
                 value={filters.sortBy}
                 onChange={(e) => setFilters(prev => ({ ...prev, sortBy: e.target.value }))}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="created_at">Created Date</option>
-                <option value="last_login">Last Login</option>
+                <option value="created_at">Tanggal Dibuat</option>
+                <option value="last_login">Terakhir Login</option>
                 <option value="email">Email</option>
-                <option value="first_name">First Name</option>
+                <option value="first_name">Nama Depan</option>
               </select>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Sort Order</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Urutan</label>
               <select
                 value={filters.sortOrder}
                 onChange={(e) => setFilters(prev => ({ ...prev, sortOrder: e.target.value }))}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="DESC">Descending</option>
-                <option value="ASC">Ascending</option>
+                <option value="DESC">Menurun</option>
+                <option value="ASC">Menaik</option>
               </select>
             </div>
           </div>
@@ -379,7 +386,7 @@ const UserManagement: React.FC = () => {
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
           <div className="flex items-center justify-between">
             <span className="text-blue-800 font-medium">
-              {selectedUsers.length} user{selectedUsers.length > 1 ? 's' : ''} selected
+              {selectedUsers.length} pengguna dipilih
             </span>
             <div className="flex space-x-2">
               <button
@@ -387,28 +394,28 @@ const UserManagement: React.FC = () => {
                 className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 flex items-center text-sm"
               >
                 <CheckCircle className="w-4 h-4 mr-1" />
-                Activate
+                Aktifkan
               </button>
               <button
                 onClick={() => handleBulkOperation('deactivate')}
                 className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 flex items-center text-sm"
               >
                 <XCircle className="w-4 h-4 mr-1" />
-                Deactivate
+                Nonaktifkan
               </button>
               <button
                 onClick={() => handleBulkOperation('update_subscription')}
                 className="px-3 py-1 bg-purple-600 text-white rounded hover:bg-purple-700 flex items-center text-sm"
               >
                 <CreditCard className="w-4 h-4 mr-1" />
-                Upgrade to Premium
+                Upgrade ke Premium
               </button>
               <button
                 onClick={() => handleBulkOperation('delete')}
                 className="px-3 py-1 bg-gray-600 text-white rounded hover:bg-gray-700 flex items-center text-sm"
               >
                 <Trash2 className="w-4 h-4 mr-1" />
-                Delete
+                Hapus
               </button>
             </div>
           </div>
@@ -430,22 +437,22 @@ const UserManagement: React.FC = () => {
                   />
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  User
+                  Pengguna
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Status
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Subscription
+                  Berlangganan
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Joined
+                  Bergabung
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Last Login
+                  Terakhir Login
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
+                  Aksi
                 </th>
               </tr>
             </thead>
@@ -491,7 +498,7 @@ const UserManagement: React.FC = () => {
                     </div>
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-500">
-                    {user.last_login ? formatDate(user.last_login) : 'Never'}
+                    {user.last_login ? formatDate(user.last_login) : 'Belum Pernah'}
                   </td>
                   <td className="px-6 py-4 text-sm font-medium">
                     <div className="flex space-x-2">
@@ -515,9 +522,9 @@ const UserManagement: React.FC = () => {
         {/* Pagination */}
         <div className="bg-gray-50 px-6 py-3 flex items-center justify-between border-t border-gray-200">
           <div className="text-sm text-gray-700">
-            Showing {((pagination.page - 1) * pagination.limit) + 1} to{' '}
-            {Math.min(pagination.page * pagination.limit, pagination.total)} of{' '}
-            {pagination.total} results
+            Menampilkan {((pagination.page - 1) * pagination.limit) + 1} hingga{' '}
+            {Math.min(pagination.page * pagination.limit, pagination.total)} dari{' '}
+            {pagination.total} hasil
           </div>
           
           <div className="flex items-center space-x-2">
@@ -530,7 +537,7 @@ const UserManagement: React.FC = () => {
             </button>
             
             <span className="px-3 py-1 text-sm">
-              Page {pagination.page} of {pagination.pages}
+              Halaman {pagination.page} dari {pagination.pages}
             </span>
             
             <button

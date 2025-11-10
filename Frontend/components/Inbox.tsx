@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import type { Review, Questionnaire } from '../types';
 import { ReviewStatus, Sentiment } from '../types';
-import { PlusIcon, FilterIcon, ChevronDownIcon } from './common/Icons';
+import { FilterIcon, ChevronDownIcon, TrashIcon } from './common/Icons';
 
 const sentimentColors = {
   [Sentiment.Positive]: 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300',
@@ -15,7 +15,11 @@ const statusColors = {
   [ReviewStatus.Resolved]: 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300',
 };
 
-const ReviewCard: React.FC<{ review: Review; onUpdateStatus: (id: number, status: ReviewStatus) => void; }> = ({ review, onUpdateStatus }) => (
+const ReviewCard: React.FC<{ 
+    review: Review; 
+    onUpdateStatus: (id: number, status: ReviewStatus) => void;
+    onDelete: (id: number) => void;
+}> = ({ review, onUpdateStatus, onDelete }) => (
     <div className="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-md dark:shadow-slate-700/50 flex space-x-4">
         <div className={`w-1.5 rounded-full ${sentimentColors[review.sentiment]}`}></div>
         <div className="flex-1">
@@ -27,7 +31,7 @@ const ReviewCard: React.FC<{ review: Review; onUpdateStatus: (id: number, status
                     </div>
                     <p className="text-slate-700 dark:text-slate-300 mt-2">{review.comment}</p>
                 </div>
-                <div className="flex-shrink-0 relative group">
+                <div className="flex items-center space-x-2 flex-shrink-0">
                      <select 
                         value={review.status} 
                         onChange={(e) => onUpdateStatus(review.id, e.target.value as ReviewStatus)}
@@ -35,7 +39,14 @@ const ReviewCard: React.FC<{ review: Review; onUpdateStatus: (id: number, status
                     >
                         {Object.values(ReviewStatus).map(s => <option key={s} value={s}>{s}</option>)}
                     </select>
-                    <ChevronDownIcon className="w-4 h-4 absolute right-1.5 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none"/>
+                    <ChevronDownIcon className="w-4 h-4 absolute right-8 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none"/>
+                    <button 
+                        onClick={() => onDelete(review.id)}
+                        className="p-1 rounded-full text-red-500 hover:bg-red-100 dark:hover:bg-red-900/30"
+                        title="Hapus ulasan"
+                    >
+                        <TrashIcon className="w-4 h-4"/>
+                    </button>
                 </div>
             </div>
             <div className="text-xs text-slate-500 dark:text-slate-400 mt-3 pt-3 border-t border-slate-200 dark:border-slate-700 flex justify-between">
@@ -55,8 +66,8 @@ const Inbox: React.FC<{
     reviews: Review[];
     questionnaires: Questionnaire[];
     onUpdateStatus: (id: number, status: ReviewStatus) => void;
-    onGenerateMockReviews: () => void;
-}> = ({ reviews, questionnaires, onUpdateStatus, onGenerateMockReviews }) => {
+    onDelete: (id: number) => void;
+}> = ({ reviews, questionnaires, onUpdateStatus, onDelete }) => {
     const [statusFilter, setStatusFilter] = useState<string>('all');
     const [questionnaireFilter, setQuestionnaireFilter] = useState<string>('all');
     
@@ -72,13 +83,6 @@ const Inbox: React.FC<{
         <div className="space-y-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <h1 className="text-3xl font-bold text-slate-800 dark:text-slate-100">Inbox</h1>
-                 <button 
-                    onClick={onGenerateMockReviews}
-                    className="flex items-center text-xs font-semibold bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 px-3 py-2 rounded-md transition-colors"
-                >
-                    <PlusIcon className="w-4 h-4 mr-2" />
-                    Simulasikan Ulasan Masuk
-                </button>
             </div>
             
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 border-b border-slate-200 dark:border-slate-700 pb-2">
@@ -104,7 +108,14 @@ const Inbox: React.FC<{
 
             <div className="space-y-4">
                 {filteredReviews.length > 0 ? (
-                    filteredReviews.map(review => <ReviewCard key={review.id} review={review} onUpdateStatus={onUpdateStatus} />)
+                    filteredReviews.map(review => (
+                        <ReviewCard 
+                            key={review.id} 
+                            review={review} 
+                            onUpdateStatus={onUpdateStatus}
+                            onDelete={onDelete}
+                        />
+                    ))
                 ) : (
                     <div className="text-center py-12 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
                         <h3 className="font-semibold text-slate-700 dark:text-slate-300">Tidak ada ulasan</h3>

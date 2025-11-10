@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
-import type { TrendData, Page } from '../types';
-import { PlusIcon, LightBulbIcon, CloseIcon } from './common/Icons';
+import type { TrendData, Page, Review } from '../types';
+import { LightBulbIcon, CloseIcon } from './common/Icons';
+import DateRangeSelector, { DateRange } from './DateRangeSelector';
 
 interface KPI {
     title: string;
@@ -34,13 +35,14 @@ const KPICard: React.FC<{ kpi: KPI, animationClass: string, onClick?: () => void
 interface DashboardProps {
   kpiData: { avgRating: number; totalReviews: number; responseRate: number; };
   trendData: TrendData[];
-  onGenerateData: () => void;
+  reviews: Review[];
   setActivePage: (page: Page) => void;
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ kpiData, trendData, onGenerateData, setActivePage }) => {
+const Dashboard: React.FC<DashboardProps> = ({ kpiData, trendData, reviews, setActivePage }) => {
   const [showGuidance, setShowGuidance] = useState(true);
   const [isDarkMode, setIsDarkMode] = useState(() => document.documentElement.classList.contains('dark'));
+  const [selectedRange, setSelectedRange] = useState<DateRange>('month');
 
   useEffect(() => {
     const observer = new MutationObserver(() => {
@@ -59,11 +61,126 @@ const Dashboard: React.FC<DashboardProps> = ({ kpiData, trendData, onGenerateDat
       },
       labelStyle: { color: isDarkMode ? '#f1f5f9' : '#1e293b' }
   };
+
+  // Filter reviews based on selected date range (LOCKED to October 2025)
+  const filteredReviews = useMemo(() => {
+    // Lock end date to October 31, 2025 for demo
+    const endDate = new Date('2025-10-31T23:59:59Z');
+    const startDate = new Date(endDate);
+
+    switch (selectedRange) {
+      case 'day':
+        startDate.setDate(endDate.getDate() - 1);
+        break;
+      case 'week':
+        startDate.setDate(endDate.getDate() - 7);
+        break;
+      case 'month':
+        startDate.setMonth(endDate.getMonth() - 1);
+        break;
+      case 'year':
+        startDate.setFullYear(endDate.getFullYear() - 1);
+        break;
+    }
+
+    return reviews.filter(review => review.timestamp >= startDate && review.timestamp <= endDate);
+  }, [reviews, selectedRange]);
+
+  // Recalculate KPI data based on filtered reviews
+  const filteredKpiData = useMemo(() => {
+    const totalReviews = filteredReviews.length;
+    const avgRating = totalReviews > 0 ? filteredReviews.reduce((sum, r) => sum + r.rating, 0) / totalReviews : 0;
+    const responseRate = totalReviews > 0 ? 88 : 0; // Static for now, 0 if no reviews
+    return {
+      avgRating: parseFloat(avgRating.toFixed(1)),
+      totalReviews,
+      responseRate,
+    };
+  }, [filteredReviews]);
+
+  // Generate trend data based on selected range (LOCKED to October 2025)
+  const filteredTrendData = useMemo(() => {
+    // Lock end date to October 31, 2025 for demo
+    const endDate = new Date('2025-10-31T23:59:59Z');
+    const trendMap: { [key: string]: { ratings: number[], count: number } } = {};
+    const dateLabels: { [key: string]: string } = {};
+
+    let days = 7; // default for week
+    switch (selectedRange) {
+      case 'day':
+        days = 24; // hourly for last 24 hours
+        break;
+      case 'week':
+        days = 7;
+        break;
+      case 'month':
+        days = 30;
+        break;
+      case 'year':
+        days = 52; // weekly for year
+        break;
+    }
+
+    // Initialize date range (LOCKED to October 2025)
+    for (let i = days - 1; i >= 0; i--) {
+        const d = new Date(endDate);
+        if (selectedRange === 'day') {
+            d.setHours(d.getHours() - i);
+        } else if (selectedRange === 'year') {
+            d.setDate(d.getDate() - (i * 7)); // weekly intervals
+        } else {
+            d.setDate(d.getDate() - i);
+        }
+        
+        let key: string;
+        if (selectedRange === 'day') {
+            key = d.toISOString().substring(0, 13); // YYYY-MM-DDTHH
+        } else if (selectedRange === 'year') {
+            key = d.toISOString().split('T')[0]; // Weekly
+        } else {
+            key = d.toISOString().split('T')[0]; // YYYY-MM-DD
+        }
+        
+        trendMap[key] = { ratings: [], count: 0 };
+        
+        if (selectedRange === 'day') {
+            dateLabels[key] = d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+        } else if (selectedRange === 'year') {
+            dateLabels[key] = d.toLocaleDateString('id-ID', { month: 'short', day: 'numeric' });
+        } else {
+            dateLabels[key] = d.toLocaleDateString('id-ID', { month: 'short', day: 'numeric' });
+        }
+    }
+
+    // Populate with review data
+    filteredReviews.forEach(review => {
+        let key: string;
+        if (selectedRange === 'day') {
+            key = review.timestamp.toISOString().substring(0, 13);
+        } else {
+            key = review.timestamp.toISOString().split('T')[0];
+        }
+        
+        if (trendMap[key]) {
+            trendMap[key].ratings.push(review.rating);
+            trendMap[key].count++;
+        }
+    });
+
+    // Calculate averages
+    return Object.entries(trendMap).map(([key, data]) => {
+        const avg = data.count > 0 ? data.ratings.reduce((a, b) => a + b, 0) / data.count : 0;
+        return {
+            date: dateLabels[key],
+            'Average Rating': parseFloat(avg.toFixed(2)),
+        };
+    });
+  }, [filteredReviews, selectedRange]);
   
   const kpis: (KPI & { pageLink?: Page })[] = [
-    { title: 'Average Rating', value: kpiData.avgRating, icon: <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.522 4.646a1 1 0 00.95.69h4.904c.969 0 1.371 1.24.588 1.81l-3.968 2.88a1 1 0 00-.364 1.118l1.522 4.646c.3.921-.755 1.688-1.539 1.118l-3.968-2.88a1 1 0 00-1.175 0l-3.968 2.88c-.784.57-1.838-.197-1.539-1.118l1.522-4.646a1 1 0 00-.364-1.118L2.08 9.073c-.783-.57-.38-1.81.588-1.81h4.904a1 1 0 00.95-.69L11.049 2.927z" /></svg>, change: '+0.1', changeType: 'increase', pageLink: 'analytics' },
-    { title: 'Total Reviews', value: kpiData.totalReviews, icon: <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a2 2 0 01-2-2V7a2 2 0 012-2h4M5 8h2" /></svg>, change: '+52', changeType: 'increase', pageLink: 'inbox' },
-    { title: 'Response Rate', value: `${kpiData.responseRate}%`, icon: <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h10a8 8 0 018 8v2M3 4h10a8 8 0 008 8v2" /></svg>, change: '-1.2%', changeType: 'decrease', pageLink: 'analytics' },
+    { title: 'Average Rating', value: filteredKpiData.avgRating, icon: <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.522 4.646a1 1 0 00.95.69h4.904c.969 0 1.371 1.24.588 1.81l-3.968 2.88a1 1 0 00-.364 1.118l1.522 4.646c.3.921-.755 1.688-1.539 1.118l-3.968-2.88a1 1 0 00-1.175 0l-3.968 2.88c-.784.57-1.838-.197-1.539-1.118l1.522-4.646a1 1 0 00-.364-1.118L2.08 9.073c-.783-.57-.38-1.81.588-1.81h4.904a1 1 0 00.95-.69L11.049 2.927z" /></svg>, change: '+0.1', changeType: 'increase', pageLink: 'analytics' },
+    { title: 'Total Reviews', value: filteredKpiData.totalReviews, icon: <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a2 2 0 01-2-2V7a2 2 0 012-2h4M5 8h2" /></svg>, change: '+52', changeType: 'increase', pageLink: 'inbox' },
+    { title: 'Response Rate', value: `${filteredKpiData.responseRate}%`, icon: <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h10a8 8 0 018 8v2M3 4h10a8 8 0 008 8v2" /></svg>, change: '-1.2%', changeType: 'decrease', pageLink: 'analytics' },
   ];
   const animationClasses = ['animate-fade-in-up', 'animate-fade-in-up-delay-1', 'animate-fade-in-up-delay-2', 'animate-fade-in-up-delay-3'];
 
@@ -71,13 +188,11 @@ const Dashboard: React.FC<DashboardProps> = ({ kpiData, trendData, onGenerateDat
     <div className="space-y-8">
        <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
         <h1 className="text-3xl font-bold text-slate-800 dark:text-slate-100 opacity-0 animate-fade-in-up">Dashboard</h1>
-        <button 
-          onClick={onGenerateData} 
-          className="flex items-center text-xs font-semibold bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 px-3 py-2 rounded-md transition-colors opacity-0 animate-fade-in-up-delay-1"
-        >
-            <PlusIcon className="w-4 h-4 mr-2" />
-            Simulasikan Data Masuk
-        </button>
+        <DateRangeSelector 
+          selectedRange={selectedRange} 
+          onRangeChange={setSelectedRange}
+          className="opacity-0 animate-fade-in-up-delay-1"
+        />
       </div>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
@@ -124,9 +239,9 @@ const Dashboard: React.FC<DashboardProps> = ({ kpiData, trendData, onGenerateDat
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-3 bg-white dark:bg-slate-800 p-6 rounded-xl shadow-md dark:shadow-slate-700/50 opacity-0 animate-fade-in-up-delay-2">
           <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100 mb-4">Evolusi Skor Rata-Rata</h3>
-          <div className="h-80">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={trendData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
+          <div className="h-80 w-full">
+            <ResponsiveContainer width="100%" height={320}>
+              <AreaChart data={filteredTrendData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
                 <defs>
                   <linearGradient id="colorRating" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#007A7A" stopOpacity={0.8}/>

@@ -13,11 +13,20 @@
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
-    "test:e2e:debug": "playwright test --debug"
+    "test:e2e:debug": "playwright test --debug",
+    "test:comprehensive": "vitest run --run tests/comprehensive-error-detection.test.tsx",
+    "test:build-validation": "vitest run --run tests/build-validation.test.ts",
+    "test:runtime-errors": "vitest run --run tests/runtime-error-detection.test.tsx",
+    "test:e2e-errors": "playwright test e2e/error-detection.spec.ts",
+    "test:all": "npm run test:comprehensive && npm run test:build-validation && npm run test:runtime-errors && npm run test:e2e-errors",
+    "check:errors": "scripts\\comprehensive-error-detection.bat",
+    "check:errors:unix": "bash scripts/comprehensive-error-detection.sh"
   },
   "dependencies": {
     "@google/genai": "^1.24.0",
+    "@types/qrcode": "^1.5.6",
     "axios": "^1.13.2",
+    "qrcode": "^1.5.4",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-router-dom": "^7.9.5",
@@ -25,7 +34,6 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.56.1",
-    "@tailwindcss/postcss": "^4.1.17",
     "@tanstack/react-query": "^5.90.7",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
@@ -38,7 +46,7 @@
     "jsdom": "^27.1.0",
     "msw": "^2.12.0",
     "postcss": "^8.5.6",
-    "tailwindcss": "^4.1.17",
+    "tailwindcss": "^3.4.0",
     "typescript": "~5.8.2",
     "vite": "^6.2.0",
     "vitest": "^4.0.7",
