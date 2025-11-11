@@ -231,3 +231,4 @@ Source: [.bmad-core/tasks/advanced-elicitation.md](.bmad-core/tasks/advanced-eli
 - Full brief: open the source file above (content not embedded)
 
 <!-- END: BMAD-AGENTS-OPENCODE -->
+
