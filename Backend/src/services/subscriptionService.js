@@ -15,21 +15,49 @@ class SubscriptionService {
         questionnaires: 1,
         responses: 50,
         exports: 5,
+        analytics_requests: 10, // per day
+        advanced_analytics: false,
+        real_time_analytics: false,
+        customer_journey: false,
+        actionable_insights: false,
+        sentiment_analysis: false,
+        data_export: false,
       },
       starter: {
         questionnaires: 5,
         responses: 500,
         exports: 50,
+        analytics_requests: 100, // per day
+        advanced_analytics: true,
+        real_time_analytics: false,
+        customer_journey: false,
+        actionable_insights: true,
+        sentiment_analysis: true,
+        data_export: true,
       },
       business: {
         questionnaires: null, // unlimited
         responses: null,
         exports: null,
+        analytics_requests: null, // unlimited
+        advanced_analytics: true,
+        real_time_analytics: true,
+        customer_journey: true,
+        actionable_insights: true,
+        sentiment_analysis: true,
+        data_export: true,
       },
       admin: {
         questionnaires: null, // unlimited
         responses: null,
         exports: null,
+        analytics_requests: null, // unlimited
+        advanced_analytics: true,
+        real_time_analytics: true,
+        customer_journey: true,
+        actionable_insights: true,
+        sentiment_analysis: true,
+        data_export: true,
       },
     };
 
@@ -114,7 +142,7 @@ class SubscriptionService {
       });
 
       // Ensure all usage types are present
-      ['questionnaires', 'responses', 'exports'].forEach(type => {
+      ['questionnaires', 'responses', 'exports', 'analytics_requests'].forEach(type => {
         if (!usage[type]) {
           usage[type] = { used: 0, limit: null };
         }
@@ -310,12 +338,12 @@ class SubscriptionService {
    * @returns {Array} Plan features
    */
   getPlanFeatures(plan) {
-    const baseFeatures = ['analytics', 'qr_codes'];
+    const baseFeatures = ['basic_analytics', 'qr_codes'];
     const planFeatures = {
-      free: baseFeatures,
-      starter: [...baseFeatures, 'csv_export'],
-      business: [...baseFeatures, 'csv_export', 'excel_export', 'advanced_analytics', 'api_access'],
-      admin: [...baseFeatures, 'csv_export', 'excel_export', 'advanced_analytics', 'api_access', 'admin_access'],
+      free: [...baseFeatures, 'sentiment_basic'],
+      starter: [...baseFeatures, 'csv_export', 'data_export', 'sentiment_analysis', 'actionable_insights'],
+      business: [...baseFeatures, 'csv_export', 'excel_export', 'data_export', 'advanced_analytics', 'real_time_analytics', 'customer_journey', 'api_access', 'sentiment_analysis', 'actionable_insights'],
+      admin: [...baseFeatures, 'csv_export', 'excel_export', 'data_export', 'advanced_analytics', 'real_time_analytics', 'customer_journey', 'api_access', 'admin_access', 'sentiment_analysis', 'actionable_insights'],
     };
     return planFeatures[plan] || planFeatures.free;
   }
@@ -507,6 +535,106 @@ class SubscriptionService {
         error: error.message,
       });
       throw error;
+    }
+  }
+
+  /**
+   * Check if user has access to specific analytics feature
+   * @param {number} userId - User ID
+   * @param {string} feature - Feature name
+   * @returns {Object} Access check result
+   */
+  async checkAnalyticsFeature(userId, feature) {
+    try {
+      const user = await User.findByPk(userId);
+      if (!user) {
+        return { allowed: false, reason: 'User not found' };
+      }
+
+      if (user.subscription_status !== 'active') {
+        return { allowed: false, reason: 'Subscription is not active' };
+      }
+
+      const planLimits = this.PLAN_LIMITS[user.subscription_plan];
+      const features = this.getPlanFeatures(user.subscription_plan);
+
+      // Check if feature is available in plan
+      const featureMapping = {
+        'basic_analytics': 'basic_analytics',
+        'advanced_sentiment': 'advanced_analytics',
+        'realtime_analytics': 'real_time_analytics',
+        'customer_journey': 'customer_journey',
+        'actionable_insights': 'actionable_insights',
+        'sentiment_analysis': 'sentiment_analysis',
+        'data_export': 'data_export',
+        'exports': 'data_export'
+      };
+
+      const requiredFeature = featureMapping[feature] || feature;
+      const hasFeature = features.includes(requiredFeature);
+
+      if (!hasFeature) {
+        return {
+          allowed: false,
+          reason: `Feature '${feature}' is not available in ${user.subscription_plan} plan`,
+          current_plan: user.subscription_plan,
+          required_feature: requiredFeature,
+          upgrade_suggestion: this.getNextPlan(user.subscription_plan)
+        };
+      }
+
+      // Check daily analytics request limit for free/starter plans
+      if (planLimits.analytics_requests && feature !== 'basic_analytics') {
+        const today = new Date().toISOString().split('T')[0];
+        const usageKey = `analytics_requests_${today}`;
+        
+        const currentUsage = await this.getUsageCount(userId, usageKey);
+        if (currentUsage >= planLimits.analytics_requests) {
+          return {
+            allowed: false,
+            reason: `Daily analytics request limit exceeded (${planLimits.analytics_requests} requests/day)`,
+            current_usage: currentUsage,
+            daily_limit: planLimits.analytics_requests,
+            resets_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
+          };
+        }
+      }
+
+      return { allowed: true };
+    } catch (error) {
+      logger.error('Check analytics feature failed', {
+        userId,
+        feature,
+        error: error.message,
+      });
+      throw error;
+    }
+  }
+
+  /**
+   * Increment analytics usage
+   * @param {number} userId - User ID
+   * @param {string} feature - Feature used
+   */
+  async incrementAnalyticsUsage(userId, feature) {
+    try {
+      const user = await User.findByPk(userId);
+      const planLimits = this.PLAN_LIMITS[user.subscription_plan];
+
+      // Only track usage for plans with limits
+      if (planLimits.analytics_requests && feature !== 'basic_analytics') {
+        const today = new Date().toISOString().split('T')[0];
+        const usageKey = `analytics_requests_${today}`;
+        
+        await this.incrementUsage(userId, usageKey, 1);
+      }
+    } catch (error) {
+      logger.error('Increment analytics usage failed', {
+        userId,
+        feature,
+        error: error.message,
+      });
+      // Don't throw error to avoid breaking analytics requests
     }
   }
 

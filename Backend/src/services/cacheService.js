@@ -26,15 +26,24 @@ const CACHE_CONFIG = {
  * @param {Object} redisOptions - Redis connection options
  */
 const initializeRedis = async (redisOptions = {}) => {
-  // Skip Redis in development to avoid connection errors
-  if (process.env.NODE_ENV === 'development') {
-    logger.info('Skipping Redis initialization in development environment');
+  // Skip Redis in development and test to avoid connection errors
+  if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
+    logger.info('Skipping Redis initialization in development/test environment');
     redisClient = null;
     return false;
   }
 
   try {
+    // Only require Redis if we're actually going to use it
     const Redis = require('redis');
+    
+    // Check if Redis is explicitly disabled
+    if (process.env.REDIS_ENABLED === 'false') {
+      logger.info('Redis is explicitly disabled via REDIS_ENABLED=false');
+      redisClient = null;
+      return false;
+    }
+    
     redisClient = Redis.createClient({
       host: process.env.REDIS_HOST || 'localhost',
       port: process.env.REDIS_PORT || 6379,
@@ -454,10 +463,14 @@ const healthCheck = async () => {
   }
 };
 
-// Initialize Redis on module load
-initializeRedis().catch(() => {
-  logger.info('Using memory cache fallback');
-});
+// Initialize Redis on module load (only if not in test environment)
+if (process.env.NODE_ENV !== 'test') {
+  initializeRedis().catch(() => {
+    logger.info('Using memory cache fallback');
+  });
+} else {
+  logger.info('Redis initialization skipped in test environment');
+}
 
 module.exports = {
   initializeRedis,

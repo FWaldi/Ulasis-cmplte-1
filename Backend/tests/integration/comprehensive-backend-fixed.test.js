@@ -605,8 +605,6 @@ describe('Comprehensive Backend Feature Tests - Fixed', () => {
     });
 
     test('should generate analytics summary', async () => {
-      console.log('📊 Testing analytics summary...');
-
       const response = await request(app)
         .get(`/api/v1/analytics/summary/${testQuestionnaire.id}`)
         .set('Authorization', `Bearer ${authTokens.business}`)
@@ -616,8 +614,6 @@ describe('Comprehensive Backend Feature Tests - Fixed', () => {
       expect(response.body.data.questionnaire_id).toBe(testQuestionnaire.id);
       expect(response.body.data.total_responses).toBeGreaterThan(0);
       expect(response.body.data.overall_rating).toBeDefined();
-
-      console.log('✅ Analytics summary generated successfully');
     });
 
     test('should handle 404 for non-existent questionnaire analytics', async () => {

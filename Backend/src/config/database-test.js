@@ -66,38 +66,83 @@ const authenticate = async () => {
 // Close database connection
 const close = async () => {
   try {
-    await sequelize.close();
-    // Clean up test database file
-    if (fs.existsSync(testDbPath)) {
-      fs.unlinkSync(testDbPath);
+    // Close connection with timeout
+    if (sequelize && !sequelize.connectionManager.isClosed) {
+      await Promise.race([
+        sequelize.close(),
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Database close timeout')), 5000)
+        )
+      ]);
+    }
+    
+    // Clean up test database file with retry
+    if (testDbPath && fs.existsSync(testDbPath)) {
+      const maxRetries = 5;
+      for (let i = 0; i <= maxRetries; i++) {
+        try {
+          fs.unlinkSync(testDbPath);
+          break;
+        } catch (error) {
+          if (error.code === 'EBUSY' && i < maxRetries) {
+            await new Promise(resolve => setTimeout(resolve, 200));
+            continue;
+          }
+          throw error;
+        }
+      }
     }
     return true;
   } catch (error) {
-    logger.error('Error closing test database:', error);
+    // Only log in non-test environments to reduce noise
+    if (process.env.NODE_ENV !== 'test') {
+      logger.error('Error closing test database:', error);
+    }
     return false;
   }
 };
 
-// Clean up all test database files with retry mechanism
+// Clean up all test database files with enhanced retry mechanism
 const cleanupAll = async () => {
-  const maxRetries = 5;
-  const retryDelay = 100; // 100ms
+  const maxRetries = 10;
+  const retryDelay = 200; // 200ms
+  const maxDelay = 2000; // 2 seconds max delay
 
   const cleanupFile = async (filePath) => {
     for (let retries = 0; retries <= maxRetries; retries++) {
       try {
         if (fs.existsSync(filePath)) {
+          // Try to close any open connections first
+          if (sequelize && !sequelize.connectionManager.isClosed) {
+            await sequelize.close();
+          }
+          
+          // Force garbage collection to help release file locks
+          if (global.gc) {
+            global.gc();
+          }
+          
+          // Wait a bit before attempting deletion
+          await new Promise(resolve => setTimeout(resolve, 50));
+          
           fs.unlinkSync(filePath);
         }
         return true;
       } catch (error) {
-        if (error.code === 'EBUSY' && retries < maxRetries) {
-          // Wait and retry
-          await new Promise(resolve => setTimeout(resolve, retryDelay));
-        } else {
-          logger.error(`Error cleaning up test database ${filePath}:`, error);
-          return false;
+        if (error.code === 'EBUSY' || error.code === 'ENOTEMPTY') {
+          if (retries < maxRetries) {
+            // Exponential backoff with jitter
+            const delay = Math.min(retryDelay * Math.pow(2, retries) + Math.random() * 100, maxDelay);
+            await new Promise(resolve => setTimeout(resolve, delay));
+            continue;
+          }
         }
+        
+        // Log error only if not in test environment to avoid noise
+        if (process.env.NODE_ENV !== 'test') {
+          logger.error(`Error cleaning up test database ${filePath}:`, error);
+        }
+        return false;
       }
     }
     return false;
@@ -107,9 +152,22 @@ const cleanupAll = async () => {
     const testDir = path.join(__dirname, '../../tests/temp');
     if (fs.existsSync(testDir)) {
       const files = fs.readdirSync(testDir);
+      
+      // Clean up both .sqlite and .sqlite-journal files
       for (const file of files) {
-        if (file.startsWith('test-') && file.endsWith('.sqlite')) {
+        if ((file.startsWith('test-') && file.endsWith('.sqlite')) || 
+            (file.startsWith('test-') && file.endsWith('.sqlite-journal'))) {
           const filePath = path.join(testDir, file);
+          await cleanupFile(filePath);
+        }
+      }
+      
+      // Also clean up any backup directory
+      const backupDir = path.join(testDir, 'backups');
+      if (fs.existsSync(backupDir)) {
+        const backupFiles = fs.readdirSync(backupDir);
+        for (const file of backupFiles) {
+          const filePath = path.join(backupDir, file);
           await cleanupFile(filePath);
         }
       }

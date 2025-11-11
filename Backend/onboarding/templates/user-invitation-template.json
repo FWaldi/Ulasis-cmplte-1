@@ -1,6 +1,0 @@
-{
-  "name": "User Invitation Template",
-  "type": "email",
-  "subject": "Invitation to Join Ulasis Platform",
-  "body": "Hello [User Name],\n\nYou've been invited to join the Ulasis platform!\n\n🔗 Get Started:\nClick here to accept your invitation: [Invitation Link]\n\n📝 Next Steps:\n1. Create your account using this email: [User Email]\n2. Set up your password\n3. Complete your profile\n4. Explore the dashboard\n\nIf you have any questions, please contact our support team.\n\nBest regards,\nNew Admin User\nAdmin"
-}

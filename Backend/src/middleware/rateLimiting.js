@@ -1,12 +1,64 @@
 'use strict';
 
 const rateLimit = require('express-rate-limit');
-const { RedisStore } = require('rate-limit-redis');
-const Redis = require('ioredis');
 const logger = require('../utils/logger');
 
 // Redis client for rate limiting
 let redisClient;
+
+// Function to create Redis store only when needed
+const createRedisStore = () => {
+  console.log('DEBUG: createRedisStore called, NODE_ENV:', process.env.NODE_ENV, 'REDIS_ENABLED:', process.env.REDIS_ENABLED);
+  
+  // Skip Redis in development and test environments
+  if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
+    logger.info('Using memory store for rate limiting in test/development environment');
+    console.log('DEBUG: Returning null due to test/development environment');
+    return null;
+  }
+
+  // Check if Redis is explicitly disabled
+  if (process.env.REDIS_ENABLED === 'false') {
+    logger.info('Redis is explicitly disabled, using memory store for rate limiting');
+    console.log('DEBUG: Returning null due to REDIS_ENABLED=false');
+    return null;
+  }
+
+  try {
+    // Only require Redis modules when we actually need them
+    const { RedisStore } = require('rate-limit-redis');
+    const Redis = require('ioredis');
+    
+    console.log('DEBUG: About to create Redis client');
+    
+    if (!redisClient) {
+      redisClient = new Redis({
+        host: process.env.REDIS_HOST || 'localhost',
+        port: process.env.REDIS_PORT || 6379,
+        password: process.env.REDIS_PASSWORD || undefined,
+        db: process.env.REDIS_DB || 0,
+        retryDelayOnFailover: 100,
+        maxRetriesPerRequest: 3,
+        lazyConnect: true,
+      });
+
+      redisClient.on('error', (err) => {
+        logger.error('Redis rate limiter connection error:', err);
+      });
+
+      redisClient.on('connect', () => {
+        logger.info('Redis rate limiter connected');
+      });
+    }
+
+    return new RedisStore({
+      sendCommand: (...args) => redisClient.call(...args),
+    });
+  } catch (error) {
+    logger.warn('Failed to create Redis store, using memory store:', error.message);
+    return null;
+  }
+};
 
 /**
  * Initialize Redis client for rate limiting
@@ -14,7 +66,19 @@ let redisClient;
 const initializeRedis = () => {
   // Skip Redis in development and test to avoid connection errors
   if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
-    logger.info('Skipping Redis initialization in development environment');
+    logger.info('Skipping Redis initialization in development/test environment');
+    return null;
+  }
+
+  // Check if Redis is explicitly disabled
+  if (process.env.REDIS_ENABLED === 'false') {
+    logger.info('Redis is explicitly disabled via REDIS_ENABLED=false');
+    return null;
+  }
+
+  // Redis modules are not available in test environment
+  if (!Redis || !RedisStore) {
+    logger.info('Redis modules not available, using memory store');
     return null;
   }
 
@@ -44,8 +108,7 @@ const initializeRedis = () => {
   }
 };
 
-// Initialize Redis client
-const redis = initializeRedis();
+
 
 /**
  * Rate limiter for anonymous response submissions
@@ -63,9 +126,7 @@ const anonymousRateLimit = rateLimit({
   },
   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
-  store: redis ? new RedisStore({
-    sendCommand: (...args) => redis.call(...args),
-  }) : undefined, // Use memory store if Redis is not available
+  store: createRedisStore(), // Use Redis store if available, otherwise memory store
   keyGenerator: (req) => {
     // Use IP address as the key
     return req.ip || req.connection.remoteAddress || req.socket.remoteAddress;
@@ -104,9 +165,7 @@ const deviceFingerprintRateLimit = rateLimit({
   },
   standardHeaders: true,
   legacyHeaders: false,
-  store: redis ? new RedisStore({
-    sendCommand: (...args) => redis.call(...args),
-  }) : undefined,
+  store: createRedisStore(),
   keyGenerator: (req) => {
     // Use device fingerprint as the key
     const deviceFingerprint = req.deviceFingerprint || 'unknown';
@@ -163,9 +222,7 @@ const qrCodeScanRateLimit = rateLimit({
   },
   standardHeaders: true,
   legacyHeaders: false,
-  store: redis ? new RedisStore({
-    sendCommand: (...args) => redis.call(...args),
-  }) : undefined,
+  store: createRedisStore(),
   keyGenerator: (req) => {
     return `qr_scan:${req.ip || req.connection.remoteAddress || req.socket.remoteAddress}`;
   },
@@ -203,9 +260,7 @@ const analyticsRateLimit = rateLimit({
   },
   standardHeaders: true,
   legacyHeaders: false,
-  store: redis ? new RedisStore({
-    sendCommand: (...args) => redis.call(...args),
-  }) : undefined,
+  store: createRedisStore(),
   keyGenerator: (req) => {
     return `analytics:${req.ip || req.connection.remoteAddress || req.socket.remoteAddress}`;
   },
@@ -288,12 +343,12 @@ const createRateLimit = (options) => {
  * @returns {Promise<Object>} Rate limit status
  */
 const getRateLimitStatus = async (key) => {
-  if (!redis) {
+  if (!redisClient) {
     return { available: false };
   }
 
   try {
-    const result = await redis.get(key);
+    const result = await redisClient.get(key);
     if (result) {
       const data = JSON.parse(result);
       return {
@@ -315,12 +370,12 @@ const getRateLimitStatus = async (key) => {
  * @returns {Promise<boolean>} Success status
  */
 const resetRateLimit = async (key) => {
-  if (!redis) {
+  if (!redisClient) {
     return false;
   }
 
   try {
-    await redis.del(key);
+    await redisClient.del(key);
     return true;
   } catch (error) {
     logger.error('Error resetting rate limit:', error);
@@ -337,5 +392,5 @@ module.exports = {
   createRateLimit,
   getRateLimitStatus,
   resetRateLimit,
-  redis,
+  redisClient,
 };

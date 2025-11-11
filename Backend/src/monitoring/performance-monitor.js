@@ -1,5 +1,7 @@
 const logger = require('../utils/logger');
-const { getConnectionPoolInfo } = require('../config/database');
+const { getConnectionPoolInfo } = process.env.NODE_ENV === 'test' 
+  ? require('../config/database-test')
+  : require('../config/database');
 
 /**
  * Performance Monitoring System

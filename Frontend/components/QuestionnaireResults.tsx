@@ -104,7 +104,7 @@ const QuestionResultCard: React.FC<{ question: Question, index: number, relevant
             <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100 mb-4">{index + 1}. {question.text}</h3>
             <div className="h-80">
                 {isChart ? (
-                    <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer width="100%" height="100%" minWidth={300} minHeight={200}>
                         {isPie ? (
                             <PieChart>
                                 <Pie data={data as {name: string, value: number}[]} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={100} labelLine={false} label={({ cx, cy, midAngle, innerRadius, outerRadius, percent }: any) => {

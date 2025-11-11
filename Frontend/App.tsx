@@ -3,6 +3,7 @@ import type { Page, Theme, DemoPlan, Review, Questionnaire, QRCode, TrendData } 
 import { Sentiment, ReviewStatus } from './types';
 import { getMockData, generateMockReview } from './hooks/useMockData';
 import { LocalizationProvider } from './locales';
+import { SubscriptionProvider } from './contexts/SubscriptionContext';
 import Header from './components/Header';
 import Dashboard from './components/Dashboard';
 import Inbox from './components/Inbox';
@@ -30,6 +31,7 @@ import Panduan from './components/Panduan';
 import TestAnalytics from './components/TestAnalytics';
 import DebugAnalyticsPage from './DebugAnalyticsPage';
 import DirectAnalyticsTest from './DirectAnalyticsTest';
+import TestAllAnalytics from './components/TestAllAnalytics';
 import './components/QuestionnaireForm'; // Ensure new component is included in dependency graph
 import PublicQuestionnaireView from './components/PublicQuestionnaireView';
 
@@ -53,6 +55,14 @@ const App: React.FC = () => {
     const totalReviews = reviews.length;
     const avgRating = totalReviews > 0 ? reviews.reduce((sum, r) => sum + r.rating, 0) / totalReviews : 0;
     const responseRate = totalReviews > 0 ? 88 : 0; // Static for now, 0 if no reviews
+    
+    console.log('🔍 App.tsx KPI Calculation:', {
+      totalReviews,
+      avgRating,
+      responseRate,
+      reviewsSample: reviews.slice(0, 3)
+    });
+    
     return {
       avgRating: parseFloat(avgRating.toFixed(1)),
       totalReviews,
@@ -62,6 +72,11 @@ const App: React.FC = () => {
 
   // Recalculate Trend data whenever reviews change
   const trendData = useMemo(() => {
+    console.log('🔍 App.tsx Trend Data Calculation:', {
+      totalReviews: reviews.length,
+      sampleReviews: reviews.slice(0, 3)
+    });
+    
     const today = new Date();
     const trendMap: { [key: string]: { ratings: number[], count: number } } = {};
     const dateLabels: { [key: string]: string } = {};
@@ -85,13 +100,16 @@ const App: React.FC = () => {
     });
 
     // Calculate averages
-    return Object.entries(trendMap).map(([key, data]) => {
+    const trend = Object.entries(trendMap).map(([key, data]) => {
         const avg = data.count > 0 ? data.ratings.reduce((a, b) => a + b, 0) / data.count : 0;
         return {
             date: dateLabels[key],
             'Average Rating': parseFloat(avg.toFixed(2)),
         };
     });
+    
+    console.log('🔍 App.tsx Trend Data Result:', trend);
+    return trend;
   }, [reviews]);
   
   // Handler functions to modify state (simulating backend API calls)
@@ -257,7 +275,8 @@ const App: React.FC = () => {
           reviewsCount: reviews.length,
           isDemoMode,
           demoPlan,
-          firstReview: reviews[0]
+          firstReview: reviews[0],
+          lastReview: reviews[reviews.length - 1]
         });
         return <Analytics reviews={reviews} isDemoMode={isDemoMode} demoPlan={demoPlan} />;
       case 'reports':
@@ -270,6 +289,8 @@ const App: React.FC = () => {
         return <DebugAnalyticsPage />;
       case 'direct-analytics':
         return <DirectAnalyticsTest />;
+      case 'test-all-analytics':
+        return <TestAllAnalytics />;
       default:
         return <Dashboard kpiData={kpiData} trendData={trendData} reviews={reviews} onGenerateData={handleGenerateDashboardData} setActivePage={setActivePage} />;
     }
@@ -386,24 +407,26 @@ const App: React.FC = () => {
 
   return (
     <LocalizationProvider>
-      <div className={`min-h-screen flex flex-col bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-200 transition-colors duration-300`}>
-          <Header 
-              theme={theme} 
-              toggleTheme={toggleTheme} 
-              onLogout={handleLogout} 
-              setActivePage={setActivePage}
-              activePage={activePage}
-              isDemoMode={isDemoMode} 
-              demoPlan={demoPlan}
-              setDemoPlan={setDemoPlan}
-              onExitDemo={handleExitDemo}
-          />
-          <div className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <main className="py-4 sm:py-6 lg:py-8">
-              {renderContent()}
-              </main>
-          </div>
-      </div>
+      <SubscriptionProvider>
+        <div className={`min-h-screen flex flex-col bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-200 transition-colors duration-300`}>
+            <Header 
+                theme={theme} 
+                toggleTheme={toggleTheme} 
+                onLogout={handleLogout} 
+                setActivePage={setActivePage}
+                activePage={activePage}
+                isDemoMode={isDemoMode} 
+                demoPlan={demoPlan}
+                setDemoPlan={setDemoPlan}
+                onExitDemo={handleExitDemo}
+            />
+            <div className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <main className="py-4 sm:py-6 lg:py-8">
+                {renderContent()}
+                </main>
+            </div>
+        </div>
+      </SubscriptionProvider>
     </LocalizationProvider>
   );
 }

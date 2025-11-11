@@ -30,11 +30,47 @@ jest.mock('../../src/middleware/security', () => ({
   requestSizeLimiter: jest.fn().mockReturnValue((req, res, next) => next()),
 }));
 
+// Mock subscription service to prevent database calls
+jest.mock('../../src/services/subscriptionService', () => ({
+  checkAnalyticsFeature: jest.fn().mockImplementation((userId, feature) => {
+    // Mock behavior based on auth header
+    const authHeader = global.mockAuthHeader || '';
+    if (authHeader.includes('starter')) {
+      if (feature === 'data_export') {
+        return { allowed: true };
+      }
+    } else if (authHeader.includes('free')) {
+      if (feature === 'data_export') {
+        return { 
+          allowed: false, 
+          reason: 'Feature \'data_export\' is not available in free plan',
+          current_plan: 'free',
+          required_feature: 'data_export',
+          upgrade_suggestion: 'starter'
+        };
+      }
+    }
+    return { allowed: true };
+  }),
+  getPlanFeatures: jest.fn().mockImplementation((plan) => {
+    const features = {
+      free: ['basic_analytics', 'qr_codes', 'sentiment_basic'],
+      starter: ['basic_analytics', 'qr_codes', 'csv_export', 'data_export', 'sentiment_analysis', 'actionable_insights'],
+      business: ['basic_analytics', 'qr_codes', 'csv_export', 'excel_export', 'data_export', 'advanced_analytics', 'real_time_analytics', 'customer_journey', 'api_access', 'sentiment_analysis', 'actionable_insights'],
+      admin: ['basic_analytics', 'qr_codes', 'csv_export', 'excel_export', 'data_export', 'advanced_analytics', 'real_time_analytics', 'customer_journey', 'api_access', 'admin_access', 'sentiment_analysis', 'actionable_insights'],
+    };
+    return features[plan] || features.free;
+  }),
+  incrementAnalyticsUsage: jest.fn().mockResolvedValue(undefined),
+  getPlanLimits: jest.fn().mockReturnValue({}),
+}));
+
 // Mock authentication middleware to bypass JWT verification in tests
 jest.mock('../../src/middleware/auth', () => ({
   authenticate: jest.fn().mockImplementation((req, res, next) => {
     // Mock authenticated user for testing - determine plan based on auth token
     const authHeader = req.headers.authorization || '';
+    global.mockAuthHeader = authHeader; // Store for subscription service mock
     let subscriptionPlan = 'business'; // default
     
     if (authHeader.includes('starter')) {
@@ -44,11 +80,21 @@ jest.mock('../../src/middleware/auth', () => ({
     }
     
     req.user = {
+      id: 1,
       userId: 1,
       email: 'analytics-test@example.com',
       subscription_plan: subscriptionPlan, // Use underscore to match controller expectation
       role: 'admin'
     };
+    
+    req.userProfile = {
+      id: 1,
+      email: 'analytics-test@example.com',
+      subscription_plan: subscriptionPlan,
+      subscription_status: 'active',
+      isLocked: () => false,
+    };
+    
     next();
   }),
   requireSubscription: jest.fn().mockImplementation((plan) => (req, res, next) => {

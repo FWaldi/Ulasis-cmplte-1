@@ -5,6 +5,7 @@ import {
     SettingsIcon, LogoutIcon, MenuIcon, CloseIcon,
     DashboardIcon, InboxIcon, QRIcon, ReportsIcon, ClipboardIcon, SignalIcon, LightBulbIcon
 } from './common/Icons';
+import { useSubscription } from '../contexts/SubscriptionContext';
 
 // --- Mobile Navigation Components ---
 
@@ -31,8 +32,8 @@ const MobileNavItem: React.FC<{
 
 const DemoPlanSelector: React.FC<{
     demoPlan: DemoPlan;
-    setDemoPlan: (plan: DemoPlan) => void;
-}> = ({ demoPlan, setDemoPlan }) => {
+    onDemoPlanChange: (plan: DemoPlan) => void;
+}> = ({ demoPlan, onDemoPlanChange }) => {
     const plans: DemoPlan[] = ['gratis', 'starter', 'bisnis'];
     const planDetails = {
         gratis: { label: 'Gratis' },
@@ -47,7 +48,7 @@ const DemoPlanSelector: React.FC<{
                 {plans.map(plan => (
                     <button
                         key={plan}
-                        onClick={() => setDemoPlan(plan)}
+                        onClick={() => onDemoPlanChange(plan)}
                         className={`w-full p-2 rounded-md text-center transition-all duration-200 border-2 ${
                             demoPlan === plan 
                                 ? 'bg-white dark:bg-slate-700 border-brand-primary shadow-lg' 
@@ -104,7 +105,18 @@ const DemoBanner: React.FC<{ onExitDemo: () => void }> = ({ onExitDemo }) => (
     </div>
 );
 
-const Header: React.FC<HeaderProps> = ({ theme, toggleTheme, onLogout, setActivePage, activePage, isDemoMode, demoPlan, setDemoPlan, onExitDemo }) => {
+const Header: React.FC<HeaderProps> = ({
+  theme,
+  toggleTheme,
+  onLogout,
+  setActivePage,
+  activePage,
+  isDemoMode,
+  demoPlan,
+  setDemoPlan,
+  onExitDemo
+}) => {
+    const { setDemoMode, setDemoPlan: setContextDemoPlan } = useSubscription();
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -131,6 +143,17 @@ const Header: React.FC<HeaderProps> = ({ theme, toggleTheme, onLogout, setActive
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+
+  // Sync demo mode with subscription context
+  useEffect(() => {
+    setDemoMode(isDemoMode, demoPlan);
+  }, [isDemoMode, demoPlan, setDemoMode]);
+
+  // Handle demo plan changes
+  const handleDemoPlanChange = (plan: DemoPlan) => {
+    setDemoPlan(plan);
+    setContextDemoPlan(plan);
+  };
 
   const handleMobileNavClick = (page: Page) => {
     setActivePage(page);
@@ -227,7 +250,7 @@ const Header: React.FC<HeaderProps> = ({ theme, toggleTheme, onLogout, setActive
                     ))}
                     </ul>
                 </nav>
-                {isDemoMode && <DemoPlanSelector demoPlan={demoPlan} setDemoPlan={setDemoPlan} />}
+                {isDemoMode && <DemoPlanSelector demoPlan={demoPlan} onDemoPlanChange={handleDemoPlanChange} />}
             </div>
         </>
       )}

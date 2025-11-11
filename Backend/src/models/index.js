@@ -29,6 +29,8 @@ const models = {
   AnalyticsKPI: require('./AnalyticsKPI')(sequelize, Sequelize.DataTypes),
   AnalyticsTrend: require('./AnalyticsTrend')(sequelize, Sequelize.DataTypes),
   AnalyticsBreakdown: require('./AnalyticsBreakdown')(sequelize, Sequelize.DataTypes),
+  SentimentAnalysis: require('./SentimentAnalysis')(sequelize, Sequelize.DataTypes),
+  ActionableInsight: require('./ActionableInsight')(sequelize, Sequelize.DataTypes),
   SubscriptionRequest: require('./SubscriptionRequest')(sequelize, Sequelize.DataTypes),
   // Enterprise Admin System Models
   AdminRole: require('./AdminRole')(sequelize, Sequelize.DataTypes),

@@ -159,6 +159,42 @@ jest.mock('../../src/middleware/subscriptionValidation', () => {
   };
 });
 
+// Mock subscription service to prevent database calls
+jest.mock('../../src/services/subscriptionService', () => ({
+  checkAnalyticsFeature: jest.fn().mockImplementation((userId, feature) => {
+    // Mock behavior based on userId
+    if (userId === 4) { // starter user
+      if (feature === 'data_export') {
+        return { allowed: true };
+      }
+    } else if (userId === 5) { // free user
+      if (feature === 'data_export') {
+        return { 
+          allowed: false, 
+          reason: 'Feature \'data_export\' is not available in free plan',
+          current_plan: 'free',
+          required_feature: 'data_export',
+          upgrade_suggestion: 'starter'
+        };
+      }
+    } else { // business user (userId 1)
+      return { allowed: true };
+    }
+    return { allowed: true };
+  }),
+  getPlanFeatures: jest.fn().mockImplementation((plan) => {
+    const features = {
+      free: ['basic_analytics', 'qr_codes', 'sentiment_basic'],
+      starter: ['basic_analytics', 'qr_codes', 'csv_export', 'data_export', 'sentiment_analysis', 'actionable_insights'],
+      business: ['basic_analytics', 'qr_codes', 'csv_export', 'excel_export', 'data_export', 'advanced_analytics', 'real_time_analytics', 'customer_journey', 'api_access', 'sentiment_analysis', 'actionable_insights'],
+      admin: ['basic_analytics', 'qr_codes', 'csv_export', 'excel_export', 'data_export', 'advanced_analytics', 'real_time_analytics', 'customer_journey', 'api_access', 'admin_access', 'sentiment_analysis', 'actionable_insights'],
+    };
+    return features[plan] || features.free;
+  }),
+  incrementAnalyticsUsage: jest.fn().mockResolvedValue(undefined),
+  getPlanLimits: jest.fn().mockReturnValue({}),
+}));
+
 // Mock security middleware to prevent rate limiting hangs
 jest.mock('../../src/middleware/security', () => ({
   validateInput: jest.fn().mockImplementation((req, res, next) => next()),

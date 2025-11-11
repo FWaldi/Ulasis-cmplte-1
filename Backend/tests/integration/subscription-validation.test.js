@@ -100,6 +100,7 @@ describe('Subscription Functionality Validation', () => {
           const starterLogin = await request(app)
             .post('/api/v1/auth/login')
             .send({ email: userData.email, password: 'Password123' });
+          console.log('DEBUG: Starter login response:', starterLogin.status, starterLogin.body);
           starterToken = starterLogin.body.data.accessToken;
           break;
         case 'business':
@@ -107,6 +108,10 @@ describe('Subscription Functionality Validation', () => {
           const businessLogin = await request(app)
             .post('/api/v1/auth/login')
             .send({ email: userData.email, password: 'Password123' });
+          console.log('Business login response:', businessLogin.status, businessLogin.body);
+          if (businessLogin.status !== 200) {
+            throw new Error(`Business login failed: ${JSON.stringify(businessLogin.body)}`);
+          }
           businessToken = businessLogin.body.data.accessToken;
           break;
         case 'admin':
@@ -335,7 +340,7 @@ describe('Subscription Functionality Validation', () => {
         .query({ format: 'csv' })
         .set('Authorization', `Bearer ${starterToken}`);
       
-      console.log('CSV Export Response:', response.status, response.body);
+      console.log('CSV Export Response:', response.status, JSON.stringify(response.body, null, 2));
       expect(response.status).toBe(200);
 
       // Excel export (should fail)
@@ -349,19 +354,74 @@ describe('Subscription Functionality Validation', () => {
     });
 
     test('business user: all export formats', async () => {
-      // CSV export (should succeed)
+      console.log('Starting business user export test');
+      
+      // First, let's verify the business user's subscription
+      const subCheck = await request(app)
+        .get('/api/v1/subscription/current')
+        .set('Authorization', `Bearer ${businessToken}`)
+        .expect(200);
+      
+      console.log('Business user subscription:', JSON.stringify(subCheck.body.data, null, 2));
+      
+      // Verify the user is actually business plan
+      if (subCheck.body.data.subscription_plan !== 'business') {
+        throw new Error(`Expected business plan, got ${subCheck.body.data.subscription_plan}`);
+      }
+
+      // Test basic authentication first
       await request(app)
+        .get('/api/v1/questionnaires')
+        .set('Authorization', `Bearer ${businessToken}`)
+        .expect(200);
+      
+      console.log('Basic auth test passed');
+
+      // Verify questionnaire exists
+      const questionnaireCheck = await request(app)
+        .get(`/api/v1/questionnaires/${questionnaireId}`)
+        .set('Authorization', `Bearer ${businessToken}`)
+        .expect(200);
+      
+      console.log('Questionnaire verified:', questionnaireId);
+
+      // CSV export (should succeed)
+      const csvResponse = await request(app)
         .get(`/api/v1/analytics/report/${questionnaireId}`)
         .query({ format: 'csv' })
+        .set('Authorization', `Bearer ${businessToken}`);
+      
+      console.log('CSV export status:', csvResponse.status);
+      expect(csvResponse.status).toBe(200);
+
+      // Test a different analytics endpoint first
+      const simpleResponse = await request(app)
+        .get('/api/v1/analytics/reviews')
         .set('Authorization', `Bearer ${businessToken}`)
         .expect(200);
+      
+      console.log('Simple analytics endpoint works');
 
       // Excel export (should succeed)
-      await request(app)
+      const excelResponse = await request(app)
         .get(`/api/v1/analytics/report/${questionnaireId}`)
         .query({ format: 'excel' })
-        .set('Authorization', `Bearer ${businessToken}`)
-        .expect(200);
+        .set('Authorization', `Bearer ${businessToken}`);
+      
+      console.log('Excel export status:', excelResponse.status);
+      console.log('Excel export body:', JSON.stringify(excelResponse.body, null, 2));
+      
+      // Write response to file for debugging
+      require('fs').writeFileSync('test-response.json', JSON.stringify({
+        status: excelResponse.status,
+        body: excelResponse.body
+      }, null, 2));
+      
+      if (excelResponse.status !== 200) {
+        throw new Error(`Excel export failed with status ${excelResponse.status}: ${JSON.stringify(excelResponse.body)}`);
+      }
+      
+      expect(excelResponse.status).toBe(200);
     });
 
     test('admin user: all export formats', async () => {
